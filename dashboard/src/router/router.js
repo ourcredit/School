@@ -9,7 +9,8 @@ export const loginRouter = {
     meta: {
         title: 'LogIn'
     },
-    component: () => import('@/views/login.vue')
+    component: () =>
+        import ('@/views/login.vue')
 };
 
 export const page404 = {
@@ -18,7 +19,8 @@ export const page404 = {
     meta: {
         title: '404 - Page does not exist'
     },
-    component: () => import('@/views/error-page/404.vue')
+    component: () =>
+        import ('@/views/error-page/404.vue')
 };
 
 export const page403 = {
@@ -27,7 +29,8 @@ export const page403 = {
         title: '403 - You are not authorized'
     },
     name: 'error-403',
-    component: () => import('@//views/error-page/403.vue')
+    component: () =>
+        import ('@//views/error-page/403.vue')
 };
 
 export const page500 = {
@@ -36,12 +39,14 @@ export const page500 = {
         title: '500 - Server error'
     },
     name: 'error-500',
-    component: () => import('@/views/error-page/500.vue')
+    component: () =>
+        import ('@/views/error-page/500.vue')
 };
 export const locking = {
     path: '/locking',
     name: 'locking',
-    component: () => import('@/views/main-components/lockscreen/components/locking-page.vue')
+    component: () =>
+        import ('@/views/main-components/lockscreen/components/locking-page.vue')
 };
 
 // A route which is not displayed in the left menu
@@ -50,29 +55,62 @@ export const otherRouter = {
     name: 'otherRouter',
     redirect: '/home',
     component: Main,
-    children: [
-        { path: 'home', title: 'HomePage', name: 'home_index', component: () => import('@/views/home/home.vue') }
-    ]
+    children: [{
+        path: 'home',
+        title: 'HomePage',
+        name: 'home_index',
+        component: () =>
+            import ('@/views/home/home.vue')
+    }]
 };
 
 // Left menu items
-export const appRouter = [
-    {
-        path: '/admin',
-        icon: 'settings',
-        title: 'Administration',
-        name: 'administration',
-        component: Main,
-        children: [
-            { path: 'home', title: 'HomePage', name: 'home_index', component: () => import('@/views/home/home.vue') },
-            { path: 'tenants', title: 'Tenants', name: 'tenants',permission:'Pages.Tenants', component: () => import('@/views/admin/tenants/tenants.vue') },
-            { path: 'users', title: 'Users', name: 'users',permission:'Pages.Users', component: () => import('@/views/admin/users/users.vue') },
-            { path: 'roles', title: 'Roles', name: 'roles',permission:'Pages.Roles', component: () => import('@/views/admin/roles/roles.vue') },
-            { path: 'about', title: 'About', name:'about',component:()=>import('@/views/admin/about/about.vue')}
-        ]
-    }
-];
-
+export const appRouter = [{
+    path: '/admin',
+    icon: 'settings',
+    title: '系统管理',
+    name: 'administration',
+    component: Main,
+    children: [{
+            path: 'home',
+            title: '主页',
+            name: 'home_index',
+            component: () =>
+                import ('@/views/home/home.vue')
+        },
+        {
+            path: 'tenants',
+            title: '租户',
+            name: 'tenants',
+            permission: 'Pages.Tenants',
+            component: () =>
+                import ('@/views/admin/tenants/tenants.vue')
+        },
+        {
+            path: 'users',
+            title: '用户',
+            name: 'users',
+            permission: 'Pages.Users',
+            component: () =>
+                import ('@/views/admin/users/users.vue')
+        },
+        {
+            path: 'roles',
+            title: '角色',
+            name: 'roles',
+            permission: 'Pages.Roles',
+            component: () =>
+                import ('@/views/admin/roles/roles.vue')
+        },
+        {
+            path: 'about',
+            title: '关于',
+            name: 'about',
+            component: () =>
+                import ('@/views/admin/about/about.vue')
+        }
+    ]
+}];
 // All the routes defined above should be written in the routers below
 export const routers = [
     loginRouter,

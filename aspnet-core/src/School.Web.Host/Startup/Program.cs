@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.IO;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace School.Web.Host.Startup
 {
@@ -7,14 +9,19 @@ namespace School.Web.Host.Startup
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
-        }
+            var conf = new ConfigurationBuilder()
+                .AddJsonFile("server.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables().Build();
 
-        public static IWebHost BuildWebHost(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args)
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();
+
+            host.Run();
         }
+      
     }
 }

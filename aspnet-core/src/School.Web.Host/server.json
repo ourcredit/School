@@ -1,0 +1,3 @@
+﻿{
+  "server.urls": "http://+:5000" //注意这里用+，而不是localhost，用localhost的话只能在本机访问，其他机器不能访问
+}
