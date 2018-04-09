@@ -12,7 +12,7 @@ namespace School
     {
         public override void PreInitialize()
         {
-            Configuration.Authorization.Providers.Add<SchoolAuthorizationProvider>();
+            Configuration.Authorization.Providers.Add<AppAuthorizationProvider>();
         }
 
         public override void Initialize()

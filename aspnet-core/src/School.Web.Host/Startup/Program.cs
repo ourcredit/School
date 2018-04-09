@@ -9,17 +9,12 @@ namespace School.Web.Host.Startup
     {
         public static void Main(string[] args)
         {
-            var conf = new ConfigurationBuilder()
-                .AddJsonFile("server.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables().Build();
-
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();
-
             host.Run();
         }
       

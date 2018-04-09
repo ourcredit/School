@@ -1,6 +1,7 @@
-using Abp.Authorization.Roles;
+﻿using Abp.Authorization.Roles;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using MyCompanyName.AbpZeroTemplate.Authorization.Users;
 using School.Authorization.Users;
 
 namespace School.Authorization.Roles
@@ -16,6 +17,7 @@ namespace School.Authorization.Roles
                 roleRepository,
                 rolePermissionSettingRepository)
         {
+
         }
     }
 }

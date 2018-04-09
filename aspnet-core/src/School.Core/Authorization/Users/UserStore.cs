@@ -1,4 +1,4 @@
-using Abp.Authorization.Users;
+﻿using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Linq;
@@ -6,26 +6,29 @@ using School.Authorization.Roles;
 
 namespace School.Authorization.Users
 {
+    /// <summary>
+    /// Used to perform database operations for <see cref="UserManager"/>.
+    /// </summary>
     public class UserStore : AbpUserStore<Role, User>
     {
         public UserStore(
-            IUnitOfWorkManager unitOfWorkManager, 
-            IRepository<User, long> userRepository, 
-            IRepository<Role> roleRepository, 
+            IRepository<User, long> userRepository,
+            IRepository<UserLogin, long> userLoginRepository,
+            IRepository<UserRole, long> userRoleRepository,
+            IRepository<Role> roleRepository,
             IAsyncQueryableExecuter asyncQueryableExecuter, 
-            IRepository<UserRole, long> userRoleRepository, 
-            IRepository<UserLogin, long> userLoginRepository, 
-            IRepository<UserClaim, long> userClaimRepository, 
-            IRepository<UserPermissionSetting, long> userPermissionSettingRepository) 
+            IUnitOfWorkManager unitOfWorkManager,
+            IRepository<UserClaim, long> userCliamRepository,
+            IRepository<UserPermissionSetting, long> userPermissionSettingRepository)
             : base(
-                  unitOfWorkManager, 
-                  userRepository, 
-                  roleRepository, 
-                  asyncQueryableExecuter, 
-                  userRoleRepository, 
-                  userLoginRepository, 
-                  userClaimRepository,
-                  userPermissionSettingRepository)
+                unitOfWorkManager,
+                userRepository,
+                roleRepository,
+                asyncQueryableExecuter,
+                userRoleRepository,
+                userLoginRepository,
+                userCliamRepository,
+                userPermissionSettingRepository)
         {
         }
     }

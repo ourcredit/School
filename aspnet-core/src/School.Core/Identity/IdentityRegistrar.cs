@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using MyCompanyName.AbpZeroTemplate.Authorization;
 using School.Authorization;
 using School.Authorization.Roles;
 using School.Authorization.Users;
@@ -21,7 +22,6 @@ namespace School.Identity
                 .AddAbpEditionManager<EditionManager>()
                 .AddAbpUserStore<UserStore>()
                 .AddAbpRoleStore<RoleStore>()
-                .AddAbpLogInManager<LogInManager>()
                 .AddAbpSignInManager<SignInManager>()
                 .AddAbpSecurityStampValidator<SecurityStampValidator>()
                 .AddAbpUserClaimsPrincipalFactory<UserClaimsPrincipalFactory>()

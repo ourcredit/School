@@ -7,23 +7,27 @@ namespace School.Authorization.Roles
     {
         public static void Configure(IRoleManagementConfig roleManagementConfig)
         {
-            // Static host roles
+            //Static host roles
 
             roleManagementConfig.StaticRoles.Add(
                 new StaticRoleDefinition(
                     StaticRoleNames.Host.Admin,
-                    MultiTenancySides.Host
-                )
-            );
+                    MultiTenancySides.Host)
+                );
 
-            // Static tenant roles
+            //Static tenant roles
 
             roleManagementConfig.StaticRoles.Add(
                 new StaticRoleDefinition(
                     StaticRoleNames.Tenants.Admin,
-                    MultiTenancySides.Tenant
-                )
-            );
+                    MultiTenancySides.Tenant)
+                );
+
+            roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    StaticRoleNames.Tenants.User,
+                    MultiTenancySides.Tenant)
+                );
         }
     }
 }

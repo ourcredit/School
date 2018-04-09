@@ -2,46 +2,54 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Abp.Authorization.Users;
-using Abp.Domain.Services;
+using Abp.Configuration;
 using Abp.IdentityFramework;
+using Abp.Notifications;
 using Abp.Runtime.Session;
 using Abp.UI;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using School.Authorization.Roles;
+using School.Configuration;
 using School.MultiTenancy;
 
 namespace School.Authorization.Users
 {
-    public class UserRegistrationManager : DomainService
+    public class UserRegistrationManager : SchoolDomainServiceBase
     {
         public IAbpSession AbpSession { get; set; }
 
         private readonly TenantManager _tenantManager;
         private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;
+        private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
         private readonly IPasswordHasher<User> _passwordHasher;
 
         public UserRegistrationManager(
-            TenantManager tenantManager,
+            TenantManager tenantManager, 
             UserManager userManager,
-            RoleManager roleManager,
+            RoleManager roleManager, 
+            INotificationSubscriptionManager notificationSubscriptionManager, 
             IPasswordHasher<User> passwordHasher)
         {
             _tenantManager = tenantManager;
             _userManager = userManager;
             _roleManager = roleManager;
+            _notificationSubscriptionManager = notificationSubscriptionManager;
             _passwordHasher = passwordHasher;
 
             AbpSession = NullAbpSession.Instance;
         }
 
-        public async Task<User> RegisterAsync(string name, string surname, string emailAddress, string userName, string plainPassword, bool isEmailConfirmed)
+        public async Task<User> RegisterAsync(string name, string surname, string emailAddress,
+            string userName, string plainPassword )
         {
             CheckForTenant();
+            CheckSelfRegistrationIsEnabled();
 
             var tenant = await GetActiveTenantAsync();
+           // var isNewRegisteredUserActiveByDefault = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault);
 
             var user = new User
             {
@@ -51,7 +59,7 @@ namespace School.Authorization.Users
                 EmailAddress = emailAddress,
                 IsActive = true,
                 UserName = userName,
-                IsEmailConfirmed = isEmailConfirmed,
+                IsEmailConfirmed = false,
                 Roles = new List<UserRole>()
             };
 
@@ -67,6 +75,11 @@ namespace School.Authorization.Users
             CheckErrors(await _userManager.CreateAsync(user));
             await CurrentUnitOfWork.SaveChangesAsync();
 
+           
+
+            //Notifications
+            await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
+
             return user;
         }
 
@@ -77,6 +90,16 @@ namespace School.Authorization.Users
                 throw new InvalidOperationException("Can not register host users!");
             }
         }
+
+        private void CheckSelfRegistrationIsEnabled()
+        {
+            if (!SettingManager.GetSettingValue<bool>(AppSettings.UserManagement.AllowSelfRegistration))
+            {
+                throw new UserFriendlyException(L("SelfUserRegistrationIsDisabledMessage_Detail"));
+            }
+        }
+
+      
 
         private async Task<Tenant> GetActiveTenantAsync()
         {

@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Abp.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using Abp.Authorization;
+using MyCompanyName.AbpZeroTemplate.Authorization.Users;
 using School.Authorization.Roles;
 
 namespace School.Authorization.Users

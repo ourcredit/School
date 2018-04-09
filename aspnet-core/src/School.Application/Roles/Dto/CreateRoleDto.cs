@@ -19,7 +19,7 @@ namespace School.Roles.Dto
 
         public string NormalizedName { get; set; }
         
-        [StringLength(Role.MaxDescriptionLength)]
+        [StringLength(128)]
         public string Description { get; set; }
 
         public bool IsStatic { get; set; }

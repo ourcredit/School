@@ -6,6 +6,7 @@ using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
+using MyCompanyName.AbpZeroTemplate.Authorization;
 using School.Authorization;
 using School.Authorization.Roles;
 using School.Authorization.Users;
@@ -48,7 +49,7 @@ namespace School.EntityFrameworkCore.Seed.Tenants
                 .ToList();
 
             var permissions = PermissionFinder
-                .GetAllPermissions(new SchoolAuthorizationProvider())
+                .GetAllPermissions(new AppAuthorizationProvider(true))
                 .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Tenant) &&
                             !grantedPermissions.Contains(p.Name))
                 .ToList();

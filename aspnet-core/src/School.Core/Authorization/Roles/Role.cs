@@ -1,28 +1,31 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Abp.Authorization.Roles;
+﻿using Abp.Authorization.Roles;
+using MyCompanyName.AbpZeroTemplate.Authorization.Users;
 using School.Authorization.Users;
 
 namespace School.Authorization.Roles
 {
+    /// <summary>
+    /// Represents a role in the system.
+    /// </summary>
     public class Role : AbpRole<User>
     {
-        public const int MaxDescriptionLength = 5000;
+        //Can add application specific role properties here
 
         public Role()
         {
+            
         }
 
         public Role(int? tenantId, string displayName)
             : base(tenantId, displayName)
         {
+
         }
 
         public Role(int? tenantId, string name, string displayName)
             : base(tenantId, name, displayName)
         {
-        }
 
-        [StringLength(MaxDescriptionLength)]
-        public string Description {get; set;}
+        }
     }
 }

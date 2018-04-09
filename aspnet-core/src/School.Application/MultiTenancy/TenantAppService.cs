@@ -9,6 +9,7 @@ using Abp.Extensions;
 using Abp.IdentityFramework;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
+using MyCompanyName.AbpZeroTemplate.Authorization;
 using School.Authorization;
 using School.Authorization.Roles;
 using School.Authorization.Users;
@@ -17,7 +18,7 @@ using School.MultiTenancy.Dto;
 
 namespace School.MultiTenancy
 {
-    [AbpAuthorize(PermissionNames.Pages_Tenants)]
+    [AbpAuthorize(AppPermissions.Pages_Tenants)]
     public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, PagedResultRequestDto, CreateTenantDto, TenantDto>, ITenantAppService
     {
         private readonly TenantManager _tenantManager;

@@ -9,6 +9,7 @@ using School.Authorization.Roles;
 using School.Authorization.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using MyCompanyName.AbpZeroTemplate.Authorization;
 
 namespace School.EntityFrameworkCore.Seed.Host
 {
@@ -46,7 +47,7 @@ namespace School.EntityFrameworkCore.Seed.Host
                 .ToList();
 
             var permissions = PermissionFinder
-                .GetAllPermissions(new SchoolAuthorizationProvider())
+                .GetAllPermissions(new AppAuthorizationProvider(true))
                 .Where(p => p.MultiTenancySides.HasFlag(MultiTenancySides.Host) &&
                             !grantedPermissions.Contains(p.Name))
                 .ToList();
