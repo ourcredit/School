@@ -25,7 +25,6 @@ using MyCompanyName.AbpZeroTemplate.Authorization.Permissions.Dto;
 using MyCompanyName.AbpZeroTemplate.Authorization.Users;
 using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
 using MyCompanyName.AbpZeroTemplate.Dto;
-using MyCompanyName.AbpZeroTemplate.Organizations.Dto;
 using School.Authorization.Roles;
 using School.Authorization.Users.Dto;
 using School.Authorization.Users.Exporting;
@@ -135,12 +134,10 @@ namespace School.Authorization.Users
                 })
                 .ToArrayAsync();
 
-            var allOrganizationUnits = await _organizationUnitRepository.GetAllListAsync();
 
             var output = new GetUserForEditOutput
             {
                 Roles = userRoleDtos,
-                AllOrganizationUnits = ObjectMapper.Map<List<OrganizationUnitDto>>(allOrganizationUnits),
                 MemberedOrganizationUnits = new List<string>()
             };
 

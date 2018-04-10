@@ -12,7 +12,9 @@ namespace School.Authorization
 
         public const string Pages = "Pages";
 
-        public const string Pages_DemoUiComponents= "Pages.DemoUiComponents";
+        /// <summary>
+        /// 权限
+        /// </summary>
         public const string Pages_Administration = "Pages.Administration";
 
         public const string Pages_Administration_Roles = "Pages.Administration.Roles";
@@ -25,49 +27,60 @@ namespace School.Authorization
         public const string Pages_Administration_Users_Edit = "Pages.Administration.Users.Edit";
         public const string Pages_Administration_Users_Delete = "Pages.Administration.Users.Delete";
         public const string Pages_Administration_Users_ChangePermissions = "Pages.Administration.Users.ChangePermissions";
-        public const string Pages_Administration_Users_Impersonation = "Pages.Administration.Users.Impersonation";
 
-        public const string Pages_Administration_Languages = "Pages.Administration.Languages";
-        public const string Pages_Administration_Languages_Create = "Pages.Administration.Languages.Create";
-        public const string Pages_Administration_Languages_Edit = "Pages.Administration.Languages.Edit";
-        public const string Pages_Administration_Languages_Delete = "Pages.Administration.Languages.Delete";
-        public const string Pages_Administration_Languages_ChangeTexts = "Pages.Administration.Languages.ChangeTexts";
+        /// <summary>
+        /// 日志
+        /// </summary>
+        public const string Pages_AuditLogs = "Pages.AuditLogs";
+        public const string Pages_AuditLogs_Logs = "Pages.AuditLogs.Logs";
 
-        public const string Pages_Administration_AuditLogs = "Pages.Administration.AuditLogs";
+        public const string Pages_AuditLogs_Warns = "Pages.AuditLogs.Warns";
 
-        public const string Pages_Administration_OrganizationUnits = "Pages.Administration.OrganizationUnits";
-        public const string Pages_Administration_OrganizationUnits_ManageOrganizationTree = "Pages.Administration.OrganizationUnits.ManageOrganizationTree";
-        public const string Pages_Administration_OrganizationUnits_ManageMembers = "Pages.Administration.OrganizationUnits.ManageMembers";
+        /// <summary>
+        /// 运营商
+        /// </summary>
+        public const string Pages_Operator = "Pages.Operator";
 
-        public const string Pages_Administration_HangfireDashboard = "Pages.Administration.HangfireDashboard";
+        public const string Pages_Operator_Orgs = "Pages.Operator.Orgs";
 
-        public const string Pages_Administration_UiCustomization = "Pages.Administration.UiCustomization";
+        public const string Pages_Operator_Orgs_Create = "Pages.Operator.Orgs.Create";
+        public const string Pages_Operator_Orgs_Edit = "Pages.Operator.Orgs.Edit";
+        public const string Pages_Operator_Orgs_Delete = "Pages.Operator.Orgs.Delete";
+        public const string Pages_Operator_Orgs_BindPrice = "Pages.Operator.Orgs.BindPrice";
+        public const string Pages_Operator_Orgs_BindProduct = "Pages.Operator.Orgs.BindProduct";
 
-        //TENANT-SPECIFIC PERMISSIONS
+        public const string Pages_Operator_Product_Create = "Pages.Operator.Product.Create";
+        public const string Pages_Operator_Product_Edit = "Pages.Operator.Product.Edit";
+        public const string Pages_Operator_Product_Delete = "Pages.Operator.Product.Delete";
 
-        public const string Pages_Tenant_Dashboard = "Pages.Tenant.Dashboard";
 
-        public const string Pages_Administration_Tenant_Settings = "Pages.Administration.Tenant.Settings";
+        /// <summary>
+        /// 订单
+        /// </summary>
+        public const string Pages_Orders = "Pages.Orders";
+        public const string Pages_Orders_OrderList = "Pages.Orders.OrderList";
 
-        public const string Pages_Administration_Tenant_SubscriptionManagement = "Pages.Administration.Tenant.SubscriptionManagement";
 
-        //HOST-SPECIFIC PERMISSIONS
+        /// <summary>
+        /// 设备
+        /// </summary>
+        public const string Pages_Device = "Pages.Device";
 
-        public const string Pages_Editions = "Pages.Editions";
-        public const string Pages_Editions_Create = "Pages.Editions.Create";
-        public const string Pages_Editions_Edit = "Pages.Editions.Edit";
-        public const string Pages_Editions_Delete = "Pages.Editions.Delete";
+        public const string Pages_Device_Manage = "Pages.Device.Manage";
 
-        public const string Pages_Tenants = "Pages.Tenants";
-        public const string Pages_Tenants_Create = "Pages.Tenants.Create";
-        public const string Pages_Tenants_Edit = "Pages.Tenants.Edit";
-        public const string Pages_Tenants_ChangeFeatures = "Pages.Tenants.ChangeFeatures";
-        public const string Pages_Tenants_Delete = "Pages.Tenants.Delete";
-        public const string Pages_Tenants_Impersonation = "Pages.Tenants.Impersonation";
+        public const string Pages_Device_Manage_Create = "Pages.Device.Manage.Create";
+        public const string Pages_Device_Manage_Edit = "Pages.Device.Manage.Edit";
+        public const string Pages_Device_Manage_Delete = "Pages.Device.Manage.Delete";
 
-        public const string Pages_Administration_Host_Maintenance = "Pages.Administration.Host.Maintenance";
-        public const string Pages_Administration_Host_Settings = "Pages.Administration.Host.Settings";
-        public const string Pages_Administration_Host_Dashboard = "Pages.Administration.Host.Dashboard";
+        /// <summary>
+        /// 点位
+        /// </summary>
+        public const string Pages_Point = "Pages.Point";
 
+        public const string Pages_Point_Manage = "Pages.Point.Manage";
+
+        public const string Pages_Point_Manage_Create = "Pages.Point.Manage.Create";
+        public const string Pages_Point_Manage_Edit = "Pages.Point.Manage.Edit";
+        public const string Pages_Point_Manage_Delete = "Pages.Point.Manage.Delete";
     }
 }

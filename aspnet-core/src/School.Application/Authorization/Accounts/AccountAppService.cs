@@ -100,7 +100,7 @@ namespace School.Authorization.Accounts
             await UserManager.UpdateAsync(user);
         }
 
-        [AbpAuthorize(AppPermissions.Pages_Administration_Users_Impersonation)]
+        [AbpAuthorize]
         public virtual async Task<ImpersonateOutput> Impersonate(ImpersonateInput input)
         {
             return new ImpersonateOutput

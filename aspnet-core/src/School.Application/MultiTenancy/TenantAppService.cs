@@ -18,7 +18,7 @@ using School.MultiTenancy.Dto;
 
 namespace School.MultiTenancy
 {
-    [AbpAuthorize(AppPermissions.Pages_Tenants)]
+    [AbpAuthorize]
     public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, PagedResultRequestDto, CreateTenantDto, TenantDto>, ITenantAppService
     {
         private readonly TenantManager _tenantManager;

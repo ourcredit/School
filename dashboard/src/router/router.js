@@ -66,19 +66,89 @@ export const otherRouter = {
 
 // Left menu items
 export const appRouter = [{
+    path: '/point',
+    icon: 'settings',
+    title: '点位信息',
+    name: 'point',
+    component: Main,
+    children: [{
+        path: 'manage',
+        title: '点位管理',
+        name: 'pointmanage',
+        permission: 'Pages.Administration.Users',
+        component: () =>
+            import ('@/views/admin/tenants/tenants.vue')
+    }]
+}, {
+    path: '/device',
+    icon: 'settings',
+    title: '设备信息',
+    name: 'device',
+    component: Main,
+    children: [{
+        path: 'manage',
+        title: '设备管理',
+        name: 'devicemanage',
+        permission: 'Pages.Administration.Users',
+        component: () =>
+            import ('@/views/admin/tenants/tenants.vue')
+    }]
+}, {
+    path: '/orders',
+    icon: 'settings',
+    title: '订单信息',
+    name: 'orders',
+    component: Main,
+    children: [{
+        path: 'list',
+        title: '订单管理',
+        name: 'order',
+        permission: 'Pages.Administration.Users',
+        component: () =>
+            import ('@/views/admin/tenants/tenants.vue')
+    }]
+}, {
+    path: '/audits',
+    icon: 'settings',
+    title: '日志管理',
+    name: 'audit',
+    component: Main,
+    children: [{
+        path: 'logs',
+        title: '日志信息',
+        name: 'logs',
+        permission: 'Pages.Administration.Users',
+        component: () =>
+            import ('@/views/admin/tenants/tenants.vue')
+    }, {
+        path: 'warns',
+        title: '报警信息',
+        name: 'warns',
+        permission: 'Pages.Administration.Users',
+        component: () =>
+            import ('@/views/admin/tenants/tenants.vue')
+    }]
+}, {
+    path: '/operator',
+    icon: 'settings',
+    title: '运营商信息',
+    name: 'operator',
+    component: Main,
+    children: [{
+        path: 'manage',
+        title: '机构树',
+        name: 'operatormanage',
+        permission: 'Pages.Administration.Users',
+        component: () =>
+            import ('@/views/admin/tenants/tenants.vue')
+    }]
+}, {
     path: '/admin',
     icon: 'settings',
     title: '系统管理',
     name: 'administration',
     component: Main,
     children: [{
-            path: 'home',
-            title: '主页',
-            name: 'home_index',
-            component: () =>
-                import ('@/views/home/home.vue')
-        },
-        {
             path: 'tenants',
             title: '租户',
             name: 'tenants',
@@ -101,14 +171,15 @@ export const appRouter = [{
             permission: 'Pages.Administration.Roles',
             component: () =>
                 import ('@/views/admin/roles/roles.vue')
-        },
-        {
-            path: 'about',
-            title: '关于',
-            name: 'about',
-            component: () =>
-                import ('@/views/admin/about/about.vue')
         }
+        //,
+        // {
+        //     path: 'about',
+        //     title: '关于',
+        //     name: 'about',
+        //     component: () =>
+        //         import ('@/views/admin/about/about.vue')
+        // }
     ]
 }];
 // All the routes defined above should be written in the routers below

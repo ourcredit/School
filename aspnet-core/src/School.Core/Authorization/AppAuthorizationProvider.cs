@@ -28,62 +28,48 @@ namespace School.Authorization
         {
             //COMMON PERMISSIONS (FOR BOTH OF TENANTS AND HOST)
 
-            var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("Pages"));
-            pages.CreateChildPermission(AppPermissions.Pages_DemoUiComponents, L("DemoUiComponents"));
+            var pages = context.GetPermissionOrNull(AppPermissions.Pages) ?? context.CreatePermission(AppPermissions.Pages, L("页面"));
 
-            var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("Administration"));
+            var administration = pages.CreateChildPermission(AppPermissions.Pages_Administration, L("权限管理"));
 
-            var roles = administration.CreateChildPermission(AppPermissions.Pages_Administration_Roles, L("Roles"));
-            roles.CreateChildPermission(AppPermissions.Pages_Administration_Roles_Create, L("CreatingNewRole"));
-            roles.CreateChildPermission(AppPermissions.Pages_Administration_Roles_Edit, L("EditingRole"));
-            roles.CreateChildPermission(AppPermissions.Pages_Administration_Roles_Delete, L("DeletingRole"));
+            var roles = administration.CreateChildPermission(AppPermissions.Pages_Administration_Roles, L("角色"));
+            roles.CreateChildPermission(AppPermissions.Pages_Administration_Roles_Create, L("创建角色"));
+            roles.CreateChildPermission(AppPermissions.Pages_Administration_Roles_Edit, L("编辑角色"));
+            roles.CreateChildPermission(AppPermissions.Pages_Administration_Roles_Delete, L("删除角色"));
 
-            var users = administration.CreateChildPermission(AppPermissions.Pages_Administration_Users, L("Users"));
-            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Create, L("CreatingNewUser"));
-            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Edit, L("EditingUser"));
-            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Delete, L("DeletingUser"));
-            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_ChangePermissions, L("ChangingPermissions"));
-            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Impersonation, L("LoginForUsers"));
+            var users = administration.CreateChildPermission(AppPermissions.Pages_Administration_Users, L("用户"));
+            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Create, L("创建用户"));
+            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Edit, L("编辑用户"));
+            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_Delete, L("删除用户"));
+            users.CreateChildPermission(AppPermissions.Pages_Administration_Users_ChangePermissions, L("修改权限"));
 
-            var languages = administration.CreateChildPermission(AppPermissions.Pages_Administration_Languages, L("Languages"));
-            languages.CreateChildPermission(AppPermissions.Pages_Administration_Languages_Create, L("CreatingNewLanguage"));
-            languages.CreateChildPermission(AppPermissions.Pages_Administration_Languages_Edit, L("EditingLanguage"));
-            languages.CreateChildPermission(AppPermissions.Pages_Administration_Languages_Delete, L("DeletingLanguages"));
-            languages.CreateChildPermission(AppPermissions.Pages_Administration_Languages_ChangeTexts, L("ChangingTexts"));
 
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_AuditLogs, L("AuditLogs"));
+            var auditlogs = pages.CreateChildPermission(AppPermissions.Pages_AuditLogs, L("审计日志"));
+            auditlogs.CreateChildPermission(AppPermissions.Pages_AuditLogs_Logs, L("日志信息"));
+            auditlogs.CreateChildPermission(AppPermissions.Pages_AuditLogs_Warns, L("报警信息"));
 
-            var organizationUnits = administration.CreateChildPermission(AppPermissions.Pages_Administration_OrganizationUnits, L("OrganizationUnits"));
-            organizationUnits.CreateChildPermission(AppPermissions.Pages_Administration_OrganizationUnits_ManageOrganizationTree, L("ManagingOrganizationTree"));
-            organizationUnits.CreateChildPermission(AppPermissions.Pages_Administration_OrganizationUnits_ManageMembers, L("ManagingMembers"));
+            var operators = pages.CreateChildPermission(AppPermissions.Pages_Operator, L("运营商管理"));
+            var tree = operators.CreateChildPermission(AppPermissions.Pages_Operator_Orgs, L("组织机构树"));
+                 tree.CreateChildPermission(AppPermissions.Pages_Operator_Orgs_Create, L("创建树"));
+                 tree.CreateChildPermission(AppPermissions.Pages_Operator_Orgs_Edit, L("编辑树"));
+                 tree.CreateChildPermission(AppPermissions.Pages_Operator_Orgs_Delete, L("删除树"));
+                 tree.CreateChildPermission(AppPermissions.Pages_Operator_Orgs_BindPrice, L("绑定价格"));
+                 tree.CreateChildPermission(AppPermissions.Pages_Operator_Orgs_BindProduct, L("绑定产品"));
 
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_UiCustomization, L("VisualSettings"));
+            var orders = pages.CreateChildPermission(AppPermissions.Pages_Orders, L("订单信息"));
+            orders.CreateChildPermission(AppPermissions.Pages_Orders_OrderList, L("订单列表"));
 
-            //TENANT-SPECIFIC PERMISSIONS
+            var devices = pages.CreateChildPermission(AppPermissions.Pages_Device, L("设备信息"));
+            var manage = devices.CreateChildPermission(AppPermissions.Pages_Device_Manage, L("设备管理"));
+            manage.CreateChildPermission(AppPermissions.Pages_Device_Manage_Create, L("创建设备"));
+            manage.CreateChildPermission(AppPermissions.Pages_Device_Manage_Edit, L("编辑设备"));
+            manage.CreateChildPermission(AppPermissions.Pages_Device_Manage_Delete, L("删除设备"));
 
-            pages.CreateChildPermission(AppPermissions.Pages_Tenant_Dashboard, L("Dashboard"), multiTenancySides: MultiTenancySides.Tenant);
-
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Tenant_Settings, L("Settings"), multiTenancySides: MultiTenancySides.Tenant);
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Tenant_SubscriptionManagement, L("Subscription"), multiTenancySides: MultiTenancySides.Tenant);
-
-            //HOST-SPECIFIC PERMISSIONS
-
-            var editions = pages.CreateChildPermission(AppPermissions.Pages_Editions, L("Editions"), multiTenancySides: MultiTenancySides.Host);
-            editions.CreateChildPermission(AppPermissions.Pages_Editions_Create, L("CreatingNewEdition"), multiTenancySides: MultiTenancySides.Host);
-            editions.CreateChildPermission(AppPermissions.Pages_Editions_Edit, L("EditingEdition"), multiTenancySides: MultiTenancySides.Host);
-            editions.CreateChildPermission(AppPermissions.Pages_Editions_Delete, L("DeletingEdition"), multiTenancySides: MultiTenancySides.Host);
-
-            var tenants = pages.CreateChildPermission(AppPermissions.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
-            tenants.CreateChildPermission(AppPermissions.Pages_Tenants_Create, L("CreatingNewTenant"), multiTenancySides: MultiTenancySides.Host);
-            tenants.CreateChildPermission(AppPermissions.Pages_Tenants_Edit, L("EditingTenant"), multiTenancySides: MultiTenancySides.Host);
-            tenants.CreateChildPermission(AppPermissions.Pages_Tenants_ChangeFeatures, L("ChangingFeatures"), multiTenancySides: MultiTenancySides.Host);
-            tenants.CreateChildPermission(AppPermissions.Pages_Tenants_Delete, L("DeletingTenant"), multiTenancySides: MultiTenancySides.Host);
-            tenants.CreateChildPermission(AppPermissions.Pages_Tenants_Impersonation, L("LoginForTenants"), multiTenancySides: MultiTenancySides.Host);
-
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Settings, L("Settings"), multiTenancySides: MultiTenancySides.Host);
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Maintenance, L("Maintenance"), multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_HangfireDashboard, L("HangfireDashboard"), multiTenancySides: _isMultiTenancyEnabled ? MultiTenancySides.Host : MultiTenancySides.Tenant);
-            administration.CreateChildPermission(AppPermissions.Pages_Administration_Host_Dashboard, L("Dashboard"), multiTenancySides: MultiTenancySides.Host);
+            var points = pages.CreateChildPermission(AppPermissions.Pages_Point, L("点位信息"));
+            var pmanage = points.CreateChildPermission(AppPermissions.Pages_Point_Manage, L("点位管理"));
+            pmanage.CreateChildPermission(AppPermissions.Pages_Point_Manage_Create, L("创建点位"));
+            pmanage.CreateChildPermission(AppPermissions.Pages_Point_Manage_Edit, L("编辑点位"));
+            pmanage.CreateChildPermission(AppPermissions.Pages_Point_Manage_Delete, L("删除点位"));
         }
 
         private static ILocalizableString L(string name)

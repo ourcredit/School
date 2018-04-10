@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
-using MyCompanyName.AbpZeroTemplate.Organizations.Dto;
 
 namespace School.Authorization.Users.Dto
 {
@@ -13,7 +12,6 @@ namespace School.Authorization.Users.Dto
 
         public UserRoleDto[] Roles { get; set; }
 
-        public List<OrganizationUnitDto> AllOrganizationUnits { get; set; }
 
         public List<string> MemberedOrganizationUnits { get; set; }
     }
