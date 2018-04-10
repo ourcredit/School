@@ -16,8 +16,8 @@ using System;
 namespace School.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    [Migration("20180410031819_bussinegss")]
-    partial class bussinegss
+    [Migration("20180410060350_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

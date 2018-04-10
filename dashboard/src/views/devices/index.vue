@@ -1,160 +1,124 @@
 <template>
-    <div>
-        <Card>
-            <p slot="title">角色信息</p>
-            <Dropdown slot="extra"  @on-click="handleClickActionsDropdown">
-                <a href="javascript:void(0)">
-                   操作
-                    <Icon type="android-more-vertical"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                    <DropdownItem name='Refresh'>刷新</DropdownItem>
-                    <DropdownItem name='Create'>创建</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
-            <Table :columns="columns" border :data="roles"></Table>
-            <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
-        </Card>
-        <Modal v-model="showModal" :title="L('CreateNewRole')" @on-ok="save" :okText="L('save')" :cancelText="L('cancel')">
-            <div>
-                <Form ref="newRoleForm" label-position="top" :rules="newRoleRule" :model="editRole">
-                    <FormItem :label="L('RoleName')" prop="name">
-                        <Input v-model="editRole.name" :maxlength="32" :minlength="2"></Input>
-                    </FormItem>
-                    <FormItem :label="L('DisplayName')" prop="displayName">
-                        <Input v-model="editRole.displayName" :maxlength="32" :minlength="2"></Input>
-                    </FormItem>
-                    <FormItem :label="L('RoleDescription')" prop="description">
-                        <Input v-model="editRole.description"></Input>
-                    </FormItem>
-                    <FormItem :label="L('Permissions')">
-                        <CheckboxGroup v-model="editRole.permissions">
-                            <Checkbox :label="permission.name" v-for="permission in permissions" :key="permission.name"><span>{{permission.displayName}}</span></Checkbox>
-                        </CheckboxGroup>
-                    </FormItem>                    
-                </Form>
-            </div>
-            <div slot="footer">
-                <Button @click="showModal=false">{{'Cancel'|l}}</Button>
-                <Button @click="save" type="primary">{{'Save'|l}}</Button>
-            </div>
-        </Modal>
-        <Modal v-model="showEditModal" :title="L('EditRole')" @on-ok="save" :okText="L('save')" :cancelText="L('cancel')">
-            <div>
-                <Form ref="roleForm" label-position="top" :rules="roleRule" :model="editRole">
-                    <FormItem :label="L('RoleName')" prop="name">
-                        <Input v-model="editRole.name" :maxlength="32" :minlength="2"></Input>
-                    </FormItem>
-                    <FormItem :label="L('DisplayName')" prop="displayName">
-                        <Input v-model="editRole.displayName" :maxlength="32" :minlength="2"></Input>
-                    </FormItem>
-                    <FormItem :label="L('RoleDescription')" prop="description">
-                        <Input v-model="editRole.description"></Input>
-                    </FormItem>
-                    <FormItem :label="L('Permissions')">
-                        <CheckboxGroup v-model="editRole.permissions">
-                            <Checkbox :label="permission.name" v-for="permission in permissions" :key="permission.name"><span>{{permission.displayName}}</span></Checkbox>
-                        </CheckboxGroup>
-                    </FormItem>                    
-                </Form>
-            </div>
-            <div slot="footer">
-                <Button @click="showEditModal=false">{{'Cancel'|l}}</Button>
-                <Button @click="save" type="primary">{{'Save'|l}}</Button>
-            </div>
-        </Modal>
-    </div>
+  <div>
+    <Card>
+      <p slot="title">设备管理</p>
+      <Row slot="extra">
+        <i-col span="12">
+        </i-col>
+        <i-col span="12">
+          <i-button @click="create" type="primary">添加</i-button>
+        </i-col>
+      </Row>
+      <Table :columns="columns" border :data="roles"></Table>
+      <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
+        :current="currentPage"></Page>
+    </Card>
+    <Modal v-model="showEditModal" title="编辑设备" @on-ok="save" okText="保存" cancelText="关闭">
+      <div>
+        <Form inline ref="roleForm" label-position="top" :rules="roleRule" :model="device">
+          <FormItem label="设备名称" prop="deviceName">
+            <Input v-model="device.deviceName" :maxlength="120" :minlength="1"></Input>
+          </FormItem>
+          <FormItem label="设备编号" prop="deviceNum">
+            <Input v-model="device.deviceNum" :maxlength="120" :minlength="1"></Input>
+          </FormItem>
+           <FormItem label="设备类型" prop="deviceType">
+            <Input v-model="device.deviceType" ></Input>
+          </FormItem>
+             <FormItem label="所属点位" prop="pointId">
+            <Input v-model="device.pointId" ></Input>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="showEditModal=false">关闭</Button>
+        <Button @click="save" type="primary">保存</Button>
+      </div>
+    </Modal>
+  </div>
 </template>
 <script>
 export default {
   methods: {
     create() {
-      this.editRole = { isActive: true };
-      this.showModal = true;
+      this.device = { isActive: true };
+      this.showEditModal = true;
     },
     async save() {
-      if (!!this.editRole.id) {
-        this.$refs.roleForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "role/update",
-              data: this.editRole
-            });
-            this.showEditModal = false;
-            await this.getpage();
-          }
-        });
-      } else {
-        this.$refs.newRoleForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "role/create",
-              data: this.editRole
-            });
-            this.showModal = false;
-            await this.getpage();
-          }
-        });
-      }
+      this.$refs.roleForm.validate(async val => {
+        if (val) {
+          await this.$store.dispatch({
+            type: "device/createOrUpdate",
+            data: { device: this.editRole }
+          });
+          this.showEditModal = false;
+          await this.getpage();
+        }
+      });
     },
     pageChange(page) {
-      this.$store.commit("role/setCurrentPage", page);
+      this.$store.commit("device/setCurrentPage", page);
       this.getpage();
     },
     pagesizeChange(pagesize) {
-      this.$store.commit("role/setPageSize", pagesize);
+      this.$store.commit("device/setPageSize", pagesize);
       this.getpage();
     },
     async getpage() {
       await this.$store.dispatch({
-        type: "role/getAll"
+        type: "device/getAll"
       });
-    },
-    handleClickActionsDropdown(name) {
-      if (name === "Create") {
-        this.create();
-      } else if (name === "Refresh") {
-        this.getpage();
-      }
     }
   },
   data() {
     return {
-      editRole: {},
-      showModal: false,
+      device: {},
       showEditModal: false,
-      newRoleRule: {
-        name: [
-          { required: true, message: "Name is required", trigger: "blur" }
-        ],
-        displayName: [
+      rule: {
+        deviceName: [
           {
             required: true,
-            message: "DisplayName is required",
+            message: "设备名称必填",
             trigger: "blur"
           }
-        ]
-      },
-      roleRule: {
-        name: [
-          { required: true, message: "Name is required", trigger: "blur" }
         ],
-        displayName: [
+        deviceNum: [
           {
             required: true,
-            message: "DisplayName is required",
+            message: "设备编号必填",
             trigger: "blur"
           }
         ]
       },
       columns: [
         {
-          title: "角色名",
-          key: "name"
+          type: "selection",
+          width: 60,
+          align: "center"
         },
         {
-          title: "显示名",
-          key: "displayName"
+          title: "设备名称",
+          key: "pointName"
+        },
+        {
+          title: "设备编号",
+          key: "pointAddress"
+        },
+        {
+          title: "设备类型",
+          key: "pointDescription"
+        },
+        {
+          title: "所属点位",
+          key: "pointDescription"
+        },
+        {
+          title: "创建人",
+          key: "pointDescription"
+        },
+        {
+          title: "创建时间",
+          key: "pointDescription"
         },
         {
           title: "操作",
@@ -175,6 +139,10 @@ export default {
                   on: {
                     click: () => {
                       this.editRole = this.roles[params.index];
+                      this.center = {
+                        lng: this.editRole.longitude,
+                        lat: this.editRole.latitide
+                      };
                       this.showEditModal = true;
                     }
                   }
@@ -191,13 +159,13 @@ export default {
                   on: {
                     click: async () => {
                       this.$Modal.confirm({
-                        title: this.L(""),
-                        content: this.L("Delete role"),
-                        okText: this.L("Yes"),
-                        cancelText: this.L("No"),
+                        title: "",
+                        content: "删除角色",
+                        okText: "是",
+                        cancelText: "否",
                         onOk: async () => {
                           await this.$store.dispatch({
-                            type: "role/delete",
+                            type: "point/delete",
                             data: this.roles[params.index]
                           });
                           await this.getpage();
@@ -216,29 +184,20 @@ export default {
   },
   computed: {
     roles() {
-      return this.$store.state.role.roles;
-    },
-    permissions() {
-      return this.$store.state.role.permissions;
+      return this.$store.state.point.device;
     },
     totalCount() {
-      return this.$store.state.role.totalCount;
+      return this.$store.state.point.totalCount;
     },
     currentPage() {
-      return this.$store.state.role.currentPage;
+      return this.$store.state.point.currentPage;
     },
     pageSize() {
-      return this.$store.state.role.pageSize;
+      return this.$store.state.point.pageSize;
     }
   },
   async created() {
     this.getpage();
-    await this.$store.dispatch({
-      type: "role/getAllPermissions"
-    });
   }
 };
 </script>
-
-
-

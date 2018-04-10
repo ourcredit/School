@@ -4,7 +4,7 @@ using School.Models;
 
 namespace School.Devices.Dtos
 {
-    public class DeviceListDto
+    public class DeviceListDto:CreationAuditedEntityDto
     {
         ////BCC/ BEGIN CUSTOM CODE SECTION
         ////ECC/ END CUSTOM CODE SECTION
@@ -12,10 +12,6 @@ namespace School.Devices.Dtos
         public string DeviceName { get; set; }
         public string DeviceType { get; set; }
         public int PointId { get; set; }
-        public string PointPointName { get; set; }
-        public string PointPointAddress { get; set; }
-        public string PointPointDescription { get; set; }
-        public string PointLongitude { get; set; }
-        public string PointLatitide { get; set; }
+        public string PointName { get; set; }
     }
 }

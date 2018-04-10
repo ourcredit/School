@@ -119,7 +119,6 @@ namespace School.Points
         /// <returns></returns>
         public async Task CreateOrUpdatePoint(CreateOrUpdatePointInput input)
         {
-
             if (input.Point.Id.HasValue)
             {
                 await UpdatePointAsync(input.Point);

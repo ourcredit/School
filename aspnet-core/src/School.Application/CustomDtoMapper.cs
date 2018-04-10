@@ -47,10 +47,13 @@ namespace School
 
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
-            configuration.CreateMap<Device, DeviceListDto>();
+            configuration.CreateMap<Device, DeviceListDto>()
+                .ForMember(c=>c.PointName,opt=>opt.MapFrom(c=>c.Point.PointName));
             configuration.CreateMap<DeviceEditDto, Device>();
+
             configuration.CreateMap<Point, PointListDto>();
             configuration.CreateMap<PointEditDto, Point>();
+
             configuration.CreateMap<OperatorTree, OperatorTreeListDto>();
             configuration.CreateMap<OperatorTreeEditDto, OperatorTree>();
         }

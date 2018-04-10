@@ -6,39 +6,31 @@
         <i-col span="12">
         </i-col>
         <i-col span="12">
-         <i-button @click="create"  type="primary">添加</i-button>
+          <i-button @click="create" type="primary">添加</i-button>
         </i-col>
       </Row>
       <Table :columns="columns" border :data="roles"></Table>
       <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
         :current="currentPage"></Page>
     </Card>
-    <Modal v-model="showModal" title="添加点位" @on-ok="save" okText="保存" cancelText="关闭">
-      <div>
-        <Form  inline ref="newRoleForm" label-position="top" :rules="newRoleRule" :model="editRole">
-          <FormItem label="点为名称" prop="pointName">
-            <Input v-model="editRole.pointName" :maxlength="120" :minlength="1"></Input>
-          </FormItem>
-          <FormItem label="描述" prop="pointDescription">
-            <Input v-model="editRole.pointDescription" :maxlength="120" :minlength="2"></Input>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button @click="showModal=false">关闭</Button>
-        <Button @click="save" type="primary">保存</Button>
-      </div>
-    </Modal>
     <Modal v-model="showEditModal" title="编辑点位" @on-ok="save" okText="保存" cancelText="关闭">
       <div>
-        <Form ref="roleForm" label-position="top" :rules="roleRule" :model="editRole">
-          <FormItem label="点位名称" prop="name">
-            <Input v-model="editRole.name" :maxlength="120" :minlength="1"></Input>
+        <Form inline ref="roleForm" label-position="top" :rules="roleRule" :model="editRole">
+          <FormItem label="点位名称" prop="pointName">
+            <Input v-model="editRole.pointName" :maxlength="120" :minlength="1"></Input>
           </FormItem>
-          <FormItem label="描述" prop="displayName">
-            <Input v-model="editRole.displayName" :maxlength="120" :minlength="1"></Input>
+          <FormItem label="地址" prop="pointAddress">
+            <Input v-model="editRole.pointAddress" :maxlength="120" :minlength="1"></Input>
+          </FormItem>
+           <FormItem label="描述" prop="pointDescription">
+            <Input v-model="editRole.pointDescription" :maxlength="120" :minlength="1"></Input>
           </FormItem>
         </Form>
+        <baidu-map :center="center" :zoom="15" :scroll-wheel-zoom="true" @ready="handler" class="bm-view">
+          <bm-marker @mouseup="showWindows" :position="center" :dragging="true" animation="BMAP_ANIMATION_BOUNCE">
+          </bm-marker>
+        </baidu-map>
+        </baidu-map>
       </div>
       <div slot="footer">
         <Button @click="showEditModal=false">关闭</Button>
@@ -51,64 +43,48 @@
 export default {
   methods: {
     create() {
-      this.editRole = {
-        isActive: true
-      };
-      this.showModal = true;
+      this.editRole = { isActive: true };
+      this.showEditModal = true;
+    },
+    showWindows(e) {
+      console.log(e);
+      this.editRole.longitude = e.point.lng;
+      this.editRole.latitide = e.point.lat;
     },
     async save() {
-      if (!!this.editRole.id) {
-        this.$refs.roleForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "role/update",
-              data: this.editRole
-            });
-            this.showEditModal = false;
-            await this.getpage();
-          }
-        });
-      } else {
-        this.$refs.newRoleForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "role/create",
-              data: this.editRole
-            });
-            this.showModal = false;
-            await this.getpage();
-          }
-        });
-      }
+      this.$refs.roleForm.validate(async val => {
+        if (val) {
+          await this.$store.dispatch({
+            type: "point/createOrUpdate",
+            data: { point: this.editRole }
+          });
+          this.showEditModal = false;
+          await this.getpage();
+        }
+      });
     },
     pageChange(page) {
-      this.$store.commit("role/setCurrentPage", page);
+      this.$store.commit("point/setCurrentPage", page);
       this.getpage();
     },
     pagesizeChange(pagesize) {
-      this.$store.commit("role/setPageSize", pagesize);
+      this.$store.commit("point/setPageSize", pagesize);
       this.getpage();
     },
     async getpage() {
       await this.$store.dispatch({
-        type: "role/getAll"
+        type: "point/getAll"
       });
-    }
+    },
+    handler({ BMap, map }) {}
   },
   data() {
     return {
-      editRole: {},
-      showModal: false,
-      showEditModal: false,
-      newRoleRule: {
-        pointName: [
-          {
-            required: true,
-            message: "点位名称必填",
-            trigger: "blur"
-          }
-        ]
+      center: { lng: 116.404, lat: 39.915 },
+      editRole: {
+        isActive: true
       },
+      showEditModal: false,
       roleRule: {
         pointName: [
           {
@@ -126,15 +102,15 @@ export default {
         },
         {
           title: "点位名称",
-          key: "name"
+          key: "pointName"
         },
         {
           title: "地址",
-          key: "displayName"
+          key: "pointAddress"
         },
         {
           title: "描述",
-          key: "displayName"
+          key: "pointDescription"
         },
         {
           title: "操作",
@@ -155,6 +131,10 @@ export default {
                   on: {
                     click: () => {
                       this.editRole = this.roles[params.index];
+                      this.center = {
+                        lng: this.editRole.longitude,
+                        lat: this.editRole.latitide
+                      };
                       this.showEditModal = true;
                     }
                   }
@@ -171,13 +151,13 @@ export default {
                   on: {
                     click: async () => {
                       this.$Modal.confirm({
-                        title: this.L(""),
-                        content: this.L("Delete role"),
-                        okText: this.L("Yes"),
-                        cancelText: this.L("No"),
+                        title: "",
+                        content: "删除角色",
+                        okText: "是",
+                        cancelText: "否",
                         onOk: async () => {
                           await this.$store.dispatch({
-                            type: "role/delete",
+                            type: "point/delete",
                             data: this.roles[params.index]
                           });
                           await this.getpage();
@@ -196,26 +176,26 @@ export default {
   },
   computed: {
     roles() {
-      return this.$store.state.role.roles;
-    },
-    permissions() {
-      return this.$store.state.role.permissions;
+      return this.$store.state.point.points;
     },
     totalCount() {
-      return this.$store.state.role.totalCount;
+      return this.$store.state.point.totalCount;
     },
     currentPage() {
-      return this.$store.state.role.currentPage;
+      return this.$store.state.point.currentPage;
     },
     pageSize() {
-      return this.$store.state.role.pageSize;
+      return this.$store.state.point.pageSize;
     }
   },
   async created() {
     this.getpage();
-    await this.$store.dispatch({
-      type: "role/getAllPermissions"
-    });
   }
 };
 </script>
+<style lang="less" scoped>
+.bm-view {
+  width: 100%;
+  height: 300px;
+}
+</style>

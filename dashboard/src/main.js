@@ -11,9 +11,12 @@ import App from './app.vue';
 import 'iview/dist/styles/iview.css';
 import util from './libs/util';
 import AppConsts from './libs/appconst'
-
+import BaiduMap from 'vue-baidu-map'
 util.ajax.get('/AbpUserConfiguration/GetAll').then(result => {
     Vue.use(iView);
+    Vue.use(BaiduMap, {
+        ak: "pYjoSR2GThuatLt06MlaKzRgSWy4Zztq"
+    });
     window.abp = $.extend(true, abp, result.data.result);
     Vue.prototype.L = function (text, ...args) {
         let localizedText = window.abp.localization.localize(text, AppConsts.localization.defaultLocalizationSourceName);

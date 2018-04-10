@@ -12,11 +12,11 @@ util.title = function (title) {
     window.document.title = this.localize(title);
 };
 
-const ajaxUrl = env === 'development'
-    ? AppConsts.remoteServiceBaseUrl
-    : env === 'production'
-        ? 'https://www.url.com'
-        : 'https://debug.url.com';
+const ajaxUrl = env === 'development' ?
+    AppConsts.remoteServiceBaseUrl :
+    env === 'production' ?
+    'https://www.url.com' :
+    'https://debug.url.com';
 
 util.ajax = axios.create({
     baseURL: ajaxUrl,
@@ -32,11 +32,11 @@ util.ajax.interceptors.request.use(function (config) {
     config.headers.common["Abp.TenantId"] = abp.multiTenancy.getTenantIdCookie();
     return config;
 }, function (error) {
-
     return Promise.reject(error);
 });
 
-+util.ajax.interceptors.response.use(function (response) {
++
+util.ajax.interceptors.response.use(function (response) {
     // Do something with response data
     return response;
 }, function (error) {
@@ -146,16 +146,13 @@ util.setCurrentPath = function (vm, name) {
 
     let currentPathArr = [];
     if (name === 'home_index') {
-        currentPathArr = [
-            {
-                title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
-                path: '',
-                name: 'home_index'
-            }
-        ];
+        currentPathArr = [{
+            title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
+            path: '',
+            name: 'home_index'
+        }];
     } else if ((name.indexOf('_index') >= 0 || isOtherRouter) && name !== 'home_index') {
-        currentPathArr = [
-            {
+        currentPathArr = [{
                 title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
                 path: '/home',
                 name: 'home_index'
@@ -185,16 +182,13 @@ util.setCurrentPath = function (vm, name) {
         })[0];
 
         if (currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
-            currentPathArr = [
-                {
-                    title: this.localize('HomePage'),
-                    path: '',
-                    name: 'home_index'
-                }
-            ];
+            currentPathArr = [{
+                title: this.localize('HomePage'),
+                path: '',
+                name: 'home_index'
+            }];
         } else if (currentPathObj.children.length <= 1 && currentPathObj.name !== 'home') {
-            currentPathArr = [
-                {
+            currentPathArr = [{
                     title: this.localize('HomePage'),
                     path: '/home',
                     name: 'home_index'
@@ -209,8 +203,7 @@ util.setCurrentPath = function (vm, name) {
             let childObj = currentPathObj.children.filter((child) => {
                 return child.name === name;
             })[0];
-            currentPathArr = [
-                {
+            currentPathArr = [{
                     title: this.localize('HomePage'),
                     path: '/home',
                     name: 'home_index'

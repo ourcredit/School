@@ -4,7 +4,7 @@ using School.Models;
 
 namespace School.Points.Dtos
 {
-    public class PointListDto
+    public class PointListDto : CreationAuditedEntityDto
     {
         ////BCC/ BEGIN CUSTOM CODE SECTION
         ////ECC/ END CUSTOM CODE SECTION
