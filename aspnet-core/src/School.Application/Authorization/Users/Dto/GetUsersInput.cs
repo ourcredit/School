@@ -1,5 +1,5 @@
 ﻿using Abp.Runtime.Validation;
-using MyCompanyName.AbpZeroTemplate.Dto;
+using School.Dto;
 
 namespace School.Authorization.Users.Dto
 {

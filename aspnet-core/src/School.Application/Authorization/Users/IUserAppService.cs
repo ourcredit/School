@@ -2,8 +2,8 @@
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
-using MyCompanyName.AbpZeroTemplate.Dto;
 using School.Authorization.Users.Dto;
+using School.Dto;
 
 namespace MyCompanyName.AbpZeroTemplate.Authorization.Users
 {

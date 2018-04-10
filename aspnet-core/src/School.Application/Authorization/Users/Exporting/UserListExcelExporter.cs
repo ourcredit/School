@@ -4,8 +4,8 @@ using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
 using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
-using MyCompanyName.AbpZeroTemplate.Dto;
 using School.DataExporting.Excel.EpPlus;
+using School.Dto;
 
 namespace School.Authorization.Users.Exporting
 {

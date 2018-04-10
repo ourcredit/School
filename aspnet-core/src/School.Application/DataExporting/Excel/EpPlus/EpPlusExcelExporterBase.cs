@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Abp.Collections.Extensions;
 using Abp.Dependency;
-using MyCompanyName.AbpZeroTemplate.Dto;
 using OfficeOpenXml;
+using School.Dto;
 using School.Net.MimeTypes;
 
 namespace School.DataExporting.Excel.EpPlus

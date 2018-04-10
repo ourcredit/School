@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
-using MyCompanyName.AbpZeroTemplate.Dto;
+using School.Dto;
 
 namespace School.Authorization.Users.Exporting
 {

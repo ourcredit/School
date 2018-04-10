@@ -24,10 +24,10 @@ using MyCompanyName.AbpZeroTemplate.Authorization.Permissions;
 using MyCompanyName.AbpZeroTemplate.Authorization.Permissions.Dto;
 using MyCompanyName.AbpZeroTemplate.Authorization.Users;
 using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
-using MyCompanyName.AbpZeroTemplate.Dto;
 using School.Authorization.Roles;
 using School.Authorization.Users.Dto;
 using School.Authorization.Users.Exporting;
+using School.Dto;
 
 namespace School.Authorization.Users
 {

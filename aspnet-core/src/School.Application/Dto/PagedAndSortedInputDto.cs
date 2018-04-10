@@ -1,8 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
-using School;
-using School.Dto;
 
-namespace MyCompanyName.AbpZeroTemplate.Dto
+namespace School.Dto
 {
     public class PagedAndSortedInputDto : PagedInputDto, ISortedResultRequest
     {
