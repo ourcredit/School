@@ -1,21 +1,20 @@
 import Vue from 'vue';
 import iView from 'iview';
-import { router } from './router/index';
-import { appRouter } from './router/router';
+import {
+    router
+} from './router/index';
+import {
+    appRouter
+} from './router/router';
 import store from './store';
 import App from './app.vue';
-import '@/locale';
 import 'iview/dist/styles/iview.css';
-import VueI18n from 'vue-i18n';
 import util from './libs/util';
 import AppConsts from './libs/appconst'
 
 util.ajax.get('/AbpUserConfiguration/GetAll').then(result => {
-    Vue.use(VueI18n);
     Vue.use(iView);
-
     window.abp = $.extend(true, abp, result.data.result);
-    
     Vue.prototype.L = function (text, ...args) {
         let localizedText = window.abp.localization.localize(text, AppConsts.localization.defaultLocalizationSourceName);
         if (!localizedText) {
@@ -98,7 +97,7 @@ util.ajax.get('/AbpUserConfiguration/GetAll').then(result => {
                 } else if (titleOrCallback) {
                     userOpts.title = titleOrCallback;
                 };
-                userOpts.onOk = callback || function () { };
+                userOpts.onOk = callback || function () {};
                 this.$Modal.confirm(userOpts);
             }
 
