@@ -77,7 +77,7 @@ export const appRouter = [{
         name: 'pointmanage',
         permission: 'Pages.Administration.Users',
         component: () =>
-            import ('@/views/admin/tenants/tenants.vue')
+            import ('@/views/points/index.vue')
     }]
 }, {
     path: '/device',
@@ -91,7 +91,7 @@ export const appRouter = [{
         name: 'devicemanage',
         permission: 'Pages.Administration.Users',
         component: () =>
-            import ('@/views/admin/tenants/tenants.vue')
+            import ('@/views/devices/index.vue')
     }]
 }, {
     path: '/orders',
@@ -105,7 +105,7 @@ export const appRouter = [{
         name: 'order',
         permission: 'Pages.Administration.Users',
         component: () =>
-            import ('@/views/admin/tenants/tenants.vue')
+            import ('@/views/orders/index.vue')
     }]
 }, {
     path: '/audits',
@@ -119,14 +119,14 @@ export const appRouter = [{
         name: 'logs',
         permission: 'Pages.Administration.Users',
         component: () =>
-            import ('@/views/admin/tenants/tenants.vue')
+            import ('@/views/auditlogs/logs.vue')
     }, {
         path: 'warns',
         title: '报警信息',
         name: 'warns',
         permission: 'Pages.Administration.Users',
         component: () =>
-            import ('@/views/admin/tenants/tenants.vue')
+            import ('@/views/auditlogs/warns.vue')
     }]
 }, {
     path: '/operator',
@@ -140,7 +140,7 @@ export const appRouter = [{
         name: 'operatormanage',
         permission: 'Pages.Administration.Users',
         component: () =>
-            import ('@/views/admin/tenants/tenants.vue')
+            import ('@/views/operators/index.vue')
     }]
 }, {
     path: '/admin',
@@ -149,14 +149,6 @@ export const appRouter = [{
     name: 'administration',
     component: Main,
     children: [{
-            path: 'tenants',
-            title: '租户',
-            name: 'tenants',
-            permission: 'Pages.Tenants',
-            component: () =>
-                import ('@/views/admin/tenants/tenants.vue')
-        },
-        {
             path: 'users',
             title: '用户',
             name: 'users',
@@ -172,14 +164,6 @@ export const appRouter = [{
             component: () =>
                 import ('@/views/admin/roles/roles.vue')
         }
-        //,
-        // {
-        //     path: 'about',
-        //     title: '关于',
-        //     name: 'about',
-        //     component: () =>
-        //         import ('@/views/admin/about/about.vue')
-        // }
     ]
 }];
 // All the routes defined above should be written in the routers below
