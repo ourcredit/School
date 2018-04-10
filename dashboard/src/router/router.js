@@ -90,7 +90,7 @@ export const appRouter = [{
             path: 'users',
             title: '用户',
             name: 'users',
-            permission: 'Pages.Users',
+            permission: 'Pages.Administration.Users',
             component: () =>
                 import ('@/views/admin/users/users.vue')
         },
@@ -98,7 +98,7 @@ export const appRouter = [{
             path: 'roles',
             title: '角色',
             name: 'roles',
-            permission: 'Pages.Roles',
+            permission: 'Pages.Administration.Roles',
             component: () =>
                 import ('@/views/admin/roles/roles.vue')
         },

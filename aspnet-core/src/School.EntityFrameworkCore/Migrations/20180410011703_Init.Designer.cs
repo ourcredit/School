@@ -16,7 +16,7 @@ using System;
 namespace School.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    [Migration("20180409084100_Init")]
+    [Migration("20180410011703_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -852,9 +852,6 @@ namespace School.Migrations
 
                     b.Property<DateTime?>("DeletionTime");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(5000);
-
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(64);
@@ -899,9 +896,6 @@ namespace School.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("AuthenticationSource")
-                        .HasMaxLength(64);
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasMaxLength(128);
@@ -918,18 +912,11 @@ namespace School.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<string>("EmailConfirmationCode")
-                        .HasMaxLength(328);
-
                     b.Property<bool>("IsActive");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsEmailConfirmed");
-
                     b.Property<bool>("IsLockoutEnabled");
-
-                    b.Property<bool>("IsPhoneNumberConfirmed");
 
                     b.Property<bool>("IsTwoFactorEnabled");
 
@@ -963,12 +950,14 @@ namespace School.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(32);
 
+                    b.Property<Guid?>("ProfilePictureId");
+
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(128);
 
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(32);
+                    b.Property<string>("SignInToken");
+
+                    b.Property<DateTime?>("SignInTokenExpireTimeUtc");
 
                     b.Property<int?>("TenantId");
 

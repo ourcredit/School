@@ -300,7 +300,6 @@ namespace School.Authorization.Users
             }
 
             user.Password = _passwordHasher.HashPassword(user, input.User.Password);
-            user.ShouldChangePasswordOnNextLogin = input.User.ShouldChangePasswordOnNextLogin;
 
             //Assign roles
             user.Roles = new Collection<UserRole>();

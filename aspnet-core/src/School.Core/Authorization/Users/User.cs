@@ -2,6 +2,7 @@
 using Abp.Authorization.Users;
 using Abp.Extensions;
 using Abp.Timing;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace School.Authorization.Users
 {
@@ -13,13 +14,19 @@ namespace School.Authorization.Users
         public const string DefaultPassword = "123456";
         public virtual Guid? ProfilePictureId { get; set; }
 
-        public virtual bool ShouldChangePasswordOnNextLogin { get; set; }
 
         public DateTime? SignInTokenExpireTimeUtc { get; set; }
 
         public string SignInToken { get; set; }
-
-        public string GoogleAuthenticatorKey { get; set; }
+        #region 隐藏无用字段
+        private new string AuthenticationSource { get; set; }
+        private new string Surname { get; set; }
+        private new bool IsEmailConfirmed { get; set; }
+        private new string EmailConfirmationCode { get; set; }
+        private new bool IsPhoneNumberConfirmed { get; set; }
+        private new string NormalizedEmailAddress { get; set; }
+        private new string NormalizedUserName { get; set; }
+        #endregion
 
         //Can add application specific user properties here
 
@@ -42,7 +49,6 @@ namespace School.Authorization.Users
                 TenantId = tenantId,
                 UserName = AdminUserName,
                 Name = AdminUserName,
-                Surname = AdminUserName,
                 EmailAddress = emailAddress
             };
 

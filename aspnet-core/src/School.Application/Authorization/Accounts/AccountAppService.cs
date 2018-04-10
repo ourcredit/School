@@ -69,7 +69,6 @@ namespace School.Authorization.Accounts
             user.Password = _passwordHasher.HashPassword(user, input.Password);
             user.PasswordResetCode = null;
             user.IsEmailConfirmed = true;
-            user.ShouldChangePasswordOnNextLogin = false;
 
             await UserManager.UpdateAsync(user);
 

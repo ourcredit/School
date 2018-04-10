@@ -88,7 +88,7 @@ namespace School.Web.Host.Startup
             });
 
             // Configure Abp and Dependency Injection
-            return services.AddAbp<SchoolWebCoreModule>(
+            return services.AddAbp<SchoolWebHostModule>(
                 // Configure Log4Net logging
                 options => options.IocManager.IocContainer.AddFacility<LoggingFacility>(
                     f => f.UseAbpLog4Net().WithConfig("log4net.config")
