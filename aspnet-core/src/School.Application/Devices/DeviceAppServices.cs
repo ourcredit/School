@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -24,19 +25,19 @@ namespace School.Devices
         ////BCC/ BEGIN CUSTOM CODE SECTION
         ////ECC/ END CUSTOM CODE SECTION
         private readonly IRepository<Device, int> _deviceRepository;
+        private readonly IRepository<Point, int> _pointRepository;
         private readonly IDeviceManager _deviceManager;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public DeviceAppService(IRepository<Device, int> deviceRepository
-      , IDeviceManager deviceManager
-        )
+      , IDeviceManager deviceManager, IRepository<Point, int> pointRepository)
         {
             _deviceRepository = deviceRepository;
             _deviceManager = deviceManager;
+            _pointRepository = pointRepository;
         }
-
         /// <summary>
         /// 获取Device的分页列表信息
         /// </summary>
@@ -62,7 +63,24 @@ namespace School.Devices
                 );
 
         }
+        /// <summary>
+        /// 获取所有点位信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ListResultDto<KeyValuePair<int,string>>> GetAllPoints()
+        {
 
+            var query = _pointRepository.GetAll();
+            var points = await query
+                .ToListAsync();
+
+            //var deviceListDtos = ObjectMapper.Map<List <DeviceListDto>>(devices);
+            var deviceListDtos = points.Select(c=>new KeyValuePair<int, string>(c.Id,c.PointName)).ToList();
+            return new ListResultDto<KeyValuePair<int, string>>(
+                deviceListDtos
+            );
+
+        }
         /// <summary>
         /// 通过指定id获取DeviceListDto信息
         /// </summary>

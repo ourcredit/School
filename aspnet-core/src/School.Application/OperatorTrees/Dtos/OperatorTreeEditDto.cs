@@ -18,16 +18,5 @@ namespace School.OperatorTrees.Dtos
         public string TreeCode { get; set; }
         public int TreeLength { get; set; }
         public int? ParentId { get; set; }
-        public OperatorTree Parent { get; set; }
-
-        /// <summary>
-        /// 子节点
-        /// </summary>
-        public IEnumerable<OperatorTreeListDto> Children { get; set; }
-
-        /// <summary>
-        /// 下届设备
-        /// </summary>
-        public IEnumerable<OperatorDevice> OperatorDevices { get; set; }
     }
 }

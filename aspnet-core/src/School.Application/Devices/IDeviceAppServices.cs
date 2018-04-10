@@ -25,6 +25,11 @@ namespace School.Devices
         Task<DeviceListDto> GetDeviceByIdAsync(EntityDto<int> input);
 
         /// <summary>
+        /// 获取所有点位信息
+        /// </summary>
+        /// <returns></returns>
+        Task<ListResultDto<KeyValuePair<int, string>>> GetAllPoints();
+        /// <summary>
         /// 导出Device为excel表
         /// </summary>
         /// <returns></returns>
@@ -36,7 +41,6 @@ namespace School.Devices
         /// <returns></returns>
         Task<GetDeviceForEditOutput> GetDeviceForEdit(NullableIdDto<int> input);
 
-        //todo:缺少Dto的生成GetDeviceForEditOutput
         /// <summary>
         /// 添加或者修改Device的公共方法
         /// </summary>

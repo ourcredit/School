@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
@@ -7,6 +9,7 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 
 using System.Linq.Dynamic.Core;
+using Abp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using School.Authorization;
 using School.OperatorTrees.Dtos;
@@ -46,7 +49,6 @@ namespace School.OperatorTrees
         {
 
             var query = _operatortreeRepository.GetAll();
-            //TODO:根据传入的参数添加过滤条件
             var operatortreeCount = await query.CountAsync();
 
             var operatortrees = await query
@@ -73,17 +75,6 @@ namespace School.OperatorTrees
 
             return entity.MapTo<OperatorTreeListDto>();
         }
-
-        /// <summary>
-        /// 导出OperatorTree为excel表
-        /// </summary>
-        /// <returns></returns>
-        //public async Task<FileDto> GetOperatorTreesToExcel(){
-        //var users = await UserManager.Users.ToListAsync();
-        //var userListDtos = ObjectMapper.Map<List<UserListDto>>(users);
-        //await FillRoleNames(userListDtos);
-        //return _userListExcelExporter.ExportToFile(userListDtos);
-        //}
         /// <summary>
         /// MPA版本才会用到的方法
         /// </summary>
@@ -136,22 +127,52 @@ namespace School.OperatorTrees
         [AbpAuthorize(AppPermissions.Pages_Operator_Orgs_Create)]
         protected virtual async Task<OperatorTreeEditDto> CreateOperatorTreeAsync(OperatorTreeEditDto input)
         {
-            //TODO:新增前的逻辑判断，是否允许新增
             var entity = ObjectMapper.Map<OperatorTree>(input);
-
+            if (input.ParentId.HasValue)
+            {
+                var parent = await _operatortreeRepository.FirstOrDefaultAsync(input.ParentId.Value);
+                if (parent != null)
+                {
+                    entity.TreeCode = GenderCode(parent.TreeCode);
+                    entity.TreeLength = parent.TreeLength + 1;
+                }
+            }
+            else
+            {
+                entity.TreeCode = GenderCode("");
+                entity.TreeLength = 1;
+            }
             entity = await _operatortreeRepository.InsertAsync(entity);
             return entity.MapTo<OperatorTreeEditDto>();
         }
 
+        private string GenderCode(string parent)
+        {
+            var code = Guid.NewGuid().ToString("D").Split('-').Last();
+            return parent.IsNullOrWhiteSpace() ? code : $"{parent}.{code}";
+        }
         /// <summary>
         /// 编辑OperatorTree
         /// </summary>
         [AbpAuthorize(AppPermissions.Pages_Operator_Orgs_Edit)]
         protected virtual async Task UpdateOperatorTreeAsync(OperatorTreeEditDto input)
         {
-            //TODO:更新前的逻辑判断，是否允许更新
+           
             var entity = await _operatortreeRepository.GetAsync(input.Id.Value);
-            input.MapTo(entity);
+            if (!entity.ParentId.HasValue || !input.ParentId.HasValue)
+            {
+                input.MapTo(entity);
+            }
+            else if(entity.ParentId.Value!=input.ParentId.Value)
+            {
+                input.MapTo(entity);
+                var parent = await _operatortreeRepository.FirstOrDefaultAsync(input.ParentId.Value);
+                if (parent != null)
+                {
+                    entity.TreeCode = GenderCode(parent.TreeCode);
+                    entity.TreeLength = parent.TreeLength + 1;
+                }
+            }
 
             // ObjectMapper.Map(input, entity);
             await _operatortreeRepository.UpdateAsync(entity);

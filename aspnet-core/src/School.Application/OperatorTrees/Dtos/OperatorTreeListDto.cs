@@ -5,7 +5,7 @@ using School.Models;
 
 namespace School.OperatorTrees.Dtos
 {
-    public class OperatorTreeListDto
+    public class OperatorTreeListDto:CreationAuditedEntityDto
     {
         ////BCC/ BEGIN CUSTOM CODE SECTION
         ////ECC/ END CUSTOM CODE SECTION
@@ -13,8 +13,6 @@ namespace School.OperatorTrees.Dtos
         public string TreeCode { get; set; }
         public int TreeLength { get; set; }
         public int? ParentId { get; set; }
-        public OperatorTree Parent { get; set; }
-        public IEnumerable<OperatorTreeListDto> Children { get; set; }
-        public IEnumerable<OperatorDevice> OperatorDevices { get; set; }
+        public string ParentName { get; set; }
     }
 }
