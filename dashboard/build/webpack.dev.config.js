@@ -7,9 +7,9 @@ const webpackBaseConfig = require('./webpack.base.config.js');
 const fs = require('fs');
 const package = require('../package.json');
 
-fs.open('./build/env.js', 'w', function(err, fd) {
+fs.open('./build/env.js', 'w', function (err, fd) {
     const buf = 'export default "development";';
-    fs.write(fd, buf, 0, buf.length, 0, function(err, written, buffer) {});
+    fs.write(fd, buf, 0, buf.length, 0, function (err, written, buffer) {});
 });
 
 module.exports = merge(webpackBaseConfig, {
@@ -33,30 +33,18 @@ module.exports = merge(webpackBaseConfig, {
             filename: '../index.html',
             inject: false
         }),
-        new CopyWebpackPlugin([
-            {
+        new CopyWebpackPlugin([{
                 from: 'src/views/main-components/theme-switch/theme'
             },
             {
-                from:'node_modules/abp-web-resources/abp/framework/scripts/abp.js',
-                to:'abp'
-            },{
-                from:'node_modules/jquery/dist/jquery.js'
+                from: 'node_modules/abp-web-resources/abp/framework/scripts/abp.js',
+                to: 'abp'
+            }, {
+                from: 'node_modules/jquery/dist/jquery.js'
             },
             {
-                from:'node_modules/signalr/jquery.signalR.js'
-            },
-            {
-                from:'node_modules/@aspnet/signalr/dist/browser/signalr.js'
-            },{
-                from:'node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.signalr.js',
-                to:'abp'
-            },{
-                from:'node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.signalr-client.js',
-                to:'abp'
-            },{
-                from:'node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.jquery.js',
-                to:'abp'
+                from: 'node_modules/abp-web-resources/Abp/Framework/scripts/libs/abp.jquery.js',
+                to: 'abp'
             }
         ])
     ]

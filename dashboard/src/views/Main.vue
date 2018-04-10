@@ -197,13 +197,6 @@ export default {
   },
   mounted() {
     this.init();
-    // if(this.$store.state.session.application.features['SignalR']){
-    //     if (this.$store.state.session.application.features['SignalR.AspNetCore']) {
-    //         SignalRAspNetCoreHelper.initSignalR();
-    //     } else {
-    //         SignalRHelper.initSignalR();
-    //     }
-    // }
   },
   created() {
     // Display a list of open pages
