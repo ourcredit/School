@@ -101,9 +101,9 @@ namespace School.Devices
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task UnBindOrgAndDevices(BindDevicesInput input)
+        public async Task UnBindOrgAndDevices(List<int> input)
         {
-             await _operatorDeviceRepository.DeleteAsync(c => c.OperatorId == input.OrgId&&input.Devices.Any(w=>w==c.DeviceId));
+             await _operatorDeviceRepository.DeleteAsync(c=>input.Any(w=>w==c.DeviceId));
         }
         /// <summary>
         /// 获取所有点位信息
