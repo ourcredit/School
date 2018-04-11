@@ -34,6 +34,26 @@ util.ajax.get('/AbpUserConfiguration/GetAll').then(result => {
         if (!value) return ''
         return window.abp.localization.localize(value, AppConsts.localization.defaultLocalizationSourceName);
     });
+    /* 列表格式转换成树格式
+     * @param data 数组
+     * @param parentId 父节点id
+     * @param pidField 父节点字段名
+     */
+    const converToTreedata = (data, parentId, pidField) => {
+        var list = []
+        data.forEach((item) => {
+            item.title = item.treeName;
+            if (item[pidField] == parentId) {
+                item.children = converToTreedata(data, item.id, pidField)
+                data.children = item.children
+                list.push(item)
+            }
+        })
+        return list
+    }
+
+    Vue.prototype.$tree = converToTreedata;
+
     Vue.prototype.formatter = function (value) {
         if (!value) return ''
         var d = new Date(value);

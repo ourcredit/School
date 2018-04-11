@@ -23,7 +23,7 @@ const org = {
         async delete({
             state
         }, payload) {
-            await Util.ajax.delete('/api/services/app/OperatorTree/DeleteOperatorTree?Id=' + payload.data.id);
+            await Util.ajax.delete('/api/services/app/OperatorTree/DeleteOperatorTree?Id=' + payload.data);
         },
         async batchDelete({
             state

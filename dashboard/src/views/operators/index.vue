@@ -5,30 +5,28 @@
       <Card>
         <p slot="title">机构信息</p>
         <Row slot="extra">
-          <i-col  span="12">
+          <i-col span="12">
             <Button @click="create" type="primary" shape="circle" icon="plus"></Button>
           </i-col>
-          <i-col  span="12">
-              <Button @click="remove" type="primary" shape="circle" icon="close"></Button>
+          <i-col span="12">
+            <Button @click="remove" type="primary" shape="circle" icon="close"></Button>
           </i-col>
         </Row>
-        <Tree @on-select-change="change" :data="baseData"></Tree>
+        <Tree @on-select-change="change" :data="orgs"></Tree>
       </Card>
       </Col>
       <Col span="15">
       <Card>
-        <p slot="title">角色信息</p>
-        <Dropdown slot="extra" @on-click="handleClickActionsDropdown">
-          <a href="javascript:void(0)">
-            操作
-            <Icon type="android-more-vertical"></Icon>
-          </a>
-          <DropdownMenu slot="list">
-            <DropdownItem name='Refresh'>刷新</DropdownItem>
-            <DropdownItem name='Create'>创建</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <Table :columns="columns" border :data="roles"></Table>
+        <p slot="title">设备信息</p>
+        <Row slot="extra">
+          <i-col span="12">
+             <i-button @click="create" type="primary">查询</i-button>
+          </i-col>
+          <i-col span="12">
+            <i-button @click="create" type="primary">绑定</i-button>
+          </i-col>
+        </Row>
+        <Table :columns="columns" border :data="devices"></Table>
         <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
           :current="currentPage"></Page>
       </Card>
@@ -36,9 +34,9 @@
     </Row>
     <Modal v-model="showModal" title="添加机构" @on-ok="save" okText="保存" cancelText="关闭">
       <div>
-        <Form ref="newRoleForm" label-position="top" :rules="orgRule" :model="org">
-          <FormItem label="上级机构" >
-            <Input v-model="org.parentName" disabled ></Input>
+        <Form ref="orgForm" label-position="top" :rules="orgRule" :model="org">
+          <FormItem label="上级机构">
+            <Input v-model="org.parentName" disabled></Input>
           </FormItem>
           <FormItem label="机构名" prop="treeName">
             <Input v-model="org.treeName" :maxlength="32" :minlength="1"></Input>
@@ -50,23 +48,29 @@
         <Button @click="save" type="primary">保存</Button>
       </div>
     </Modal>
-    
   </div>
 </template>
 <script>
 export default {
   methods: {
-    change(data) {
+    async change(data) {
       if (data.length == 1) {
-        this.parent = { parentId: data[0].id, parentName: data[0].title };
+        this.parent = {
+          parentId: data[0].id,
+          parentName: data[0].title
+        };
         this.org.parentName = this.parent.parentName;
+        await this.getpage();
       } else {
         this.parent = null;
         delete this.org.parentName;
       }
     },
     remove() {
-      if (!this.parent) return;
+      if (!this.parent) {
+        abp.message.warn("请选择机构进行操作", "");
+        return;
+      }
       this.$Modal.confirm({
         title: this.parent.parentName,
         content: "确定要删除么",
@@ -74,98 +78,67 @@ export default {
         cancelText: "否",
         onOk: async () => {
           await this.$store.dispatch({
-            type: "role/delete",
-            data: this.roles[params.index]
+            type: "org/delete",
+            data: this.parent.parentId
           });
-          await this.getpage();
+          this.parent = null;
+          await this.init();
         }
       });
     },
     create() {
-      const p =
+      const Id =
         this.parent && this.parent.parentId ? this.parent.parentId : null;
+      const Name =
+        this.parent && this.parent.parentName ? this.parent.parentName : "";
       this.org = {
-        parentId: p
+        parentId: Id,
+        parentName: Name
       };
       this.showModal = true;
     },
     async save() {
-      if (!!this.editRole.id) {
-        this.$refs.roleForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "role/update",
-              data: this.editRole
-            });
-            this.showEditModal = false;
-            await this.getpage();
-          }
-        });
-      } else {
-        this.$refs.newRoleForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "role/create",
-              data: this.editRole
-            });
-            this.showModal = false;
-            await this.getpage();
-          }
-        });
-      }
+      this.$refs.orgForm.validate(async val => {
+        if (val) {
+          await this.$store.dispatch({
+            type: "org/createOrUpdate",
+            data: {
+              operatorTree: this.org
+            }
+          });
+          this.showModal = false;
+          this.parent = null;
+          await this.init();
+        }
+      });
     },
-    pageChange(page) {
-      this.$store.commit("org/setCurrentPage", page);
-      this.getpage();
-    },
-    pagesizeChange(pagesize) {
-      this.$store.commit("org/setPageSize", pagesize);
-      this.getpage();
-    },
-    async getpage() {
+    async init() {
       await this.$store.dispatch({
         type: "org/getAll"
       });
     },
-    handleClickActionsDropdown(name) {
-      if (name === "Create") {
-        this.create();
-      } else if (name === "Refresh") {
-        this.getpage();
-      }
+    pageChange(page) {
+      this.$store.commit("device/setCurrentPage", page);
+      this.getpage();
+    },
+    pagesizeChange(pagesize) {
+      this.$store.commit("device/setPageSize", pagesize);
+      this.getpage();
+    },
+    async getpage() {
+      if (!this.parent || !this.parent.parentId) return;
+      await this.$store.dispatch({
+        type: "device/getOrgDevices",
+        data: this.parent.parentId
+      });
     }
   },
   data() {
     return {
       parent: null,
-      baseData: [
-        {
-          id: 1,
-          title: "parent 1",
-          children: [
-            {
-              title: "parent 1-0",
-              children: [
-                {
-                  title: "leaf"
-                },
-                {
-                  title: "leaf"
-                }
-              ]
-            },
-            {
-              title: "parent 1-1",
-              children: [
-                {
-                  title: '<span style="color: red">leaf</span>'
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      org: { parentId: null },
+      org: {
+        parentId: null
+      },
       showModal: false,
       orgRule: {
         treeName: [
@@ -178,12 +151,20 @@ export default {
       },
       columns: [
         {
-          title: "角色名",
-          key: "name"
+          title: "设备名",
+          key: "deviceName"
         },
         {
-          title: "显示名",
-          key: "displayName"
+          title: "设备编号",
+          key: "deviceNum"
+        },
+        {
+          title: "设备类型",
+          key: "deviceType"
+        },
+        {
+          title: "所属点位",
+          key: "pointName"
         },
         {
           title: "操作",
@@ -208,7 +189,7 @@ export default {
                     }
                   }
                 },
-                "编辑"
+                "配置"
               ),
               h(
                 "Button",
@@ -220,14 +201,14 @@ export default {
                   on: {
                     click: async () => {
                       this.$Modal.confirm({
-                        title: this.L(""),
-                        content: this.L("Delete role"),
-                        okText: this.L("Yes"),
-                        cancelText: this.L("No"),
+                        title: "",
+                        content: "删除设备信息",
+                        okText: "是",
+                        cancelText: "否",
                         onOk: async () => {
                           await this.$store.dispatch({
-                            type: "role/delete",
-                            data: this.roles[params.index]
+                            type: "device/delete",
+                            data: this.devices[params.index]
                           });
                           await this.getpage();
                         }
@@ -245,23 +226,24 @@ export default {
   },
   computed: {
     orgs() {
-      return this.$store.state.org.orgs;
+      let orgs = this.$store.state.org.orgs;
+      return this.$tree(orgs, null, "parentId");
+    },
+    devices() {
+      return this.$store.state.device.devices;
     },
     totalCount() {
-      return this.$store.state.role.totalCount;
+      return this.$store.state.device.totalCount;
     },
     currentPage() {
-      return this.$store.state.role.currentPage;
+      return this.$store.state.device.currentPage;
     },
     pageSize() {
-      return this.$store.state.role.pageSize;
+      return this.$store.state.device.pageSize;
     }
   },
   async created() {
-    this.getpage();
-    await this.$store.dispatch({
-      type: "org/getAll"
-    });
+    this.init();
   }
 };
 </script>
