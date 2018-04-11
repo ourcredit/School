@@ -12,6 +12,7 @@ using System.Linq.Dynamic.Core;
 using Abp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using School.Authorization;
+using School.Dto;
 using School.OperatorTrees.Dtos;
 using School.OperatorTrees.DomainServices;
 using School.Models;
@@ -45,22 +46,18 @@ namespace School.OperatorTrees
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<PagedResultDto<OperatorTreeListDto>> GetPagedOperatorTrees(GetOperatorTreesInput input)
+        public async Task<ListResultDto<OperatorTreeListDto>> GetOperatorTrees(FilterInputDto input)
         {
 
             var query = _operatortreeRepository.GetAll();
-            var operatortreeCount = await query.CountAsync();
-
+            query = query.WhereIf(!input.Filter.IsNullOrWhiteSpace(), c => c.TreeCode.Contains(input.Filter));
             var operatortrees = await query
-                .OrderBy(input.Sorting)
-                .PageBy(input)
                 .ToListAsync();
 
             //var operatortreeListDtos = ObjectMapper.Map<List <OperatorTreeListDto>>(operatortrees);
             var operatortreeListDtos = operatortrees.MapTo<List<OperatorTreeListDto>>();
 
-            return new PagedResultDto<OperatorTreeListDto>(
-                operatortreeCount,
+            return new ListResultDto<OperatorTreeListDto>(
                 operatortreeListDtos
                 );
 

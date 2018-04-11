@@ -1,75 +1,92 @@
 <template>
-    <div>
-        <Card>
-            <p slot="title">角色信息</p>
-            <Dropdown slot="extra"  @on-click="handleClickActionsDropdown">
-                <a href="javascript:void(0)">
-                   操作
-                    <Icon type="android-more-vertical"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                    <DropdownItem name='Refresh'>刷新</DropdownItem>
-                    <DropdownItem name='Create'>创建</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
-            <Table :columns="columns" border :data="roles"></Table>
-            <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
-        </Card>
-        <Modal v-model="showModal" :title="L('CreateNewRole')" @on-ok="save" :okText="L('save')" :cancelText="L('cancel')">
-            <div>
-                <Form ref="newRoleForm" label-position="top" :rules="newRoleRule" :model="editRole">
-                    <FormItem :label="L('RoleName')" prop="name">
-                        <Input v-model="editRole.name" :maxlength="32" :minlength="2"></Input>
-                    </FormItem>
-                    <FormItem :label="L('DisplayName')" prop="displayName">
-                        <Input v-model="editRole.displayName" :maxlength="32" :minlength="2"></Input>
-                    </FormItem>
-                    <FormItem :label="L('RoleDescription')" prop="description">
-                        <Input v-model="editRole.description"></Input>
-                    </FormItem>
-                    <FormItem :label="L('Permissions')">
-                        <CheckboxGroup v-model="editRole.permissions">
-                            <Checkbox :label="permission.name" v-for="permission in permissions" :key="permission.name"><span>{{permission.displayName}}</span></Checkbox>
-                        </CheckboxGroup>
-                    </FormItem>                    
-                </Form>
-            </div>
-            <div slot="footer">
-                <Button @click="showModal=false">{{'Cancel'|l}}</Button>
-                <Button @click="save" type="primary">{{'Save'|l}}</Button>
-            </div>
-        </Modal>
-        <Modal v-model="showEditModal" :title="L('EditRole')" @on-ok="save" :okText="L('save')" :cancelText="L('cancel')">
-            <div>
-                <Form ref="roleForm" label-position="top" :rules="roleRule" :model="editRole">
-                    <FormItem :label="L('RoleName')" prop="name">
-                        <Input v-model="editRole.name" :maxlength="32" :minlength="2"></Input>
-                    </FormItem>
-                    <FormItem :label="L('DisplayName')" prop="displayName">
-                        <Input v-model="editRole.displayName" :maxlength="32" :minlength="2"></Input>
-                    </FormItem>
-                    <FormItem :label="L('RoleDescription')" prop="description">
-                        <Input v-model="editRole.description"></Input>
-                    </FormItem>
-                    <FormItem :label="L('Permissions')">
-                        <CheckboxGroup v-model="editRole.permissions">
-                            <Checkbox :label="permission.name" v-for="permission in permissions" :key="permission.name"><span>{{permission.displayName}}</span></Checkbox>
-                        </CheckboxGroup>
-                    </FormItem>                    
-                </Form>
-            </div>
-            <div slot="footer">
-                <Button @click="showEditModal=false">{{'Cancel'|l}}</Button>
-                <Button @click="save" type="primary">{{'Save'|l}}</Button>
-            </div>
-        </Modal>
-    </div>
+  <div>
+    <Row :gutter="16">
+      <Col span="8">
+      <Card>
+        <p slot="title">机构信息</p>
+        <Row slot="extra">
+          <i-col  span="12">
+            <Button @click="create" type="primary" shape="circle" icon="plus"></Button>
+          </i-col>
+          <i-col  span="12">
+              <Button @click="remove" type="primary" shape="circle" icon="close"></Button>
+          </i-col>
+        </Row>
+        <Tree @on-select-change="change" :data="baseData"></Tree>
+      </Card>
+      </Col>
+      <Col span="15">
+      <Card>
+        <p slot="title">角色信息</p>
+        <Dropdown slot="extra" @on-click="handleClickActionsDropdown">
+          <a href="javascript:void(0)">
+            操作
+            <Icon type="android-more-vertical"></Icon>
+          </a>
+          <DropdownMenu slot="list">
+            <DropdownItem name='Refresh'>刷新</DropdownItem>
+            <DropdownItem name='Create'>创建</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+        <Table :columns="columns" border :data="roles"></Table>
+        <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
+          :current="currentPage"></Page>
+      </Card>
+      </Col>
+    </Row>
+    <Modal v-model="showModal" title="添加机构" @on-ok="save" okText="保存" cancelText="关闭">
+      <div>
+        <Form ref="newRoleForm" label-position="top" :rules="orgRule" :model="org">
+          <FormItem label="上级机构" >
+            <Input v-model="org.parentName" disabled ></Input>
+          </FormItem>
+          <FormItem label="机构名" prop="treeName">
+            <Input v-model="org.treeName" :maxlength="32" :minlength="1"></Input>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="showModal=false">关闭</Button>
+        <Button @click="save" type="primary">保存</Button>
+      </div>
+    </Modal>
+    
+  </div>
 </template>
 <script>
 export default {
   methods: {
+    change(data) {
+      if (data.length == 1) {
+        this.parent = { parentId: data[0].id, parentName: data[0].title };
+        this.org.parentName = this.parent.parentName;
+      } else {
+        this.parent = null;
+        delete this.org.parentName;
+      }
+    },
+    remove() {
+      if (!this.parent) return;
+      this.$Modal.confirm({
+        title: this.parent.parentName,
+        content: "确定要删除么",
+        okText: "是",
+        cancelText: "否",
+        onOk: async () => {
+          await this.$store.dispatch({
+            type: "role/delete",
+            data: this.roles[params.index]
+          });
+          await this.getpage();
+        }
+      });
+    },
     create() {
-      this.editRole = { isActive: true };
+      const p =
+        this.parent && this.parent.parentId ? this.parent.parentId : null;
+      this.org = {
+        parentId: p
+      };
       this.showModal = true;
     },
     async save() {
@@ -98,16 +115,16 @@ export default {
       }
     },
     pageChange(page) {
-      this.$store.commit("role/setCurrentPage", page);
+      this.$store.commit("org/setCurrentPage", page);
       this.getpage();
     },
     pagesizeChange(pagesize) {
-      this.$store.commit("role/setPageSize", pagesize);
+      this.$store.commit("org/setPageSize", pagesize);
       this.getpage();
     },
     async getpage() {
       await this.$store.dispatch({
-        type: "role/getAll"
+        type: "org/getAll"
       });
     },
     handleClickActionsDropdown(name) {
@@ -120,29 +137,41 @@ export default {
   },
   data() {
     return {
-      editRole: {},
+      parent: null,
+      baseData: [
+        {
+          id: 1,
+          title: "parent 1",
+          children: [
+            {
+              title: "parent 1-0",
+              children: [
+                {
+                  title: "leaf"
+                },
+                {
+                  title: "leaf"
+                }
+              ]
+            },
+            {
+              title: "parent 1-1",
+              children: [
+                {
+                  title: '<span style="color: red">leaf</span>'
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      org: { parentId: null },
       showModal: false,
-      showEditModal: false,
-      newRoleRule: {
-        name: [
-          { required: true, message: "Name is required", trigger: "blur" }
-        ],
-        displayName: [
+      orgRule: {
+        treeName: [
           {
             required: true,
-            message: "DisplayName is required",
-            trigger: "blur"
-          }
-        ]
-      },
-      roleRule: {
-        name: [
-          { required: true, message: "Name is required", trigger: "blur" }
-        ],
-        displayName: [
-          {
-            required: true,
-            message: "DisplayName is required",
+            message: "机构名必填",
             trigger: "blur"
           }
         ]
@@ -215,11 +244,8 @@ export default {
     };
   },
   computed: {
-    roles() {
-      return this.$store.state.role.roles;
-    },
-    permissions() {
-      return this.$store.state.role.permissions;
+    orgs() {
+      return this.$store.state.org.orgs;
     },
     totalCount() {
       return this.$store.state.role.totalCount;
@@ -234,11 +260,8 @@ export default {
   async created() {
     this.getpage();
     await this.$store.dispatch({
-      type: "role/getAllPermissions"
+      type: "org/getAll"
     });
   }
 };
 </script>
-
-
-

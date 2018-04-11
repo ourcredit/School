@@ -129,7 +129,10 @@ export default {
         },
         {
           title: "创建时间",
-          key: "creationTime"
+          key: "creationTime",
+          render: (h, params) => {
+            return this.formatter(params.row.creationTime);
+          }
         },
         {
           title: "操作",
@@ -149,11 +152,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.editRole = this.roles[params.index];
-                      this.center = {
-                        lng: this.editRole.longitude,
-                        lat: this.editRole.latitide
-                      };
+                      this.device = this.devices[params.index];
                       this.showEditModal = true;
                     }
                   }
@@ -171,13 +170,13 @@ export default {
                     click: async () => {
                       this.$Modal.confirm({
                         title: "",
-                        content: "删除角色",
+                        content: "删除设备信息",
                         okText: "是",
                         cancelText: "否",
                         onOk: async () => {
                           await this.$store.dispatch({
-                            type: "point/delete",
-                            data: this.roles[params.index]
+                            type: "device/delete",
+                            data: this.devices[params.index]
                           });
                           await this.getpage();
                         }

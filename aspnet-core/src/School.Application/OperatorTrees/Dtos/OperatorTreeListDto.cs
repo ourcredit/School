@@ -5,7 +5,7 @@ using School.Models;
 
 namespace School.OperatorTrees.Dtos
 {
-    public class OperatorTreeListDto:CreationAuditedEntityDto
+    public class OperatorTreeListDto : CreationAuditedEntityDto
     {
         ////BCC/ BEGIN CUSTOM CODE SECTION
         ////ECC/ END CUSTOM CODE SECTION

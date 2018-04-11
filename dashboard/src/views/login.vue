@@ -73,14 +73,14 @@ export default {
         userNameOrEmailAddress: [
           {
             required: true,
-            message: this.L("ThisFieldIsRequired"),
+            message: "字段必填",
             trigger: "blur"
           }
         ],
         password: [
           {
             required: true,
-            message: this.L("ThisFieldIsRequired"),
+            message: "字段必填",
             trigger: "blur"
           }
         ]
@@ -117,17 +117,14 @@ export default {
             location.reload();
             return;
           case 2:
-            let message = this.L("TenantIsNotActive", this.changedTenancyName);
+            let message = `${this.changedTenancyName}未启用`;
             this.$Modal.error({
               title: "",
               content: message
             });
             break;
           case 3:
-            let message2 = this.L(
-              "ThereIsNoTenantDefinedWithName{0}",
-              this.changedTenancyName
-            );
+            let message2 = `${this.changedTenancyName}未找到`;
             this.$Modal.error({
               title: "",
               content: message2
@@ -143,7 +140,7 @@ export default {
       this.$refs.loginForm.validate(async valid => {
         if (valid) {
           this.$Message.loading({
-            content: this.L("PleaseWait"),
+            content: "请稍等",
             duration: 0
           });
 
@@ -165,7 +162,7 @@ export default {
               error => {
                 this.$Modal.error({
                   title: "",
-                  content: "Login failed !"
+                  content: "登陆失败 !"
                 });
                 this.$Message.destroy();
               }

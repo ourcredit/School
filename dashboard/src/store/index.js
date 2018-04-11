@@ -8,6 +8,7 @@ import account from './modules/account'
 import role from './modules/role'
 import point from './modules/point'
 import device from './modules/device'
+import org from './modules/org'
 
 Vue.use(Vuex);
 
@@ -28,7 +29,8 @@ const store = new Vuex.Store({
         account,
         role,
         point,
-        device
+        device,
+        org
     }
 });
 

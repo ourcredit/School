@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using School.Dto;
 using School.OperatorTrees.Dtos;
 using School.Models;
 
@@ -12,12 +13,13 @@ namespace School.OperatorTrees
     /// </summary>
     public interface IOperatorTreeAppService : IApplicationService
     {
+
         /// <summary>
         /// 获取OperatorTree的分页列表信息
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<PagedResultDto<OperatorTreeListDto>> GetPagedOperatorTrees(GetOperatorTreesInput input);
+        Task<ListResultDto<OperatorTreeListDto>> GetOperatorTrees(FilterInputDto input);
 
         /// <summary>
         /// 通过指定id获取OperatorTreeListDto信息
