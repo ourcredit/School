@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Abp.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Abp.Zero.EntityFrameworkCore;
 using School.Authorization.Roles;
 using School.Authorization.Users;
@@ -16,6 +17,16 @@ namespace School.EntityFrameworkCore
         public virtual DbSet<OperatorDevice> OperatorDevices { get; set; }
 
         public SchoolDbContext(DbContextOptions<SchoolDbContext> options)
+            : base(options)
+        {
+        }
+    }
+
+    public class OtherDbContext : AbpDbContext
+    {
+        public virtual DbSet<OperatorDevice> Courses { get; set; }
+
+        public OtherDbContext(DbContextOptions<OtherDbContext> options)
             : base(options)
         {
         }
