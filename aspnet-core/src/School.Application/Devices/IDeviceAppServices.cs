@@ -42,7 +42,7 @@ namespace School.Devices
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task UnBindOrgAndDevices(BindDevicesInput input);
+        Task UnBindOrgAndDevices(List<int> input);
         /// <summary>
         /// 获取所有点位信息
         /// </summary>
