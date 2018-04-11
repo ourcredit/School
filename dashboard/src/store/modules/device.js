@@ -5,6 +5,7 @@ const point = {
     namespaced: true,
     state: {
         devices: [],
+        orgdevices: [],
         points: [],
         totalCount: 0,
         pageSize: 10,
@@ -34,6 +35,22 @@ const point = {
             state.devices.push(...rep.data.result.items);
             state.totalCount = rep.data.result.totalCount;
         },
+        async getOrgDevices({
+            state
+        }, payload) {
+            let page = {
+                maxResultCount: state.pageSize,
+                skipCount: (state.currentPage - 1) * state.pageSize,
+                OrgId: payload.parentId
+            }
+            let rep = await Util.ajax.get('/api/services/app/Device/GetOperatorTreeDevices', {
+                params: page
+            });
+            state.orgdevices = [];
+            state.orgdevices.push(...rep.data.result.items);
+            state.totalCount = rep.data.result.totalCount;
+        },
+
         async getAllPoints({
             state
         }, payload) {
@@ -45,6 +62,16 @@ const point = {
             state
         }, payload) {
             await Util.ajax.delete('/api/services/app/Device/DeleteDevice?Id=' + payload.data.id);
+        },
+        async bindDevice({
+            state
+        }, payload) {
+            await Util.ajax.post('/api/services/app/Device/BindOrgAndDevices', payload.data);
+        },
+        async unBindDevice({
+            state
+        }, payload) {
+            await Util.ajax.post('/api/services/app/Device/UnBindOrgAndDevices', payload.data);
         },
         async batchDelete({
             state

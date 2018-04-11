@@ -68,18 +68,22 @@ namespace School.Devices
         /// <returns></returns>
         public async Task<PagedResultDto<DeviceListDto>> GetOperatorTreeDevices(GetOrgsDevicesInput input)
         {
-            var query = _operatorDeviceRepository.GetAllIncluding(c => c.Device);
+            var query = _operatorDeviceRepository.GetAllIncluding(c => c.Device,c=>c.Device.Point);
             query = query.Where(c => c.OperatorId == input.OrgId);
             var deviceCount = await query.CountAsync();
             var devices = await query
                 .OrderBy(input.Sorting)
-                .PageBy(input).Select(c=>c.Device)
+                .PageBy(input)
                 .ToListAsync();
-            //var deviceListDtos = ObjectMapper.Map<List <DeviceListDto>>(devices);
-            var deviceListDtos = devices.MapTo<List<DeviceListDto>>();
+            var result=new List<DeviceListDto>();
+            foreach (var r in devices)
+            {
+                var mo = r.Device.MapTo<DeviceListDto>();
+                result.Add(mo);
+            }
             return new PagedResultDto<DeviceListDto>(
                 deviceCount,
-                deviceListDtos
+                result
             );
         }
         /// <summary>

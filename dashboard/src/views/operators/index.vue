@@ -23,7 +23,7 @@
              <i-button @click="create" type="primary">查询</i-button>
           </i-col>
           <i-col span="12">
-            <i-button @click="create" type="primary">绑定</i-button>
+            <i-button @click="bind" type="primary">绑定</i-button>
           </i-col>
         </Row>
         <Table :columns="columns" border :data="devices"></Table>
@@ -48,10 +48,24 @@
         <Button @click="save" type="primary">保存</Button>
       </div>
     </Modal>
+
+     <Modal v-model="bindModal" title="绑定设备" @on-ok="bindDevice" okText="保存" cancelText="关闭">
+      <div>
+        <bind-form @cc.sync="setValues"></bind-form>
+      </div>
+      <div slot="footer">
+        <Button @click="bindModal=false">关闭</Button>
+        <Button @click="bindDevice" type="primary">保存</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
+import BindForm from "./bind";
 export default {
+  components: {
+    BindForm
+  },
   methods: {
     async change(data) {
       if (data.length == 1) {
@@ -117,6 +131,31 @@ export default {
         type: "org/getAll"
       });
     },
+    setValues(data) {
+      this.selectModels = data;
+    },
+    bind() {
+      this.bindModal = true;
+    },
+    async bindDevice() {
+      if (!this.parent || !this.parent.parentId) {
+        abp.message.warn("请先选择机构");
+        this.bindModal = false;
+        return;
+      }
+      let des = Array.from(this.selectModels, c => c.id);
+      if (!des || des.length <= 0) {
+        abp.message.warn("请选择设备");
+        return;
+      }
+      const params = { orgId: this.parent.parentId, devices: des };
+      await this.$store.dispatch({
+        type: "device/bindDevice",
+        data: params
+      });
+      this.bindModal = false;
+      this.getpage();
+    },
     pageChange(page) {
       this.$store.commit("device/setCurrentPage", page);
       this.getpage();
@@ -129,12 +168,14 @@ export default {
       if (!this.parent || !this.parent.parentId) return;
       await this.$store.dispatch({
         type: "device/getOrgDevices",
-        data: this.parent.parentId
+        parentId: this.parent.parentId
       });
     }
   },
   data() {
     return {
+      selectModels: [],
+      bindModal: false,
       parent: null,
       org: {
         parentId: null
@@ -230,7 +271,7 @@ export default {
       return this.$tree(orgs, null, "parentId");
     },
     devices() {
-      return this.$store.state.device.devices;
+      return this.$store.state.device.orgdevices;
     },
     totalCount() {
       return this.$store.state.device.totalCount;
