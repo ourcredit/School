@@ -54,7 +54,7 @@ const point = {
         async createOrUpdate({
             state
         }, payload) {
-            await Util.ajax.post('/api/services/app/Device/BatchDeleteDevicesAsync', payload.data);
+            await Util.ajax.post('/api/services/app/Device/CreateOrUpdateDevice', payload.data);
         }
     }
 };

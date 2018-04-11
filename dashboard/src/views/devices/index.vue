@@ -9,7 +9,7 @@
           <i-button @click="create" type="primary">添加</i-button>
         </i-col>
       </Row>
-      <Table :columns="columns" border :data="roles"></Table>
+      <Table :columns="columns" border :data="devices"></Table>
       <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
         :current="currentPage"></Page>
     </Card>
@@ -22,20 +22,18 @@
           <FormItem label="设备编号" prop="deviceNum">
             <Input v-model="device.deviceNum" :maxlength="120" :minlength="1"></Input>
           </FormItem>
-           <FormItem label="设备类型" prop="deviceType">
-              <Form-item label="选择器">
-            <i-select :model.sync="device.deviceType" placeholder="请选择">
-                <i-option value="beijing">A</i-option>
-                <i-option value="shanghai">B</i-option>
-                <i-option value="shenzhen">C</i-option>
-                <i-option value="shenzhen">D</i-option>
-            </i-select>
-        </Form-item>
+          <FormItem label="设备类型" prop="deviceType">
+              <Select style="width:162px" v-model="device.deviceType" placeholder="请选择">
+                <Option value="A">A</Option>
+                <Option value="B">B</Option>
+                <Option value="C">C</Option>
+                <Option value="D">D</Option>
+              </Select>
           </FormItem>
-             <FormItem label="所属点位" prop="pointId">
-             <i-select :model.sync="device.deviceType" placeholder="请选择">
-                <i-option :key="index" v-for="item in points" :value="item.key">{{ item.value }}</i-option>
-            </i-select>
+          <FormItem label="所属点位" prop="pointId">
+            <Select style="width:162px" v-model="device.pointId" placeholder="请选择">
+              <Option :key="index" v-for="item,index in points" :value="item.key">{{ item.value }}</Option>
+            </Select>
           </FormItem>
         </Form>
       </div>
@@ -50,7 +48,10 @@
 export default {
   methods: {
     create() {
-      this.device = { isActive: true };
+      this.device = {
+        pointId: null,
+        deviceType: ""
+      };
       this.showEditModal = true;
     },
     async save() {
@@ -58,7 +59,9 @@ export default {
         if (val) {
           await this.$store.dispatch({
             type: "device/createOrUpdate",
-            data: { device: this.editRole }
+            data: {
+              device: this.device
+            }
           });
           this.showEditModal = false;
           await this.getpage();
@@ -81,7 +84,10 @@ export default {
   },
   data() {
     return {
-      device: {},
+      device: {
+        pointId: null,
+        deviceType: ""
+      },
       showEditModal: false,
       rule: {
         deviceName: [
@@ -107,27 +113,23 @@ export default {
         },
         {
           title: "设备名称",
-          key: "pointName"
+          key: "deviceName"
         },
         {
           title: "设备编号",
-          key: "pointAddress"
+          key: "deviceNum"
         },
         {
           title: "设备类型",
-          key: "pointDescription"
+          key: "deviceType"
         },
         {
           title: "所属点位",
-          key: "pointDescription"
-        },
-        {
-          title: "创建人",
-          key: "pointDescription"
+          key: "pointName"
         },
         {
           title: "创建时间",
-          key: "pointDescription"
+          key: "creationTime"
         },
         {
           title: "操作",
@@ -192,17 +194,17 @@ export default {
     };
   },
   computed: {
-    device() {
-      return this.$store.state.point.devices;
+    devices() {
+      return this.$store.state.device.devices;
     },
     points() {
-      return this.$store.state.point.points;
+      return this.$store.state.device.points;
     },
     totalCount() {
-      return this.$store.state.point.totalCount;
+      return this.$store.state.device.totalCount;
     },
     currentPage() {
-      return this.$store.state.point.currentPage;
+      return this.$store.state.device.currentPage;
     },
     pageSize() {
       return this.$store.state.point.pageSize;

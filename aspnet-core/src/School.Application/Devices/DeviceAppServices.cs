@@ -46,7 +46,7 @@ namespace School.Devices
         public async Task<PagedResultDto<DeviceListDto>> GetPagedDevices(GetDevicesInput input)
         {
 
-            var query = _deviceRepository.GetAll();
+            var query = _deviceRepository.GetAllIncluding(c=>c.Point);
             var deviceCount = await query.CountAsync();
 
             var devices = await query
