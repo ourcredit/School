@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
@@ -26,17 +27,19 @@ namespace School.Devices
         ////ECC/ END CUSTOM CODE SECTION
         private readonly IRepository<Device, int> _deviceRepository;
         private readonly IRepository<Point, int> _pointRepository;
+        private readonly IRepository<OperatorDevice, Guid> _operatorDeviceRepository;
         private readonly IDeviceManager _deviceManager;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public DeviceAppService(IRepository<Device, int> deviceRepository
-      , IDeviceManager deviceManager, IRepository<Point, int> pointRepository)
+      , IDeviceManager deviceManager, IRepository<Point, int> pointRepository, IRepository<OperatorDevice, Guid> operatorDeviceRepository)
         {
             _deviceRepository = deviceRepository;
             _deviceManager = deviceManager;
             _pointRepository = pointRepository;
+            _operatorDeviceRepository = operatorDeviceRepository;
         }
         /// <summary>
         /// 获取Device的分页列表信息
@@ -51,15 +54,56 @@ namespace School.Devices
                 .OrderBy(input.Sorting)
                 .PageBy(input)
                 .ToListAsync();
-
             //var deviceListDtos = ObjectMapper.Map<List <DeviceListDto>>(devices);
             var deviceListDtos = devices.MapTo<List<DeviceListDto>>();
-
             return new PagedResultDto<DeviceListDto>(
                 deviceCount,
                 deviceListDtos
                 );
-
+        }
+        /// <summary>
+        /// 获取机构树下的设备
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<DeviceListDto>> GetOperatorTreeDevices(GetOrgsDevicesInput input)
+        {
+            var query = _operatorDeviceRepository.GetAllIncluding(c => c.Device);
+            query = query.Where(c => c.OperatorId == input.OrgId);
+            var deviceCount = await query.CountAsync();
+            var devices = await query
+                .OrderBy(input.Sorting)
+                .PageBy(input).Select(c=>c.Device)
+                .ToListAsync();
+            //var deviceListDtos = ObjectMapper.Map<List <DeviceListDto>>(devices);
+            var deviceListDtos = devices.MapTo<List<DeviceListDto>>();
+            return new PagedResultDto<DeviceListDto>(
+                deviceCount,
+                deviceListDtos
+            );
+        }
+        /// <summary>
+        /// 设备和 机构绑定
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task BindOrgAndDevices(BindDevicesInput input)
+        {
+            var devices = await _operatorDeviceRepository.GetAllListAsync(c => c.OperatorId == input.OrgId);
+            foreach (var i in input.Devices)
+            {
+                if(devices.Any(w=>w.DeviceId==i))continue;
+                await _operatorDeviceRepository.InsertAsync(new OperatorDevice(input.OrgId, i));
+            }
+        }
+        /// <summary>
+        /// 设备和 机构解绑
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task UnBindOrgAndDevices(BindDevicesInput input)
+        {
+             await _operatorDeviceRepository.DeleteAsync(c => c.OperatorId == input.OrgId&&input.Devices.Any(w=>w==c.DeviceId));
         }
         /// <summary>
         /// 获取所有点位信息

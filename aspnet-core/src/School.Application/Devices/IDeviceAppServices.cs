@@ -25,6 +25,25 @@ namespace School.Devices
         Task<DeviceListDto> GetDeviceByIdAsync(EntityDto<int> input);
 
         /// <summary>
+        /// 获取机构树下的设备
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<DeviceListDto>> GetOperatorTreeDevices(GetOrgsDevicesInput input);
+
+        /// <summary>
+        /// 设备和 机构绑定
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task BindOrgAndDevices(BindDevicesInput input);
+        /// <summary>
+        /// 设备和 机构解绑
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task UnBindOrgAndDevices(BindDevicesInput input);
+        /// <summary>
         /// 获取所有点位信息
         /// </summary>
         /// <returns></returns>

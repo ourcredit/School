@@ -10,21 +10,20 @@ namespace School.Models
     /// 设备和机构树关系表
     /// </summary>
     [Table("s_operator_device")]
-   public class OperatorDevice:CreationAuditedEntity
+   public class OperatorDevice:CreationAuditedEntity<Guid>
     {
+        public OperatorDevice() { }
+
+        public OperatorDevice(int orgId, int deviceId)
+        {
+            OperatorId = orgId;
+            DeviceId = deviceId;
+        }
         /// <summary>
         /// 设备id
         /// </summary>
         public int DeviceId { get; set; }
         public virtual Device Device { get; set; }
         public int OperatorId { get; set; }
-        /// <summary>
-        /// 是否售卖
-        /// </summary>
-        public bool IsSeal { get; set; }
-        /// <summary>
-        /// 价格
-        /// </summary>
-        public int Price { get; set; }
     }
 }
