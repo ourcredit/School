@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
 using School.Authorization.Users.Dto;
 using School.Dto;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Users
+namespace School.Authorization.Users
 {
     public interface IUserAppService : IApplicationService
     {

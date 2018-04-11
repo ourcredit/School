@@ -225,8 +225,10 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.editRole = this.roles[params.index];
-                      this.showEditModal = true;
+                      //  this.editRole = this.devices[params.index];
+                      this.$router.push({
+                        name: "settings"
+                      });
                     }
                   }
                 },

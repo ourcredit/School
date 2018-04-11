@@ -3,7 +3,7 @@ using System.Linq;
 using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
 using Abp.Timing.Timezone;
-using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
+using School.Authorization.Users.Dto;
 using School.DataExporting.Excel.EpPlus;
 using School.Dto;
 
@@ -34,11 +34,7 @@ namespace School.Authorization.Users.Exporting
                     AddHeader(
                         sheet,
                         L("Name"),
-                        L("Surname"),
                         L("UserName"),
-                        L("PhoneNumber"),
-                        L("EmailAddress"),
-                        L("EmailConfirm"),
                         L("Roles"),
                         L("LastLoginTime"),
                         L("Active"),
@@ -48,11 +44,7 @@ namespace School.Authorization.Users.Exporting
                     AddObjects(
                         sheet, 2, userListDtos,
                         _ => _.Name,
-                        _ => _.Surname,
                         _ => _.UserName,
-                        _ => _.PhoneNumber,
-                        _ => _.EmailAddress,
-                        _ => _.IsEmailConfirmed,
                         _ => _.Roles.Select(r => r.RoleName).JoinAsString(", "),
                         _ => _timeZoneConverter.Convert(_.LastLoginTime, _abpSession.TenantId, _abpSession.GetUserId()),
                         _ => _.IsActive,

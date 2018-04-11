@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto
+namespace School.Authorization.Users.Dto
 {
     public class CreateOrUpdateUserInput
     {
@@ -10,16 +10,5 @@ namespace MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto
 
         [Required]
         public string[] AssignedRoleNames { get; set; }
-
-        public bool SendActivationEmail { get; set; }
-
-        public bool SetRandomPassword { get; set; }
-
-        public List<long> OrganizationUnits { get; set; }
-
-        public CreateOrUpdateUserInput()
-        {
-            OrganizationUnits = new List<long>();
-        }
     }
 }

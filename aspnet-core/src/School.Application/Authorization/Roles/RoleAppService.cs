@@ -7,11 +7,9 @@ using Abp.Authorization;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
-using MyCompanyName.AbpZeroTemplate.Authorization;
-using MyCompanyName.AbpZeroTemplate.Authorization.Permissions;
-using MyCompanyName.AbpZeroTemplate.Authorization.Permissions.Dto;
-using MyCompanyName.AbpZeroTemplate.Authorization.Roles;
-using MyCompanyName.AbpZeroTemplate.Authorization.Roles.Dto;
+using School.Authorization.Permissions;
+using School.Authorization.Permissions.Dto;
+using School.Authorization.Roles.Dto;
 
 namespace School.Authorization.Roles
 {

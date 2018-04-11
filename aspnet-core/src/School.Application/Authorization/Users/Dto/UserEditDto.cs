@@ -2,8 +2,9 @@
 using Abp.Auditing;
 using Abp.Authorization.Users;
 using Abp.Domain.Entities;
+using MyCompanyName.AbpZeroTemplate.Authorization.Users;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto
+namespace School.Authorization.Users.Dto
 {
     //Mapped to/from User in CustomDtoMapper
     public class UserEditDto : IPassivable
@@ -18,32 +19,15 @@ namespace MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto
         public string Name { get; set; }
 
         [Required]
-        [StringLength(AbpUserBase.MaxSurnameLength)]
-        public string Surname { get; set; }
-
-        [Required]
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [StringLength(AbpUserBase.MaxEmailAddressLength)]
-        public string EmailAddress { get; set; }
-
         [StringLength(UserConsts.MaxPhoneNumberLength)]
         public string PhoneNumber { get; set; }
-
         // Not used "Required" attribute since empty value is used to 'not change password'
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]
         [DisableAuditing]
         public string Password { get; set; }
-
         public bool IsActive { get; set; }
-
-        public bool ShouldChangePasswordOnNextLogin { get; set; }
-
-        public virtual bool IsTwoFactorEnabled { get; set; }
-
         public virtual bool IsLockoutEnabled { get; set; }
 
     }

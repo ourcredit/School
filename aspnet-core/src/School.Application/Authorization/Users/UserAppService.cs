@@ -19,11 +19,8 @@ using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MyCompanyName.AbpZeroTemplate.Authorization;
-using MyCompanyName.AbpZeroTemplate.Authorization.Permissions;
-using MyCompanyName.AbpZeroTemplate.Authorization.Permissions.Dto;
-using MyCompanyName.AbpZeroTemplate.Authorization.Users;
-using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
+using School.Authorization.Permissions;
+using School.Authorization.Permissions.Dto;
 using School.Authorization.Roles;
 using School.Authorization.Users.Dto;
 using School.Authorization.Users.Exporting;
@@ -138,7 +135,6 @@ namespace School.Authorization.Users
             var output = new GetUserForEditOutput
             {
                 Roles = userRoleDtos,
-                MemberedOrganizationUnits = new List<string>()
             };
 
             if (!input.Id.HasValue)
@@ -147,8 +143,6 @@ namespace School.Authorization.Users
                 output.User = new UserEditDto
                 {
                     IsActive = true,
-                    ShouldChangePasswordOnNextLogin = true,
-                    IsTwoFactorEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled),
                     IsLockoutEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled)
                 };
 
@@ -174,8 +168,8 @@ namespace School.Authorization.Users
                     userRoleDto.IsAssigned = await UserManager.IsInRoleAsync(user, userRoleDto.RoleName);
                 }
 
-                var organizationUnits = await UserManager.GetOrganizationUnitsAsync(user);
-                output.MemberedOrganizationUnits = organizationUnits.Select(ou => ou.Code).ToList();
+               // var organizationUnits = await UserManager.GetOrganizationUnitsAsync(user);
+               // output.MemberedOrganizationUnits = organizationUnits.Select(ou => ou.Code).ToList();
             }
 
             return output;
@@ -250,10 +244,10 @@ namespace School.Authorization.Users
             //Update user properties
             ObjectMapper.Map(input.User, user); //Passwords is not mapped (see mapping configuration)
 
-            if (input.SetRandomPassword)
-            {
-                input.User.Password = User.CreateRandomPassword();
-            }
+            //if (input.SetRandomPassword)
+            //{
+            //    input.User.Password = User.CreateRandomPassword();
+            //}
 
             if (!input.User.Password.IsNullOrEmpty())
             {
@@ -267,12 +261,7 @@ namespace School.Authorization.Users
             CheckErrors(await UserManager.SetRoles(user, input.AssignedRoleNames));
 
             //update organization units
-            await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
-
-            if (input.SendActivationEmail)
-            {
-                user.SetNewEmailConfirmationCode();
-            }
+          //  await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
         }
 
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
@@ -282,18 +271,10 @@ namespace School.Authorization.Users
             var user = ObjectMapper.Map<User>(input.User); //Passwords is not mapped (see mapping configuration)
             user.TenantId = AbpSession.TenantId;
 
-            //Set password
-            if (input.SetRandomPassword|| input.User.Password.IsNullOrEmpty())
+            await UserManager.InitializeOptionsAsync(AbpSession.TenantId);
+            foreach (var validator in _passwordValidators)
             {
-                input.User.Password = User.CreateRandomPassword();
-            }
-            else
-            {
-                await UserManager.InitializeOptionsAsync(AbpSession.TenantId);
-                foreach (var validator in _passwordValidators)
-                {
-                    CheckErrors(await validator.ValidateAsync(UserManager, user, input.User.Password));
-                }
+                CheckErrors(await validator.ValidateAsync(UserManager, user, input.User.Password));
             }
 
             user.Password = _passwordHasher.HashPassword(user, input.User.Password);
@@ -313,7 +294,7 @@ namespace School.Authorization.Users
             await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
 
             //Organization Units
-            await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
+           // await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
         }
 
         private async Task FillRoleNames(List<UserListDto> userListDtos)

@@ -5,8 +5,6 @@ using Abp.Extensions;
 using Abp.UI;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
-using MyCompanyName.AbpZeroTemplate.Authorization;
-using MyCompanyName.AbpZeroTemplate.Authorization.Accounts.Dto;
 using MyCompanyName.AbpZeroTemplate.Authorization.Impersonation;
 using School.Authorization.Accounts.Dto;
 using School.Authorization.Users;
@@ -37,8 +35,6 @@ namespace School.Authorization.Accounts
         {
             var user = await _userRegistrationManager.RegisterAsync(
                 input.Name,
-                input.Surname,
-                input.EmailAddress,
                 input.UserName,
                 input.Password
               
@@ -52,11 +48,7 @@ namespace School.Authorization.Accounts
             };
         }
 
-        public async Task SendPasswordResetCode(SendPasswordResetCodeInput input)
-        {
-            var user = await GetUserByChecking(input.EmailAddress);
-            user.SetNewPasswordResetCode();
-        }
+       
 
         public async Task<ResetPasswordOutput> ResetPassword(ResetPasswordInput input)
         {
@@ -79,27 +71,9 @@ namespace School.Authorization.Accounts
             };
         }
 
-        public async Task SendEmailActivationLink(SendEmailActivationLinkInput input)
-        {
-            var user = await GetUserByChecking(input.EmailAddress);
-            user.SetNewEmailConfirmationCode();
-          
-        }
+     
 
-        public async Task ActivateEmail(ActivateEmailInput input)
-        {
-            var user = await UserManager.GetUserByIdAsync(input.UserId);
-            if (user == null || user.EmailConfirmationCode.IsNullOrEmpty() || user.EmailConfirmationCode != input.ConfirmationCode)
-            {
-                throw new UserFriendlyException(L("InvalidEmailConfirmationCode"), L("InvalidEmailConfirmationCode_Detail"));
-            }
-
-            user.IsEmailConfirmed = true;
-            user.EmailConfirmationCode = null;
-
-            await UserManager.UpdateAsync(user);
-        }
-
+      
         [AbpAuthorize]
         public virtual async Task<ImpersonateOutput> Impersonate(ImpersonateInput input)
         {
@@ -119,14 +93,7 @@ namespace School.Authorization.Accounts
             };
         }
 
-        public virtual async Task<SwitchToLinkedAccountOutput> SwitchToLinkedAccount(SwitchToLinkedAccountInput input)
-        {
-            return new SwitchToLinkedAccountOutput
-            {
-                SwitchAccountToken ="",
-                TenancyName = await GetTenancyNameOrNullAsync(input.TargetTenantId)
-            };
-        }
+      
 
         private async Task<Tenant> GetActiveTenantAsync(int tenantId)
         {

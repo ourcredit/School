@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Roles.Dto
+namespace School.Authorization.Roles.Dto
 {
     public class RoleEditDto
     {

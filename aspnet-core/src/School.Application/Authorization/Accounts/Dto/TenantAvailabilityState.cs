@@ -1,4 +1,4 @@
-﻿namespace MyCompanyName.AbpZeroTemplate.Authorization.Accounts.Dto
+﻿namespace School.Authorization.Accounts.Dto
 {
     public enum TenantAvailabilityState
     {

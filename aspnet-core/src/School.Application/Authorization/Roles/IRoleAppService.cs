@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using MyCompanyName.AbpZeroTemplate.Authorization.Roles.Dto;
+using School.Authorization.Roles.Dto;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Roles
+namespace School.Authorization.Roles
 {
     /// <summary>
     /// Application service that is used by 'role management' page.

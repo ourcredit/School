@@ -1,6 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Accounts.Dto
+namespace School.Authorization.Accounts.Dto
 {
     //### This class is mapped in CustomDtoMapper ###
     public class CurrentTenantInfoDto : EntityDto

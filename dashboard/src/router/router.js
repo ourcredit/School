@@ -7,7 +7,7 @@ export const loginRouter = {
     path: '/login',
     name: 'login',
     meta: {
-        title: 'LogIn'
+        title: '登陆页'
     },
     component: () =>
         import ('@/views/login.vue')
@@ -17,7 +17,7 @@ export const page404 = {
     path: '/*',
     name: 'error-404',
     meta: {
-        title: '404 - Page does not exist'
+        title: '404-未找到页面'
     },
     component: () =>
         import ('@/views/error-page/404.vue')
@@ -26,7 +26,7 @@ export const page404 = {
 export const page403 = {
     path: '/403',
     meta: {
-        title: '403 - You are not authorized'
+        title: '403 - 未授权'
     },
     name: 'error-403',
     component: () =>
@@ -36,7 +36,7 @@ export const page403 = {
 export const page500 = {
     path: '/500',
     meta: {
-        title: '500 - Server error'
+        title: '500 - 服务器内部错误'
     },
     name: 'error-500',
     component: () =>
@@ -57,17 +57,23 @@ export const otherRouter = {
     component: Main,
     children: [{
         path: 'home',
-        title: 'HomePage',
+        title: '首页',
         name: 'home_index',
         component: () =>
             import ('@/views/home/home.vue')
+    }, {
+        path: 'setting',
+        title: '配置设备',
+        name: 'settings',
+        component: () =>
+            import ('@/views/operators/setting.vue')
     }]
 };
 
 // Left menu items
 export const appRouter = [{
     path: '/point',
-    icon: 'settings',
+    icon: 'pinpoint',
     title: '点位信息',
     name: 'point',
     component: Main,
@@ -81,7 +87,7 @@ export const appRouter = [{
     }]
 }, {
     path: '/device',
-    icon: 'settings',
+    icon: 'magnet',
     title: '设备信息',
     name: 'device',
     component: Main,
@@ -95,7 +101,7 @@ export const appRouter = [{
     }]
 }, {
     path: '/orders',
-    icon: 'settings',
+    icon: 'record',
     title: '订单信息',
     name: 'orders',
     component: Main,
@@ -109,7 +115,7 @@ export const appRouter = [{
     }]
 }, {
     path: '/audits',
-    icon: 'settings',
+    icon: 'android-list',
     title: '日志管理',
     name: 'audit',
     component: Main,
@@ -130,7 +136,7 @@ export const appRouter = [{
     }]
 }, {
     path: '/operator',
-    icon: 'settings',
+    icon: 'icecream',
     title: '运营商信息',
     name: 'operator',
     component: Main,
@@ -144,7 +150,7 @@ export const appRouter = [{
     }]
 }, {
     path: '/admin',
-    icon: 'settings',
+    icon: 'gear-a',
     title: '系统管理',
     name: 'administration',
     component: Main,

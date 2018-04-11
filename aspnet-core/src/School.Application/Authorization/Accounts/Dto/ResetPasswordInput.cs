@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Accounts.Dto
+namespace School.Authorization.Accounts.Dto
 {
     public class ResetPasswordInput
     {

@@ -1,5 +1,5 @@
 <style lang="less">
-    @import './500.less';
+@import "./500.less";
 </style>
 
 <template>
@@ -11,8 +11,8 @@
                 </div>
                 <p class="error500-body-con-message">Oops! the server is wrong</p>
                 <div class="error500-btn-con">
-                    <Button @click="goHome" size="large" style="width: 200px;" type="text">{{'Return to Home page'|l}}</Button>
-                    <Button @click="backPage" size="large" style="width: 200px;margin-left: 40px;" type="primary">{{'Back to last page'|l}}</Button>
+                    <Button @click="goHome" size="large" style="width: 200px;" type="text">返回首页</Button>
+                    <Button @click="backPage" size="large" style="width: 200px;margin-left: 40px;" type="primary">尾页</Button>
                 </div>
             </Card>
         </div>
@@ -21,16 +21,16 @@
 
 <script>
 export default {
-    name: 'Error500',
-    methods: {
-        backPage () {
-            this.$router.go(-1);
-        },
-        goHome () {
-            this.$router.push({
-                name: 'home_index'
-            });
-        }
+  name: "Error500",
+  methods: {
+    backPage() {
+      this.$router.go(-1);
+    },
+    goHome() {
+      this.$router.push({
+        name: "home_index"
+      });
     }
+  }
 };
 </script>

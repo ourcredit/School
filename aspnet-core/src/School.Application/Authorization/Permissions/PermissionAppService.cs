@@ -2,8 +2,7 @@
 using System.Linq;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
-using MyCompanyName.AbpZeroTemplate.Authorization.Permissions;
-using MyCompanyName.AbpZeroTemplate.Authorization.Permissions.Dto;
+using School.Authorization.Permissions.Dto;
 
 namespace School.Authorization.Permissions
 {

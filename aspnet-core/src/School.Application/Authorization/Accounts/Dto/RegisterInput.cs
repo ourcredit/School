@@ -13,18 +13,13 @@ namespace School.Authorization.Accounts.Dto
         [StringLength(AbpUserBase.MaxNameLength)]
         public string Name { get; set; }
 
-        [Required]
-        [StringLength(AbpUserBase.MaxSurnameLength)]
-        public string Surname { get; set; }
+       
 
         [Required]
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
 
-        [Required]
-        [EmailAddress]
-        [StringLength(AbpUserBase.MaxEmailAddressLength)]
-        public string EmailAddress { get; set; }
+    
 
         [Required]
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]
@@ -38,7 +33,7 @@ namespace School.Authorization.Accounts.Dto
         {
             if (!UserName.IsNullOrEmpty())
             {
-                if (!UserName.Equals(EmailAddress) && ValidationHelper.IsEmail(UserName))
+                if (ValidationHelper.IsEmail(UserName))
                 {
                     yield return new ValidationResult("Username cannot be an email address unless it's same with your email address !");
                 }

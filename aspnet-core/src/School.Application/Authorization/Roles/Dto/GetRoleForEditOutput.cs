@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Abp.Application.Services.Dto;
-using MyCompanyName.AbpZeroTemplate.Authorization.Permissions.Dto;
+using School.Authorization.Permissions.Dto;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Roles.Dto
+namespace School.Authorization.Roles.Dto
 {
     public class GetRoleForEditOutput
     {

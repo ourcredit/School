@@ -4,7 +4,7 @@ using System.Linq;
 using Abp.Authorization;
 using Abp.Runtime.Validation;
 
-namespace MyCompanyName.AbpZeroTemplate.Authorization.Permissions
+namespace School.Authorization.Permissions
 {
     public static class PermissionManagerExtensions
     {

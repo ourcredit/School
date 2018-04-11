@@ -8,8 +8,7 @@ using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
 using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
-using MyCompanyName.AbpZeroTemplate.Authorization.Users;
-using MyCompanyName.AbpZeroTemplate.Authorization.Users.Dto;
+using School.Authorization.Users.Dto;
 
 namespace School.Authorization.Users
 {

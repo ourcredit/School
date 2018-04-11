@@ -1,273 +1,294 @@
 <template>
     <div>
         <Card>
-            <p slot="title">{{'Users'|l}}</p>
-            <Dropdown slot="extra"  @on-click="handleClickActionsDropdown">
-                <a href="javascript:void(0)">
-                    {{'Actions'|l}}
-                    <Icon type="android-more-vertical"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                    <DropdownItem name='Refresh'>{{'Refresh'|l}}</DropdownItem>
-                    <DropdownItem name='Create'>{{'Create'|l}}</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
+            <p slot="title">用户信息</p>
+            <Row slot="extra">
+                <i-col span="12">
+                </i-col>
+                <i-col span="12">
+                    <i-button @click="create" type="primary">添加</i-button>
+                </i-col>
+            </Row>
             <Table :columns="columns" border :data="users"></Table>
-            <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
+            <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
+                :current="currentPage"></Page>
         </Card>
-        <Modal v-model="showModal" :title="L('CreateNewUser')" @on-ok="save" :okText="L('save')" :cancelText="L('cancel')">
+        <Modal v-model="showModal" title="添加用户" @on-ok="save" okText="保存" cancelText="关闭">
             <div>
                 <Form ref="newUserForm" label-position="top" :rules="newUserRule" :model="editUser">
                     <Tabs value="detail">
-                        <TabPane :label="L('UserDetails')" name="detail">
-                            <FormItem :label="L('UserName')" prop="userName">
+                        <TabPane label="用户信息" name="detail">
+                            <FormItem label="用户名" prop="userName">
                                 <Input v-model="editUser.userName" :maxlength="32" :minlength="2"></Input>
                             </FormItem>
-                            <FormItem :label="L('Name')" prop="name">
+                            <FormItem label="姓名" prop="name">
                                 <Input v-model="editUser.name" :maxlength="32"></Input>
                             </FormItem>
-                            <FormItem :label="L('Surname')" prop="surname">
-                                <Input v-model="editUser.surname" :maxlength="1024"></Input>
-                            </FormItem>
-                            <FormItem :label="L('EmailAddress')" prop="emailAddress">
-                                <Input v-model="editUser.emailAddress" type="email" :maxlength="32"></Input>
-                            </FormItem>
-                            <FormItem :label="L('Password')" prop="password">
+                            <FormItem label="密码" prop="password">
                                 <Input v-model="editUser.password" type="password" :maxlength="32"></Input>
                             </FormItem>
-                            <FormItem :label="L('ConfirmPassword')" prop="confirmPassword">
+                            <FormItem label="确认密码" prop="confirmPassword">
                                 <Input v-model="editUser.confirmPassword" type="password" :maxlength="32"></Input>
                             </FormItem>
                             <FormItem>
-                                <Checkbox v-model="editUser.isActive">{{'IsActive'|l}}</Checkbox>
+                                <Checkbox v-model="editUser.isActive">是否启用</Checkbox>
                             </FormItem>
                         </TabPane>
-                        <TabPane :label="L('UserRoles')" name="roles">
+                        <TabPane label="用户角色" name="roles">
                             <CheckboxGroup v-model="editUser.roleNames">
-                                <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
+                                <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id">
+                                    <span>{{role.name}}</span>
+                                </Checkbox>
                             </CheckboxGroup>
                         </TabPane>
                     </Tabs>
-                    
+
                 </Form>
             </div>
             <div slot="footer">
-                <Button @click="showModal=false">{{'Cancel'|l}}</Button>
-                <Button @click="save" type="primary">{{'Save'|l}}</Button>
+                <Button @click="showModal=false">关闭</Button>
+                <Button @click="save" type="primary">保存</Button>
             </div>
         </Modal>
-        <Modal v-model="showEditModal" :title="L('EditUser')" @on-ok="save" :okText="L('save')" :cancelText="L('cancel')">
+        <Modal v-model="showEditModal" title="编辑用户" @on-ok="save" okText="保存" cancelText="关闭">
             <div>
                 <Form ref="userForm" label-position="top" :rules="userRule" :model="editUser">
                     <Tabs value="detail">
-                        <TabPane :label="L('UserDetails')" name="detail">
-                            <FormItem :label="L('UserName')" prop="userName">
+                        <TabPane label="用户信息" name="detail">
+                            <FormItem label="用户名" prop="userName">
                                 <Input v-model="editUser.userName" :maxlength="32" :minlength="2"></Input>
                             </FormItem>
-                            <FormItem :label="L('Name')" prop="name">
+                            <FormItem label="姓名" prop="name">
                                 <Input v-model="editUser.name" :maxlength="32"></Input>
                             </FormItem>
-                            <FormItem :label="L('Surname')" prop="surname">
-                                <Input v-model="editUser.surname" :maxlength="1024"></Input>
-                            </FormItem>
-                            <FormItem :label="L('EmailAddress')" prop="emailAddress">
-                                <Input v-model="editUser.emailAddress" type="email" :maxlength="32"></Input>
-                            </FormItem>
+
                             <FormItem>
-                                <Checkbox v-model="editUser.isActive">{{'IsActive'|l}}</Checkbox>
+                                <Checkbox v-model="editUser.isActive">是否启用</Checkbox>
                             </FormItem>
                         </TabPane>
-                        <TabPane :label="L('UserRoles')" name="roles">
+                        <TabPane label="角色信息" name="roles">
                             <CheckboxGroup v-model="editUser.roleNames">
-                                <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
+                                <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id">
+                                    <span>{{role.name}}</span>
+                                </Checkbox>
                             </CheckboxGroup>
                         </TabPane>
-                    </Tabs>                    
+                    </Tabs>
                 </Form>
             </div>
             <div slot="footer">
-                <Button @click="showEditModal=false">{{'Cancel'|l}}</Button>
-                <Button @click="save" type="primary">{{'Save'|l}}</Button>
+                <Button @click="showEditModal=false">关闭</Button>
+                <Button @click="save" type="primary">保存</Button>
             </div>
         </Modal>
     </div>
 </template>
 <script>
 export default {
-    methods:{
-        create(){
-            this.editUser={isActive:true};
-            this.showModal=true;
-        },
-        async save(){
-            if(!!this.editUser.id){
-                this.$refs.userForm.validate(async (val)=>{
-                    if(val){
-                        await this.$store.dispatch({
-                            type:'user/update',
-                            data:this.editUser
-                        })
-                        this.showEditModal=false;
-                        await this.getpage();
-                    }
-                })
-                
-            }else{
-                this.$refs.newUserForm.validate(async (val)=>{
-                    if(val){
-                        await this.$store.dispatch({
-                            type:'user/create',
-                            data:this.editUser
-                        })
-                        this.showModal=false;
-                        await this.getpage();
-                    }
-                })
-            }
-            
-        },
-        pageChange(page){
-            this.$store.commit('user/setCurrentPage',page);
-            this.getpage();
-        },
-        pagesizeChange(pagesize){
-            this.$store.commit('user/setPageSize',pagesize);
-            this.getpage();
-        },
-        async getpage(){
+  methods: {
+    create() {
+      this.editUser = {
+        isActive: true
+      };
+      this.showModal = true;
+    },
+    async save() {
+      if (!!this.editUser.id) {
+        this.$refs.userForm.validate(async val => {
+          if (val) {
             await this.$store.dispatch({
-                type:'user/getAll'
-            })
-        },
-        handleClickActionsDropdown(name){
-            if(name==='Create'){
-                this.create();
-            }else if(name==='Refresh'){
-                this.getpage();
-            }
-        }
-    },
-    data(){
-        const validatePassCheck = (rule, value, callback) => {
-            if (!value) {
-                callback(new Error('Please enter your password again'));
-            } else if (value !== this.editUser.password) {
-                callback(new Error('The two input passwords do not match!'));
-            } else {
-                callback();
-            }
-        };
-        return{
-            editUser:{},
-            showModal:false,
-            showEditModal:false,
-            newUserRule:{
-                userName:[{required: true,message:'User Name is required',trigger: 'blur'}],
-                name:[{required:true,message:'Name is required',trigger: 'blur'}],
-                surname:[{required:true,message:'Surname is required',trigger: 'blur'}],
-                emailAddress:[{required:true,message:'Email is required',trigger: 'blur'},{type: 'email'}],
-                password:[{required:true,message:'Password is required',trigger: 'blur'}],
-                confirmPassword:{validator:validatePassCheck,trigger: 'blur'}
-            },
-            
-            userRule:{
-                userName:[{required: true,message:'User Name is required',trigger: 'blur'}],
-                name:[{required:true,message:'Name is required',trigger: 'blur'}],
-                surname:[{required:true,message:'Surname is required',trigger: 'blur'}],
-                emailAddress:[{required:true,message:'Email is required',trigger: 'blur'},{type: 'email'}],
-            },
-            columns:[{
-                title:this.L('UserName'),
-                key:'userName'
-            },{
-                title:this.L('FullName'),
-                key:'fullName'
-            },{
-                title:this.L('EmailAddress'),
-                key:'emailAddress'
-            },{
-                title:this.L('IsActive'),
-                render:(h,params)=>{
-                    return h('Checkbox',{
-                        props:{
-                            value:this.users[params.index].isActive,
-                            disabled:true
-                        }
-                    })
-                }
-            },{
-                title: this.L('Actions'),
-                key: 'action',
-                width:150,
-                render:(h,params)=>{
-                    return h('div',[
-                        h('Button',{
-                            props:{
-                                type:'primary',
-                                size:'small'
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:()=>{
-                                    this.editUser=this.users[params.index];
-                                    this.showEditModal=true;
-                                }
-                            }
-                        },this.L('Edit')),
-                        h('Button',{
-                            props:{
-                                type:'error',
-                                size:'small'
-                            },
-                            on:{
-                                click:async()=>{
-                                    this.$Modal.confirm({
-                                        title:this.L(''),
-                                        content:this.L('Delete user'),
-                                        okText:this.L('Yes'),
-                                        cancelText:this.L('No'),
-                                        onOk:async()=>{
-                                            await this.$store.dispatch({
-                                                type:'user/delete',
-                                                data:this.users[params.index]
-                                            })
-                                            await this.getpage();
-                                        }
-                                    })
-                                }
-                            }
-                        },this.L('Delete'))
-                    ])
-                }
-            }]
-        }
-    },
-    computed:{
-        users(){
-            return this.$store.state.user.users;
-        },
-        roles(){
-            return this.$store.state.user.roles;
-        },
-        totalCount(){
-            return this.$store.state.user.totalCount;
-        },
-        currentPage(){
-            return this.$store.state.user.currentPage;
-        },
-        pageSize(){
-            return this.$store.state.user.pageSize;
-        }
-    },
-    async created(){
-        this.getpage();
-        await this.$store.dispatch({
-            type:'user/getRoles'
+              type: "user/update",
+              data: this.editUser
+            });
+            this.showEditModal = false;
+            await this.getpage();
+          }
         });
+      } else {
+        this.$refs.newUserForm.validate(async val => {
+          if (val) {
+            await this.$store.dispatch({
+              type: "user/create",
+              data: this.editUser
+            });
+            this.showModal = false;
+            await this.getpage();
+          }
+        });
+      }
+    },
+    pageChange(page) {
+      this.$store.commit("user/setCurrentPage", page);
+      this.getpage();
+    },
+    pagesizeChange(pagesize) {
+      this.$store.commit("user/setPageSize", pagesize);
+      this.getpage();
+    },
+    async getpage() {
+      await this.$store.dispatch({
+        type: "user/getAll"
+      });
     }
-}
+  },
+  data() {
+    const validatePassCheck = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error("请确认你的密码"));
+      } else if (value !== this.editUser.password) {
+        callback(new Error("两次密码不一致"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      editUser: {},
+      showModal: false,
+      showEditModal: false,
+      newUserRule: {
+        userName: [
+          {
+            required: true,
+            message: "用户名必填",
+            trigger: "blur"
+          }
+        ],
+        name: [
+          {
+            required: true,
+            message: "姓名必填",
+            trigger: "blur"
+          }
+        ],
+        password: [
+          {
+            required: true,
+            message: "密码必填",
+            trigger: "blur"
+          }
+        ],
+        confirmPassword: {
+          validator: validatePassCheck,
+          trigger: "blur"
+        }
+      },
+
+      userRule: {
+        userName: [
+          {
+            required: true,
+            message: "用户名必填",
+            trigger: "blur"
+          }
+        ],
+        name: [
+          {
+            required: true,
+            message: "姓名必填",
+            trigger: "blur"
+          }
+        ]
+      },
+      columns: [
+        {
+          title: "用户名",
+          key: "userName"
+        },
+        {
+          title: "姓名",
+          key: "name"
+        },
+        {
+          title: "是否启用",
+          render: (h, params) => {
+            return h("Checkbox", {
+              props: {
+                value: this.users[params.index].isActive,
+                disabled: true
+              }
+            });
+          }
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 150,
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.editUser = this.users[params.index];
+                      this.showEditModal = true;
+                    }
+                  }
+                },
+                "编辑"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "error",
+                    size: "small"
+                  },
+                  on: {
+                    click: async () => {
+                      this.$Modal.confirm({
+                        title: "",
+                        content: "删除用户",
+                        okText: "是",
+                        cancelText: "否",
+                        onOk: async () => {
+                          await this.$store.dispatch({
+                            type: "user/delete",
+                            data: this.users[params.index]
+                          });
+                          await this.getpage();
+                        }
+                      });
+                    }
+                  }
+                },
+                "删除"
+              )
+            ]);
+          }
+        }
+      ]
+    };
+  },
+  computed: {
+    users() {
+      return this.$store.state.user.users;
+    },
+    roles() {
+      return this.$store.state.user.roles;
+    },
+    totalCount() {
+      return this.$store.state.user.totalCount;
+    },
+    currentPage() {
+      return this.$store.state.user.currentPage;
+    },
+    pageSize() {
+      return this.$store.state.user.pageSize;
+    }
+  },
+  async created() {
+    this.getpage();
+    await this.$store.dispatch({
+      type: "user/getRoles"
+    });
+  }
+};
 </script>
-
-

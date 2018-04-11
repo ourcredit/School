@@ -29,11 +29,6 @@ export default {
     return {
       columns: [
         {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "设备名",
           key: "deviceName"
         },
@@ -48,6 +43,20 @@ export default {
         {
           title: "所属点位",
           key: "pointName"
+        },
+        {
+          title: "是否销售",
+          key: "pointName",
+          render: (h, params) => {
+            return "checkbox";
+          }
+        },
+        {
+          title: "制定价格",
+          key: "pointName",
+          render: (h, params) => {
+            return "price";
+          }
         }
       ]
     };

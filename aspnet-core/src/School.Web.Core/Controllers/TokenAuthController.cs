@@ -137,13 +137,9 @@ namespace School.Controllers
         {
             var user = await _userRegistrationManager.RegisterAsync(
                 externalUser.Name,
-                externalUser.Surname,
-                externalUser.EmailAddress,
                 externalUser.EmailAddress,
                 Authorization.Users.User.CreateRandomPassword()
-              
             );
-
             user.Logins = new List<UserLogin>
             {
                 new UserLogin

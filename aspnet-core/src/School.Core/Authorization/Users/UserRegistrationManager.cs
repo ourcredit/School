@@ -42,7 +42,7 @@ namespace School.Authorization.Users
             AbpSession = NullAbpSession.Instance;
         }
 
-        public async Task<User> RegisterAsync(string name, string surname, string emailAddress,
+        public async Task<User> RegisterAsync(string name,
             string userName, string plainPassword )
         {
             CheckForTenant();
@@ -55,8 +55,7 @@ namespace School.Authorization.Users
             {
                 TenantId = tenant.Id,
                 Name = name,
-                Surname = surname,
-                EmailAddress = emailAddress,
+                EmailAddress = $"{userName}.{name}@qq.com",
                 IsActive = true,
                 UserName = userName,
                 IsEmailConfirmed = false,
