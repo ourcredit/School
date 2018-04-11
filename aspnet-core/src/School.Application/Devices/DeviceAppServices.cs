@@ -69,7 +69,6 @@ namespace School.Devices
         /// <returns></returns>
         public async Task<ListResultDto<KeyValuePair<int,string>>> GetAllPoints()
         {
-
             var query = _pointRepository.GetAll();
             var points = await query
                 .ToListAsync();

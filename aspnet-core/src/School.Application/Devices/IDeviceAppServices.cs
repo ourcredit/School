@@ -40,7 +40,6 @@ namespace School.Devices
         /// <param name="input"></param>
         /// <returns></returns>
         Task<GetDeviceForEditOutput> GetDeviceForEdit(NullableIdDto<int> input);
-
         /// <summary>
         /// 添加或者修改Device的公共方法
         /// </summary>

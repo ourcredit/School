@@ -15,7 +15,7 @@
     </Card>
     <Modal v-model="showEditModal" title="编辑设备" @on-ok="save" okText="保存" cancelText="关闭">
       <div>
-        <Form inline ref="roleForm" label-position="top" :rules="roleRule" :model="device">
+        <Form inline ref="roleForm" label-position="top" :rules="rule" :model="device">
           <FormItem label="设备名称" prop="deviceName">
             <Input v-model="device.deviceName" :maxlength="120" :minlength="1"></Input>
           </FormItem>
@@ -23,10 +23,19 @@
             <Input v-model="device.deviceNum" :maxlength="120" :minlength="1"></Input>
           </FormItem>
            <FormItem label="设备类型" prop="deviceType">
-            <Input v-model="device.deviceType" ></Input>
+              <Form-item label="选择器">
+            <i-select :model.sync="device.deviceType" placeholder="请选择">
+                <i-option value="beijing">A</i-option>
+                <i-option value="shanghai">B</i-option>
+                <i-option value="shenzhen">C</i-option>
+                <i-option value="shenzhen">D</i-option>
+            </i-select>
+        </Form-item>
           </FormItem>
              <FormItem label="所属点位" prop="pointId">
-            <Input v-model="device.pointId" ></Input>
+             <i-select :model.sync="device.deviceType" placeholder="请选择">
+                <i-option :key="index" v-for="item in points" :value="item.key">{{ item.value }}</i-option>
+            </i-select>
           </FormItem>
         </Form>
       </div>
@@ -183,8 +192,11 @@ export default {
     };
   },
   computed: {
-    roles() {
-      return this.$store.state.point.device;
+    device() {
+      return this.$store.state.point.devices;
+    },
+    points() {
+      return this.$store.state.point.points;
     },
     totalCount() {
       return this.$store.state.point.totalCount;
@@ -198,6 +210,9 @@ export default {
   },
   async created() {
     this.getpage();
+    await this.$store.dispatch({
+      type: "device/getAllPoints"
+    });
   }
 };
 </script>

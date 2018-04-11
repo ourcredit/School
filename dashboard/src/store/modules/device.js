@@ -5,6 +5,7 @@ const point = {
     namespaced: true,
     state: {
         devices: [],
+        points: [],
         totalCount: 0,
         pageSize: 10,
         currentPage: 1
@@ -32,6 +33,13 @@ const point = {
             state.devices = [];
             state.devices.push(...rep.data.result.items);
             state.totalCount = rep.data.result.totalCount;
+        },
+        async getAllPoints({
+            state
+        }, payload) {
+            let rep = await Util.ajax.get('/api/services/app/Device/GetAllPoints');
+            state.points = [];
+            state.points.push(...rep.data.result.items);
         },
         async delete({
             state
