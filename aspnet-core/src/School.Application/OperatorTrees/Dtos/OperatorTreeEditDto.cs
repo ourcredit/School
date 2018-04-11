@@ -15,8 +15,6 @@ namespace School.OperatorTrees.Dtos
         /// </summary>
         [Required, MaxLength(120)]
         public string TreeName { get; set; }
-        public string TreeCode { get; set; }
-        public int TreeLength { get; set; }
         public int? ParentId { get; set; }
     }
 }
