@@ -16,4 +16,9 @@ namespace School.Dto
             MaxResultCount = AppConsts.DefaultPageSize;
         }
     }
+
+    public class FilterInputDto
+    {
+        public string Filter { get; set; }
+    }
 }
