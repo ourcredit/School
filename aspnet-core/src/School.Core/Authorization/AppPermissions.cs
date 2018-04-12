@@ -42,6 +42,7 @@ namespace School.Authorization
         public const string Pages_Operator = "Pages.Operator";
 
         public const string Pages_Operator_Orgs = "Pages.Operator.Orgs";
+        public const string Pages_Operator_Boxs = "Pages.Operator.Boxs";
 
         public const string Pages_Operator_Orgs_Create = "Pages.Operator.Orgs.Create";
         public const string Pages_Operator_Orgs_Edit = "Pages.Operator.Orgs.Edit";
