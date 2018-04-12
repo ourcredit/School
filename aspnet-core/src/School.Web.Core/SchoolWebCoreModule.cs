@@ -1,21 +1,24 @@
 ﻿using System;
+using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
+using Abp.AspNetCore.SignalR;
+using Abp.Configuration.Startup;
+using Abp.Dependency;
+using Abp.IO;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Zero.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using School.Authentication.JwtBearer;
 using School.Configuration;
 using School.EntityFrameworkCore;
 
 #if FEATURE_SIGNALR
 using Abp.Web.SignalR;
-#elif FEATURE_SIGNALR_ASPNETCORE
-using Abp.AspNetCore.SignalR;
 #endif
 
 namespace School
@@ -48,7 +51,8 @@ namespace School
             );
 
             // Use database for language management
-            Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
+            // Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
+            Configuration.ReplaceService<IAppConfigurationAccessor, AppConfigurationAccessor>();
 
             Configuration.Modules.AbpAspNetCore()
                  .CreateControllersForAppServices(
@@ -73,6 +77,35 @@ namespace School
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(SchoolWebCoreModule).GetAssembly());
+        }
+        public override void PostInitialize()
+        {
+            SetAppFolders();
+        }
+        private void SetAppFolders()
+        {
+            var appFolders = IocManager.Resolve<AppFolders>();
+
+            appFolders.SampleProfileImagesFolder = Path.Combine(_env.WebRootPath, $"Common{Path.DirectorySeparatorChar}Images{Path.DirectorySeparatorChar}SampleProfilePics");
+            appFolders.TempFileDownloadFolder = Path.Combine(_env.WebRootPath, $"Temp{Path.DirectorySeparatorChar}Downloads");
+            appFolders.WebLogsFolder = Path.Combine(_env.ContentRootPath, $"App_Data{Path.DirectorySeparatorChar}Logs");
+
+#if NET461
+            if (_env.IsDevelopment())
+            {
+                var currentAssemblyDirectoryPath = typeof(AbpZeroTemplateWebCoreModule).GetAssembly().GetDirectoryPathOrNull();
+                if (currentAssemblyDirectoryPath != null)
+                {
+                    appFolders.WebLogsFolder = Path.Combine(currentAssemblyDirectoryPath, $"App_Data{Path.DirectorySeparatorChar}Logs");
+                }
+            }
+#endif
+
+            try
+            {
+                DirectoryHelper.CreateIfNotExists(appFolders.TempFileDownloadFolder);
+            }
+            catch { }
         }
     }
 }

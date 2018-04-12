@@ -18,6 +18,8 @@ namespace School.EntityFrameworkCore
 
             return new SchoolDbContext(builder.Options);
         }
-      
+
+    
     }
+  
 }

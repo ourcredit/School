@@ -1,7 +1,9 @@
-﻿using Abp.EntityFrameworkCore.Configuration;
+﻿using Abp.Configuration;
+using Abp.EntityFrameworkCore.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using Abp.Zero.EntityFrameworkCore;
+using School.Configuration;
 using School.EntityFrameworkCore.Seed;
 
 namespace School.EntityFrameworkCore
@@ -31,16 +33,16 @@ namespace School.EntityFrameworkCore
                         SchoolDbContextConfigurer.Configure(options.DbContextOptions, options.ConnectionString);
                     }
                 });
+               
             }
         }
-
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(SchoolEntityFrameworkModule).GetAssembly());
         }
-
         public override void PostInitialize()
         {
+            var configurationAccessor = IocManager.Resolve<IAppConfigurationAccessor>();
             if (!SkipDbSeed)
             {
                 SeedHelper.SeedHostDb(IocManager);

@@ -24,8 +24,6 @@ namespace School.EntityFrameworkCore
 
     public class OtherDbContext : AbpDbContext
     {
-        public virtual DbSet<OperatorDevice> Courses { get; set; }
-
         public OtherDbContext(DbContextOptions<OtherDbContext> options)
             : base(options)
         {
