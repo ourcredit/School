@@ -2,65 +2,84 @@ import Cookies from 'js-cookie';
 import Util from '@/libs/util'
 import appconst from '@/libs/appconst'
 const user = {
-    namespaced:true,
+    namespaced: true,
     state: {
-        users:[],
-        totalCount:0,
-        pageSize:10,
-        currentPage:1,
-        roles:[]
+        users: [],
+        user: null,
+        totalCount: 0,
+        pageSize: 10,
+        currentPage: 1,
+        roles: []
     },
     mutations: {
-        logout(){
+        logout() {
             abp.auth.clearToken();
             location.reload();
         },
-        setPageSize(state,size){
-            state.pageSize=size;
+        setPageSize(state, size) {
+            state.pageSize = size;
         },
-        setCurrentPage(state,page){
-            state.currentPage=page;
+        setCurrentPage(state, page) {
+            state.currentPage = page;
         }
     },
-    actions:{
-        async login({state},payload){
-            let rep=await Util.ajax.post("/api/TokenAuth/Authenticate",payload.data);
+    actions: {
+        async login({
+            state
+        }, payload) {
+            let rep = await Util.ajax.post("/api/TokenAuth/Authenticate", payload.data);
             var tokenExpireDate = payload.data.rememberMe ? (new Date(new Date().getTime() + 1000 * rep.data.result.expireInSeconds)) : undefined;
-            abp.auth.setToken(rep.data.result.accessToken,tokenExpireDate);
-            abp.utils.setCookieValue(appconst.authorization.encrptedAuthTokenName,rep.data.result.encryptedAccessToken,tokenExpireDate,abp.appPath)
+            abp.auth.setToken(rep.data.result.accessToken, tokenExpireDate);
+            abp.utils.setCookieValue(appconst.authorization.encrptedAuthTokenName, rep.data.result.encryptedAccessToken, tokenExpireDate, abp.appPath)
         },
-        async getAll({state},payload){
-            let page={
-                maxResultCount:state.pageSize,
-                skipCount:(state.currentPage-1)*state.pageSize
+        async getAll({
+            state
+        }, payload) {
+            let page = {
+                maxResultCount: state.pageSize,
+                skipCount: (state.currentPage - 1) * state.pageSize
             }
-            let rep= await Util.ajax.get('/api/services/app/User/GetAll',{params:page});
-            state.users=[];
+            let rep = await Util.ajax.get('/api/services/app/User/GetUsers', {
+                params: page
+            });
+            state.users = [];
             state.users.push(...rep.data.result.items);
-            state.totalCount=rep.data.result.totalCount;
+            state.totalCount = rep.data.result.totalCount;
         },
-        async delete({state},payload){
-            await Util.ajax.delete('/api/services/app/User/Delete?Id='+payload.data.id);
+        async delete({
+            state
+        }, payload) {
+            await Util.ajax.delete('/api/services/app/User/DeleteUser?Id=' + payload.data.id);
         },
-        async create({state},payload){
-            await Util.ajax.post('/api/services/app/User/Create',payload.data);
+        async createOrUpdate({
+            state
+        }, payload) {
+            await Util.ajax.post('/api/services/app/User/CreateOrUpdateUser', payload.data);
         },
-        async update({state},payload){
-            await Util.ajax.put('/api/services/app/User/Update',payload.data);
+        async getUser({
+            state
+        }, payload) {
+            let rep = await Util.ajax.get('/api/services/app/User/GetUserForEdit?Id=' + payload.data.id);
+            state.user = null;
+            state.user = rep.data.result;
         },
-        async getRoles({state}){
-            let rep=await Util.ajax.get('/api/services/app/User/GetRoles');
-            state.roles=[];
+        async getRoles({
+            state
+        }) {
+            let rep = await Util.ajax.get('/api/services/app/Role/GetRoles');
+            state.roles = [];
             state.roles.push(...rep.data.result.items)
         },
-        async changeLanguage({state},payload){
-            let rep=await Util.ajax.post('/api/services/app/User/ChangeLanguage',payload.data);
+        async changeLanguage({
+            state
+        }, payload) {
+            let rep = await Util.ajax.post('/api/services/app/User/ChangeLanguage', payload.data);
             abp.utils.setCookieValue(
                 'Abp.Localization.CultureName',
                 payload.data.languageName,
                 new Date(new Date().getTime() + 5 * 365 * 86400000),
                 abp.appPath
-            );  
+            );
             window.location.reload();
         }
     }

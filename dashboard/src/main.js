@@ -52,8 +52,51 @@ util.ajax.get('/AbpUserConfiguration/GetAll').then(result => {
         })
         return list
     }
-
+    /* 列表格式转换成树格式
+     * @param data 数组
+     * @param parentId 父节点id
+     * @param pidField 父节点字段名
+     */
+    const converToPermissionTree = (data, parentId, pidField, range) => {
+        var list = []
+        data.forEach((item) => {
+            var t = {};
+            t.title = item.displayName;
+            t.name = item.name;
+            t.parentName = item.parentName;
+            if (range) {
+                const temp = range.findIndex(key => key === item.name);
+                if (temp > 0) {
+                    if (!item.children || item.children.length <= 0) {
+                        t.checked = true;
+                        t.expand = true;
+                    } else {
+                        t.checked = false;
+                        t.expand = false;
+                    }
+                } else {
+                    t.checked = false;
+                    t.expand = false;
+                }
+            }
+            if (item[pidField] == parentId) {
+                t.children = converToPermissionTree(data, item.name, pidField, range)
+                list.push(t)
+            }
+        })
+        return list
+    }
+    const depthNode = (arrays, node, result = []) => {
+        result.push(node.name);
+        let parent = arrays.find(c => c.name == node.parentName);
+        if (parent) {
+            result.push(parent.name);
+            depthNode(arrays, parent, result);
+        }
+    }
     Vue.prototype.$tree = converToTreedata;
+    Vue.prototype.$permissions = converToPermissionTree;
+    Vue.prototype.$depthNode = depthNode;
 
     Vue.prototype.formatter = function (value) {
         if (!value) return ''

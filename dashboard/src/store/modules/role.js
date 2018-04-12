@@ -5,53 +5,42 @@ const user = {
     namespaced: true,
     state: {
         roles: [],
-        totalCount: 0,
-        pageSize: 10,
-        currentPage: 1,
+        role: null,
         permissions: []
     },
-    mutations: {
-        setPageSize(state, size) {
-            state.pageSize = size;
-        },
-        setCurrentPage(state, page) {
-            state.currentPage = page;
-        }
-    },
+    mutations: {},
     actions: {
         async getAll({
             state
         }, payload) {
-            let page = {
-                maxResultCount: state.pageSize,
-                skipCount: (state.currentPage - 1) * state.pageSize
-            }
-            let rep = await Util.ajax.get('/api/services/app/Role/GetRoles', {
-                params: page
-            });
+            let rep = await Util.ajax.get('/api/services/app/Role/GetRoles');
             state.roles = [];
             state.roles.push(...rep.data.result.items);
-            state.totalCount = rep.data.result.totalCount;
+        },
+        async getRole({
+            state
+        }, payload) {
+            var params = ""
+            if (payload.data) {
+                params = "?Id=" + payload.data;
+            }
+            let rep = await Util.ajax.get('/api/services/app/Role/GetRoleForEdit' + params);
+            state.role = rep.data.result;
         },
         async delete({
             state
         }, payload) {
-            await Util.ajax.delete('/api/services/app/Role/Delete?Id=' + payload.data.id);
+            await Util.ajax.delete('/api/services/app/Role/DeleteRole?Id=' + payload.data);
         },
-        async create({
+        async createOrUpdate({
             state
         }, payload) {
-            await Util.ajax.post('/api/services/app/Role/Create', payload.data);
-        },
-        async update({
-            state
-        }, payload) {
-            await Util.ajax.put('/api/services/app/Role/Update', payload.data);
+            await Util.ajax.post('/api/services/app/Role/CreateOrUpdateRole', payload.data);
         },
         async getAllPermissions({
             state
         }) {
-            let rep = await Util.ajax.get('/api/services/app/Role/GetAllPermissions');
+            let rep = await Util.ajax.get('/api/services/app/Permission/GetAllPermissions');
             state.permissions = [];
             state.permissions.push(...rep.data.result.items)
         }

@@ -10,8 +10,6 @@
         </i-col>
       </Row>
       <Table :columns="columns" border :data="roles"></Table>
-      <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
-        :current="currentPage"></Page>
     </Card>
 
     <Modal v-model="showModal" title="添加角色" @on-ok="save" okText="保存" cancelText="关闭">
@@ -19,9 +17,6 @@
         <Form ref="newRoleForm" label-position="top" :rules="RoleRule" :model="editRole">
           <Tabs value="detail">
             <TabPane label="角色信息" name="detail">
-              <FormItem label="角色名称" prop="name">
-                <Input v-model="editRole.name" :maxlength="32" :minlength="2"></Input>
-              </FormItem>
               <FormItem label="显示名" prop="displayName">
                 <Input v-model="editRole.displayName" :maxlength="32" :minlength="2"></Input>
               </FormItem>
@@ -30,14 +25,7 @@
               </FormItem>
             </TabPane>
             <TabPane label="权限信息" name="roles">
-               <!-- <Tree show-checkbox :data="orgs"></Tree> -->
-              <FormItem label="权限树">
-                <CheckboxGroup v-model="editRole.permissions">
-                  <Checkbox :label="permission.name" v-for="permission in permissions" :key="permission.name">
-                    <span>{{permission.displayName}}</span>
-                  </Checkbox>
-                </CheckboxGroup>
-              </FormItem>
+               <Tree ref="tree" multiple show-checkbox :data="tree"></Tree>
             </TabPane>
           </Tabs>
         </Form>
@@ -52,44 +40,39 @@
 <script>
 export default {
   methods: {
-    create() {
-      this.editRole = {
-        isActive: true
-      };
+    async create() {
+      await this.$store.dispatch({
+        type: "role/getRole"
+      });
+      this.editRole = this.role.role;
+      this.permissions = this.role.permissions;
+      this.tree = this.$permissions(
+        this.role.permissions,
+        null,
+        "parentName",
+        this.role.grantedPermissionNames
+      );
       this.showModal = true;
     },
     async save() {
-      if (!!this.editRole.id) {
-        this.$refs.roleForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "role/update",
-              data: this.editRole
-            });
-            this.showEditModal = false;
-            await this.getpage();
-          }
-        });
-      } else {
-        this.$refs.newRoleForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "role/create",
-              data: this.editRole
-            });
-            this.showModal = false;
-            await this.getpage();
-          }
-        });
-      }
-    },
-    pageChange(page) {
-      this.$store.commit("role/setCurrentPage", page);
-      this.getpage();
-    },
-    pagesizeChange(pagesize) {
-      this.$store.commit("role/setPageSize", pagesize);
-      this.getpage();
+      var nodes = this.$refs.tree.getCheckedNodes();
+      var result = [];
+      nodes.forEach(c => {
+        this.$depthNode(this.permissions, c, result);
+      });
+      this.$refs.newRoleForm.validate(async val => {
+        if (val) {
+          await this.$store.dispatch({
+            type: "role/createOrUpdate",
+            data: {
+              role: this.editRole,
+              grantedPermissionNames: new Set(result)
+            }
+          });
+          this.showModal = false;
+          await this.getpage();
+        }
+      });
     },
     async getpage() {
       await this.$store.dispatch({
@@ -101,6 +84,8 @@ export default {
     return {
       editRole: {},
       showModal: false,
+      permissions: [],
+      tree: [],
       RoleRule: {
         name: [
           {
@@ -143,9 +128,19 @@ export default {
                     marginRight: "5px"
                   },
                   on: {
-                    click: () => {
-                      this.editRole = this.roles[params.index];
-                      console.log(this.editRole);
+                    click: async () => {
+                      await this.$store.dispatch({
+                        type: "role/getRole",
+                        data: params.row.id
+                      });
+                      this.editRole = this.role.role;
+                      this.permissions = this.role.permissions;
+                      this.tree = this.$permissions(
+                        this.role.permissions,
+                        null,
+                        "parentName",
+                        this.role.grantedPermissionNames
+                      );
                       this.showModal = true;
                     }
                   }
@@ -169,7 +164,7 @@ export default {
                         onOk: async () => {
                           await this.$store.dispatch({
                             type: "role/delete",
-                            data: this.roles[params.index]
+                            data: params.row.id
                           });
                           await this.getpage();
                         }
@@ -189,24 +184,12 @@ export default {
     roles() {
       return this.$store.state.role.roles;
     },
-    permissions() {
-      return this.$store.state.role.permissions;
-    },
-    totalCount() {
-      return this.$store.state.role.totalCount;
-    },
-    currentPage() {
-      return this.$store.state.role.currentPage;
-    },
-    pageSize() {
-      return this.$store.state.role.pageSize;
+    role() {
+      return this.$store.state.role.role;
     }
   },
   async created() {
     this.getpage();
-    await this.$store.dispatch({
-      type: "role/getAllPermissions"
-    });
   }
 };
 </script>
