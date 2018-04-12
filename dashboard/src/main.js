@@ -42,12 +42,14 @@ util.ajax.get('/AbpUserConfiguration/GetAll').then(result => {
     const converToTreedata = (data, parentId, pidField) => {
         var list = []
         data.forEach((item) => {
-            item.title = item.treeName;
-            item.expand = true;
+            var t = {};
+            t.id = item.id;
+            t.title = item.treeName;
+            t.expand = true;
             if (item[pidField] == parentId) {
-                item.children = converToTreedata(data, item.id, pidField)
-                data.children = item.children
-                list.push(item)
+                t.children = converToTreedata(data, item.id, pidField)
+                // data.children = item.children
+                list.push(t)
             }
         })
         return list

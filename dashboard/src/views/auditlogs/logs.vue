@@ -35,19 +35,11 @@ export default {
       showModal: false,
       columns: [
         {
-          title: "订单编号",
+          title: "设备编号",
           key: "name"
         },
         {
-          title: "商品名称",
-          key: "displayName"
-        },
-        {
           title: "设备名称",
-          key: "displayName"
-        },
-        {
-          title: "设备编号",
           key: "displayName"
         },
         {
@@ -59,15 +51,7 @@ export default {
           key: "displayName"
         },
         {
-          title: "订单金额",
-          key: "displayName"
-        },
-        {
-          title: "订单状态",
-          key: "displayName"
-        },
-        {
-          title: "订单时间",
+          title: "日志信息",
           key: "displayName"
         }
       ]

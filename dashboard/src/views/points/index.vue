@@ -22,15 +22,16 @@
           <FormItem label="地址" prop="pointAddress">
             <Input v-model="editRole.pointAddress" :maxlength="120" :minlength="1"></Input>
           </FormItem>
-           <FormItem label="描述" prop="pointDescription">
+          <FormItem label="描述" prop="pointDescription">
             <Input v-model="editRole.pointDescription" :maxlength="120" :minlength="1"></Input>
           </FormItem>
         </Form>
-        <baidu-map :center="center" :zoom="15" :scroll-wheel-zoom="true" @ready="handler" class="bm-view">
-          <bm-marker @mouseup="showWindows" :position="center" :dragging="true" animation="BMAP_ANIMATION_BOUNCE">
+        <baidu-map @click="draw" :center="center" :zoom="15" :scroll-wheel-zoom="true" @ready="handler" class="bm-view">
+          <bm-marker :position="point" :dragging="false">
           </bm-marker>
+          
         </baidu-map>
-        </baidu-map>
+        
       </div>
       <div slot="footer">
         <Button @click="showEditModal=false">关闭</Button>
@@ -42,21 +43,28 @@
 <script>
 export default {
   methods: {
-    create() {
-      this.editRole = { isActive: true };
-      this.showEditModal = true;
-    },
-    showWindows(e) {
-      console.log(e);
+    draw(e) {
+      this.point = {
+        lng: e.point.lng,
+        lat: e.point.lat
+      };
       this.editRole.longitude = e.point.lng;
       this.editRole.latitide = e.point.lat;
+    },
+    create() {
+      this.editRole = {
+        isActive: true
+      };
+      this.showEditModal = true;
     },
     async save() {
       this.$refs.roleForm.validate(async val => {
         if (val) {
           await this.$store.dispatch({
             type: "point/createOrUpdate",
-            data: { point: this.editRole }
+            data: {
+              point: this.editRole
+            }
           });
           this.showEditModal = false;
           await this.getpage();
@@ -80,7 +88,11 @@ export default {
   },
   data() {
     return {
-      center: { lng: 116.404, lat: 39.915 },
+      point: {},
+      center: {
+        lng: 116.404,
+        lat: 39.915
+      },
       editRole: {
         isActive: true
       },
@@ -131,10 +143,11 @@ export default {
                   on: {
                     click: () => {
                       this.editRole = this.roles[params.index];
-                      this.center = {
+                      this.point = {
                         lng: this.editRole.longitude,
                         lat: this.editRole.latitide
                       };
+                      this.center = this.point;
                       this.showEditModal = true;
                     }
                   }

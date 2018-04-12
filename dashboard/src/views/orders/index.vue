@@ -1,19 +1,40 @@
 <template>
     <div>
-        <Card>
-            <p slot="title">订单信息</p>
+  <Row :gutter="16">
+      <Col span="5">
+      <Card>
+        <p slot="title">机构信息</p>
+        <Tree @on-select-change="change" :data="orgs"></Tree>
+      </Card>
+      </Col>
+      <Col span="19">
+      <Card>
+       <p slot="title">订单信息</p>
             <Table :columns="columns" border :data="orders"></Table>
             <Page :total="totalCount" class="margin-top-10"
              @on-change="pageChange"
               @on-page-size-change="pagesizeChange"
                :page-size="pageSize"
                 :current="currentPage"></Page>
-        </Card>
+      </Card>
+      </Col>
+    </Row>
     </div>
 </template>
 <script>
 export default {
   methods: {
+    async change(data) {
+      if (data.length == 1) {
+        this.parent = {
+          parentId: data[0].id,
+          parentName: data[0].title
+        };
+        await this.getpage();
+      } else {
+        this.parent = null;
+      }
+    },
     pageChange(page) {
       this.$store.commit("order/setCurrentPage", page);
       this.getpage();
@@ -25,6 +46,11 @@ export default {
     async getpage() {
       await this.$store.dispatch({
         type: "order/getAll"
+      });
+    },
+    async init() {
+      await this.$store.dispatch({
+        type: "org/getAll"
       });
     },
     detail() {}
@@ -74,6 +100,10 @@ export default {
     };
   },
   computed: {
+    orgs() {
+      let orgs = this.$store.state.org.orgs;
+      return this.$tree(orgs, null, "parentId");
+    },
     orders() {
       return this.$store.state.role.roles;
     },
@@ -89,6 +119,7 @@ export default {
   },
   async created() {
     this.getpage();
+    this.init();
   }
 };
 </script>
