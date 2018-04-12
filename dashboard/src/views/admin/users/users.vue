@@ -15,7 +15,7 @@
         </Card>
         <Modal v-model="showModal" title="添加用户" @on-ok="save" okText="保存" cancelText="关闭">
             <div>
-                <Form ref="newUserForm" label-position="top" :rules="newUserRule" :model="editUser">
+                <Form ref="userForm" label-position="top" :rules="newUserRule" :model="editUser">
                     <Tabs value="detail">
                         <TabPane label="用户信息" name="detail">
                             <FormItem label="用户名" prop="userName">
@@ -24,10 +24,10 @@
                             <FormItem label="姓名" prop="name">
                                 <Input v-model="editUser.name" :maxlength="32"></Input>
                             </FormItem>
-                            <FormItem label="密码" prop="password">
+                            <FormItem v-if="!isedit" label="密码" prop="password">
                                 <Input v-model="editUser.password" type="password" :maxlength="32"></Input>
                             </FormItem>
-                            <FormItem label="确认密码" prop="confirmPassword">
+                            <FormItem v-if="!isedit" label="确认密码" prop="confirmPassword">
                                 <Input v-model="editUser.confirmPassword" type="password" :maxlength="32"></Input>
                             </FormItem>
                             <FormItem>
@@ -35,14 +35,13 @@
                             </FormItem>
                         </TabPane>
                         <TabPane label="用户角色" name="roles">
-                            <CheckboxGroup v-model="editUser.roleNames">
-                                <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id">
-                                    <span>{{role.name}}</span>
+                             <CheckboxGroup >
+                                <Checkbox v-model="role.isAssigned" :label="role.roleDisplayName" v-for="role in userRoles" :key="role.id">
+                                    <span>{{role.roleDisplayName}}</span>
                                 </Checkbox>
                             </CheckboxGroup>
                         </TabPane>
                     </Tabs>
-
                 </Form>
             </div>
             <div slot="footer">
@@ -50,72 +49,35 @@
                 <Button @click="save" type="primary">保存</Button>
             </div>
         </Modal>
-        <Modal v-model="showEditModal" title="编辑用户" @on-ok="save" okText="保存" cancelText="关闭">
-            <div>
-                <Form ref="userForm" label-position="top" :rules="userRule" :model="editUser">
-                    <Tabs value="detail">
-                        <TabPane label="用户信息" name="detail">
-                            <FormItem label="用户名" prop="userName">
-                                <Input v-model="editUser.userName" :maxlength="32" :minlength="2"></Input>
-                            </FormItem>
-                            <FormItem label="姓名" prop="name">
-                                <Input v-model="editUser.name" :maxlength="32"></Input>
-                            </FormItem>
-
-                            <FormItem>
-                                <Checkbox v-model="editUser.isActive">是否启用</Checkbox>
-                            </FormItem>
-                        </TabPane>
-                        <TabPane label="角色信息" name="roles">
-                            <CheckboxGroup v-model="editUser.roleNames">
-                                <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id">
-                                    <span>{{role.name}}</span>
-                                </Checkbox>
-                            </CheckboxGroup>
-                        </TabPane>
-                    </Tabs>
-                </Form>
-            </div>
-            <div slot="footer">
-                <Button @click="showEditModal=false">关闭</Button>
-                <Button @click="save" type="primary">保存</Button>
-            </div>
-        </Modal>
+     
     </div>
 </template>
 <script>
 export default {
   methods: {
-    create() {
-      this.editUser = {
-        isActive: true
-      };
+    async create() {
+      this.isedit = false;
+      await this.$store.dispatch({
+        type: "user/getUser"
+      });
+      this.editUser = this.user.user;
+      this.userRoles = this.user.roles;
       this.showModal = true;
     },
     async save() {
-      if (!!this.editUser.id) {
-        this.$refs.userForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "user/update",
-              data: this.editUser
-            });
-            this.showEditModal = false;
-            await this.getpage();
-          }
-        });
-      } else {
-        this.$refs.newUserForm.validate(async val => {
-          if (val) {
-            await this.$store.dispatch({
-              type: "user/create",
-              data: this.editUser
-            });
-            this.showModal = false;
-            await this.getpage();
-          }
-        });
-      }
+      this.$refs.userForm.validate(async val => {
+        if (val) {
+          let arr = this.userRoles
+            .filter(c => c.isAssigned)
+            .map(w => w.roleName);
+          await this.$store.dispatch({
+            type: "user/createOrUpdate",
+            data: { user: this.editUser, assignedRoleNames: arr }
+          });
+          this.showEditModal = false;
+          await this.getpage();
+        }
+      });
     },
     pageChange(page) {
       this.$store.commit("user/setCurrentPage", page);
@@ -143,8 +105,8 @@ export default {
     };
     return {
       editUser: {},
+      isedit: false,
       showModal: false,
-      showEditModal: false,
       newUserRule: {
         userName: [
           {
@@ -172,23 +134,7 @@ export default {
           trigger: "blur"
         }
       },
-
-      userRule: {
-        userName: [
-          {
-            required: true,
-            message: "用户名必填",
-            trigger: "blur"
-          }
-        ],
-        name: [
-          {
-            required: true,
-            message: "姓名必填",
-            trigger: "blur"
-          }
-        ]
-      },
+      userRoles: [],
       columns: [
         {
           title: "用户名",
@@ -197,6 +143,19 @@ export default {
         {
           title: "姓名",
           key: "name"
+        },
+        {
+          title: "角色",
+          key: "name",
+          render: (h, p) => {
+            if (p.row.roles) {
+              var t = "";
+              p.row.roles.forEach(w => {
+                t += w.roleName + " ";
+              });
+              return t;
+            }
+          }
         },
         {
           title: "是否启用",
@@ -226,9 +185,15 @@ export default {
                     marginRight: "5px"
                   },
                   on: {
-                    click: () => {
-                      this.editUser = this.users[params.index];
-                      this.showEditModal = true;
+                    click: async () => {
+                      await this.$store.dispatch({
+                        type: "user/getUser",
+                        data: params.row.id
+                      });
+                      this.editUser = this.user.user;
+                      this.userRoles = this.user.roles;
+                      this.isedit = true;
+                      this.showModal = true;
                     }
                   }
                 },
@@ -271,8 +236,8 @@ export default {
     users() {
       return this.$store.state.user.users;
     },
-    roles() {
-      return this.$store.state.user.roles;
+    user() {
+      return this.$store.state.user.user;
     },
     totalCount() {
       return this.$store.state.user.totalCount;

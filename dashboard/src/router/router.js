@@ -84,6 +84,13 @@ export const appRouter = [{
         permission: 'Pages.Administration.Users',
         component: () =>
             import ('@/views/points/index.vue')
+    }, {
+        path: 'view',
+        title: '点位展示',
+        name: 'pointview',
+        permission: 'Pages.Administration.Users',
+        component: () =>
+            import ('@/views/points/index.vue')
     }]
 }, {
     path: '/device',
@@ -144,6 +151,13 @@ export const appRouter = [{
         path: 'manage',
         title: '机构树',
         name: 'operatormanage',
+        permission: 'Pages.Administration.Users',
+        component: () =>
+            import ('@/views/operators/index.vue')
+    }, {
+        path: 'box',
+        title: '货道管理',
+        name: 'boxs',
         permission: 'Pages.Administration.Users',
         component: () =>
             import ('@/views/operators/index.vue')

@@ -59,7 +59,11 @@ const user = {
         async getUser({
             state
         }, payload) {
-            let rep = await Util.ajax.get('/api/services/app/User/GetUserForEdit?Id=' + payload.data.id);
+            var params = ""
+            if (payload.data) {
+                params = "?Id=" + payload.data;
+            }
+            let rep = await Util.ajax.get('/api/services/app/User/GetUserForEdit' + params);
             state.user = null;
             state.user = rep.data.result;
         },
@@ -69,18 +73,6 @@ const user = {
             let rep = await Util.ajax.get('/api/services/app/Role/GetRoles');
             state.roles = [];
             state.roles.push(...rep.data.result.items)
-        },
-        async changeLanguage({
-            state
-        }, payload) {
-            let rep = await Util.ajax.post('/api/services/app/User/ChangeLanguage', payload.data);
-            abp.utils.setCookieValue(
-                'Abp.Localization.CultureName',
-                payload.data.languageName,
-                new Date(new Date().getTime() + 5 * 365 * 86400000),
-                abp.appPath
-            );
-            window.location.reload();
         }
     }
 };

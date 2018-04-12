@@ -248,18 +248,15 @@ namespace School.Authorization.Users
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
         protected virtual async Task CreateUserAsync(CreateOrUpdateUserInput input)
         {
-
             var user = ObjectMapper.Map<User>(input.User); //Passwords is not mapped (see mapping configuration)
             user.TenantId = AbpSession.TenantId;
-
+            user.EmailAddress = $"{user.Name}@{user.UserName}@qq.com";
             await UserManager.InitializeOptionsAsync(AbpSession.TenantId);
             foreach (var validator in _passwordValidators)
             {
                 CheckErrors(await validator.ValidateAsync(UserManager, user, input.User.Password));
             }
-
             user.Password = _passwordHasher.HashPassword(user, input.User.Password);
-
             //Assign roles
             user.Roles = new Collection<UserRole>();
             foreach (var roleName in input.AssignedRoleNames)
