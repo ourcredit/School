@@ -82,5 +82,8 @@ namespace School.Authorization
         public const string Pages_Point_Manage_Create = "Pages.Point.Manage.Create";
         public const string Pages_Point_Manage_Edit = "Pages.Point.Manage.Edit";
         public const string Pages_Point_Manage_Delete = "Pages.Point.Manage.Delete";
+
+        public const string Pages_Point_View = "Pages.Point.View";
+
     }
 }

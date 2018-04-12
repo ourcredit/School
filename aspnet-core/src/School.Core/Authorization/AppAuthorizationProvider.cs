@@ -56,6 +56,9 @@ namespace School.Authorization
                  tree.CreateChildPermission(AppPermissions.Pages_Operator_Orgs_BindPrice, L("绑定价格"));
                  tree.CreateChildPermission(AppPermissions.Pages_Operator_Orgs_BindProduct, L("绑定产品"));
 
+           operators.CreateChildPermission(AppPermissions.Pages_Operator_Orgs, L("货道信息"));
+
+
             var orders = pages.CreateChildPermission(AppPermissions.Pages_Orders, L("订单信息"));
             orders.CreateChildPermission(AppPermissions.Pages_Orders_OrderList, L("订单列表"));
 
@@ -67,6 +70,7 @@ namespace School.Authorization
 
             var points = pages.CreateChildPermission(AppPermissions.Pages_Point, L("点位信息"));
             var pmanage = points.CreateChildPermission(AppPermissions.Pages_Point_Manage, L("点位管理"));
+            var view = points.CreateChildPermission(AppPermissions.Pages_Point_Manage, L("点位查看"));
             pmanage.CreateChildPermission(AppPermissions.Pages_Point_Manage_Create, L("创建点位"));
             pmanage.CreateChildPermission(AppPermissions.Pages_Point_Manage_Edit, L("编辑点位"));
             pmanage.CreateChildPermission(AppPermissions.Pages_Point_Manage_Delete, L("删除点位"));
