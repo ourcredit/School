@@ -74,7 +74,7 @@ export default {
             type: "user/createOrUpdate",
             data: { user: this.editUser, assignedRoleNames: arr }
           });
-          this.showEditModal = false;
+          this.showModal = false;
           await this.getpage();
         }
       });

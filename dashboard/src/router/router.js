@@ -65,6 +65,7 @@ export const otherRouter = {
         path: 'setting',
         title: '配置设备',
         name: 'settings',
+        permission: 'Pages.Device.Manage.Create',
         component: () =>
             import ('@/views/operators/setting.vue')
     }]
@@ -81,16 +82,16 @@ export const appRouter = [{
         path: 'manage',
         title: '点位管理',
         name: 'pointmanage',
-        permission: 'Pages.Administration.Users',
+        permission: 'Pages.Point.Manage',
         component: () =>
             import ('@/views/points/index.vue')
     }, {
         path: 'view',
         title: '点位展示',
         name: 'pointview',
-        permission: 'Pages.Administration.Users',
+        permission: 'Pages.Point.View',
         component: () =>
-            import ('@/views/points/index.vue')
+            import ('@/views/points/view.vue')
     }]
 }, {
     path: '/device',
@@ -102,7 +103,7 @@ export const appRouter = [{
         path: 'manage',
         title: '设备管理',
         name: 'devicemanage',
-        permission: 'Pages.Administration.Users',
+        permission: 'Pages.Device.Manage',
         component: () =>
             import ('@/views/devices/index.vue')
     }]
@@ -116,7 +117,7 @@ export const appRouter = [{
         path: 'list',
         title: '订单管理',
         name: 'order',
-        permission: 'Pages.Administration.Users',
+        permission: 'Pages.Orders.OrderList',
         component: () =>
             import ('@/views/orders/index.vue')
     }]
@@ -130,14 +131,14 @@ export const appRouter = [{
         path: 'logs',
         title: '日志信息',
         name: 'logs',
-        permission: 'Pages.Administration.Users',
+        permission: 'Pages.AuditLogs.Logs',
         component: () =>
             import ('@/views/auditlogs/logs.vue')
     }, {
         path: 'warns',
         title: '报警信息',
         name: 'warns',
-        permission: 'Pages.Administration.Users',
+        permission: 'Pages.AuditLogs.Warns',
         component: () =>
             import ('@/views/auditlogs/warns.vue')
     }]
@@ -151,14 +152,14 @@ export const appRouter = [{
         path: 'manage',
         title: '机构树',
         name: 'operatormanage',
-        permission: 'Pages.Administration.Users',
+        permission: 'Pages.Operator.Orgs',
         component: () =>
             import ('@/views/operators/index.vue')
     }, {
         path: 'box',
         title: '货道管理',
         name: 'boxs',
-        permission: 'Pages.Administration.Users',
+        permission: 'Pages.Operator.Boxs',
         component: () =>
             import ('@/views/operators/index.vue')
     }]
