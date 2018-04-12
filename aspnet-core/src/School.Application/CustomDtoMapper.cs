@@ -10,6 +10,8 @@ using Abp.UI.Inputs;
 using AutoMapper;
 using School.Authorization.Accounts.Dto;
 using School.Authorization.Permissions.Dto;
+using School.Authorization.Roles;
+using School.Authorization.Roles.Dto;
 using School.Authorization.Users;
 using School.Authorization.Users.Dto;
 using School.Devices.Dtos;
@@ -42,8 +44,13 @@ namespace School
                 .ForMember(user => user.Password, options => options.Ignore());
             configuration.CreateMap<User, UserLoginInfoDto>();
             configuration.CreateMap<User, UserListDto>();
+        
             configuration.CreateMap<UserLoginAttemptDto, UserLoginAttempt>().ReverseMap();
 
+            //Role
+            configuration.CreateMap<RoleEditDto, Role>().ReverseMap();
+            configuration.CreateMap<Role, RoleListDto>();
+            configuration.CreateMap<UserRole, UserListRoleDto>();
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
             configuration.CreateMap<Device, DeviceListDto>()

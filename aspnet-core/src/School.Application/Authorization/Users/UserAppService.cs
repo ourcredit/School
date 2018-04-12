@@ -67,7 +67,7 @@ namespace School.Authorization.Users
 
         public async Task<PagedResultDto<UserListDto>> GetUsers(GetUsersInput input)
         {
-            var query = UserManager.Users
+            var query = UserManager.Users.Include(c=>c.Roles)
                 .WhereIf(
                     !input.Filter.IsNullOrWhiteSpace(),
                     u =>
