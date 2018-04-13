@@ -225,6 +225,7 @@ export default {
                   },
                   on: {
                     click: () => {
+                      this.$store.commit("device/setCurrent", params.row.id);
                       //  this.editRole = this.devices[params.index];
                       this.$router.push({
                         name: "settings"

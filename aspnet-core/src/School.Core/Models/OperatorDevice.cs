@@ -18,6 +18,7 @@ namespace School.Models
         {
             OperatorId = orgId;
             DeviceId = deviceId;
+            DeviceGoodses=new List<OperatorDeviceGoods>();
         }
         /// <summary>
         /// 设备id
@@ -34,6 +35,13 @@ namespace School.Models
     [Table("OperatorDeviceGoods")]
     public class OperatorDeviceGoods : CreationAuditedEntity<Guid>
     {
+        public OperatorDeviceGoods(int dId,int gId,string name,int price)
+        {
+            OperatorDeviceId = dId;
+            GoodsId = gId;
+            GoodsName = name;
+            Price = price;
+        }
         public int OperatorDeviceId { get; set; }
         /// <summary>
         /// 商品id

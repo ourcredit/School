@@ -25,6 +25,12 @@ namespace School.Devices
         Task<DeviceListDto> GetDeviceByIdAsync(EntityDto<int> input);
 
         /// <summary>
+        /// 绑定设备和价格
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task BindDeviceGoods(BindGoodsInput input);
+        /// <summary>
         /// 获取机构树下的设备
         /// </summary>
         /// <param name="input"></param>

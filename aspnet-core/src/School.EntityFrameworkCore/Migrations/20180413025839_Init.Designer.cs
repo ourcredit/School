@@ -16,7 +16,7 @@ using System;
 namespace School.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    [Migration("20180410060350_Init")]
+    [Migration("20180413025839_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -914,6 +914,8 @@ namespace School.Migrations
 
                     b.Property<bool>("IsActive");
 
+                    b.Property<bool>("IsAdmin");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<bool>("IsLockoutEnabled");
@@ -960,6 +962,8 @@ namespace School.Migrations
                     b.Property<DateTime?>("SignInTokenExpireTimeUtc");
 
                     b.Property<int?>("TenantId");
+
+                    b.Property<string>("TreeCode");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -1017,11 +1021,7 @@ namespace School.Migrations
 
                     b.Property<int>("DeviceId");
 
-                    b.Property<bool>("IsSeal");
-
                     b.Property<int>("OperatorId");
-
-                    b.Property<int>("Price");
 
                     b.HasKey("Id");
 
@@ -1030,6 +1030,30 @@ namespace School.Migrations
                     b.HasIndex("OperatorId");
 
                     b.ToTable("s_operator_device");
+                });
+
+            modelBuilder.Entity("School.Models.OperatorDeviceGoods", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<int>("GoodsId");
+
+                    b.Property<string>("GoodsName");
+
+                    b.Property<int>("OperatorDeviceId");
+
+                    b.Property<int>("Price");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperatorDeviceId");
+
+                    b.ToTable("OperatorDeviceGoods");
                 });
 
             modelBuilder.Entity("School.Models.OperatorTree", b =>
@@ -1302,6 +1326,14 @@ namespace School.Migrations
                     b.HasOne("School.Models.OperatorTree")
                         .WithMany("OperatorDevices")
                         .HasForeignKey("OperatorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("School.Models.OperatorDeviceGoods", b =>
+                {
+                    b.HasOne("School.Models.OperatorDevice")
+                        .WithMany("DeviceGoodses")
+                        .HasForeignKey("OperatorDeviceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

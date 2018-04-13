@@ -6,6 +6,8 @@ const point = {
     state: {
         devices: [],
         orgdevices: [],
+        goods: [],
+        current: null,
         points: [],
         totalCount: 0,
         pageSize: 10,
@@ -17,6 +19,9 @@ const point = {
         },
         setCurrentPage(state, page) {
             state.currentPage = page;
+        },
+        setCurrent(state, model) {
+            state.current = model;
         }
     },
     actions: {
@@ -50,7 +55,19 @@ const point = {
             state.orgdevices.push(...rep.data.result.items);
             state.totalCount = rep.data.result.totalCount;
         },
-
+        async getGoods({
+            state
+        }, payload) {
+            let page = {
+                maxResultCount: state.pageSize,
+                skipCount: (state.currentPage - 1) * state.pageSize,
+                DeviceId: state.current
+            }
+            let rep = await Util.ajax.get('/api/services/app/Other/GetPagedGoods');
+            state.goods = [];
+            state.goods.push(...rep.data.result.items);
+            state.totalCount = rep.data.result.totalCount;
+        },
         async getAllPoints({
             state
         }, payload) {
@@ -68,6 +85,12 @@ const point = {
         }, payload) {
             await Util.ajax.post('/api/services/app/Device/BindOrgAndDevices', payload.data);
         },
+        async bindGoods({
+            state
+        }, payload) {
+            await Util.ajax.post('/api/services/app/Device/BindDeviceGoods', payload.data);
+        },
+
         async unBindDevice({
             state
         }, payload) {

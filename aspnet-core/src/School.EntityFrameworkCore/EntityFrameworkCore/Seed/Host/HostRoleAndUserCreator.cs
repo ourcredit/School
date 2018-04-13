@@ -76,13 +76,14 @@ namespace School.EntityFrameworkCore.Seed.Host
                     TenantId = null,
                     UserName = AbpUserBase.AdminUserName,
                     Name = "admin",
+                    IsAdmin = true,
                     Surname = "admin",
                     EmailAddress = "admin@aspnetboilerplate.com",
                     IsEmailConfirmed = true,
                     IsActive = true
                 };
 
-                user.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(user, "123qwe");
+                user.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(user, "123456");
                 user.SetNormalizedNames();
 
                 adminUserForHost = _context.Users.Add(user).Entity;

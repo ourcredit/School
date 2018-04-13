@@ -63,7 +63,7 @@ export const otherRouter = {
             import ('@/views/home/home.vue')
     }, {
         path: 'setting',
-        title: '配置设备',
+        title: '商品配置',
         name: 'settings',
         permission: 'Pages.Device.Manage.Create',
         component: () =>

@@ -54,4 +54,17 @@ namespace School.Devices.Dtos
         public int OrgId { get; set; }
         public List<int> Devices { get; set; }
     }
+
+    public class BindGoodsInput
+    {
+        public int DeviceId { get; set; }
+        public List<GoodsDto> Goods { get; set; }
+    }
+
+    public class GoodsDto
+    {
+        public int GoodId { get; set; }
+        public string GoodName { get; set; }
+        public int Price { get; set; }  
+    }
 }

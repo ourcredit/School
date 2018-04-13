@@ -28,18 +28,23 @@ namespace School.Devices
         private readonly IRepository<Device, int> _deviceRepository;
         private readonly IRepository<Point, int> _pointRepository;
         private readonly IRepository<OperatorDevice, int> _operatorDeviceRepository;
+        private readonly IRepository<OperatorDeviceGoods,Guid> _goodsRepository;
         private readonly IDeviceManager _deviceManager;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public DeviceAppService(IRepository<Device, int> deviceRepository
-      , IDeviceManager deviceManager, IRepository<Point, int> pointRepository, IRepository<OperatorDevice, int> operatorDeviceRepository)
+      , IDeviceManager deviceManager,
+            IRepository<Point, int> pointRepository, 
+            IRepository<OperatorDevice, int> operatorDeviceRepository,
+            IRepository<OperatorDeviceGoods, Guid> goodsRepository)
         {
             _deviceRepository = deviceRepository;
             _deviceManager = deviceManager;
             _pointRepository = pointRepository;
             _operatorDeviceRepository = operatorDeviceRepository;
+            _goodsRepository = goodsRepository;
         }
         /// <summary>
         /// 获取Device的分页列表信息
@@ -98,6 +103,27 @@ namespace School.Devices
             {
                 if(devices.Any(w=>w.DeviceId==i))continue;
                 await _operatorDeviceRepository.InsertAsync(new OperatorDevice(input.OrgId, i));
+            }
+        }
+        /// <summary>
+        /// 绑定设备和价格
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task BindDeviceGoods(BindGoodsInput input)
+        {
+            var device = await _operatorDeviceRepository.FirstOrDefaultAsync(input.DeviceId);
+            if (device != null)
+            {
+                if (device.DeviceGoodses.Any())
+                {
+                    await _goodsRepository.DeleteAsync(c => c.OperatorDeviceId == device.Id);
+                }
+                foreach (var i in input.Goods)
+                {
+                    await _goodsRepository.InsertAsync(
+                        new OperatorDeviceGoods(device.Id, i.GoodId, i.GoodName, i.Price));
+                }
             }
         }
         /// <summary>

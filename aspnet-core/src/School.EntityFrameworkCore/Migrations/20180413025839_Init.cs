@@ -330,6 +330,7 @@ namespace School.Migrations
                     DeletionTime = table.Column<DateTime>(nullable: true),
                     EmailAddress = table.Column<string>(maxLength: 256, nullable: false),
                     IsActive = table.Column<bool>(nullable: false),
+                    IsAdmin = table.Column<bool>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
                     IsLockoutEnabled = table.Column<bool>(nullable: false),
                     IsTwoFactorEnabled = table.Column<bool>(nullable: false),
@@ -348,6 +349,7 @@ namespace School.Migrations
                     SignInToken = table.Column<string>(nullable: true),
                     SignInTokenExpireTimeUtc = table.Column<DateTime>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
+                    TreeCode = table.Column<string>(nullable: true),
                     UserName = table.Column<string>(maxLength: 32, nullable: false)
                 },
                 constraints: table =>
@@ -788,9 +790,7 @@ namespace School.Migrations
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     DeviceId = table.Column<int>(nullable: false),
-                    IsSeal = table.Column<bool>(nullable: false),
-                    OperatorId = table.Column<int>(nullable: false),
-                    Price = table.Column<int>(nullable: false)
+                    OperatorId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -805,6 +805,29 @@ namespace School.Migrations
                         name: "FK_s_operator_device_s_operator_tree_OperatorId",
                         column: x => x.OperatorId,
                         principalTable: "s_operator_tree",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OperatorDeviceGoods",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    GoodsId = table.Column<int>(nullable: false),
+                    GoodsName = table.Column<string>(nullable: true),
+                    OperatorDeviceId = table.Column<int>(nullable: false),
+                    Price = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OperatorDeviceGoods", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OperatorDeviceGoods_s_operator_device_OperatorDeviceId",
+                        column: x => x.OperatorDeviceId,
+                        principalTable: "s_operator_device",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1110,6 +1133,11 @@ namespace School.Migrations
                 columns: new[] { "TenantId", "UserId" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_OperatorDeviceGoods_OperatorDeviceId",
+                table: "OperatorDeviceGoods",
+                column: "OperatorDeviceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_s_device_PointId",
                 table: "s_device",
                 column: "PointId");
@@ -1199,7 +1227,7 @@ namespace School.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "s_operator_device");
+                name: "OperatorDeviceGoods");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChanges");
@@ -1211,16 +1239,19 @@ namespace School.Migrations
                 name: "AbpEditions");
 
             migrationBuilder.DropTable(
-                name: "s_device");
-
-            migrationBuilder.DropTable(
-                name: "s_operator_tree");
+                name: "s_operator_device");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChangeSets");
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");
+
+            migrationBuilder.DropTable(
+                name: "s_device");
+
+            migrationBuilder.DropTable(
+                name: "s_operator_tree");
 
             migrationBuilder.DropTable(
                 name: "s_point");
