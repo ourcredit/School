@@ -86,6 +86,7 @@ namespace School.Devices
             foreach (var r in devices)
             {
                 var mo = r.Device.MapTo<DeviceListDto>();
+                mo.Id = r.Id;
                 result.Add(mo);
             }
             return new PagedResultDto<DeviceListDto>(
