@@ -59,7 +59,7 @@
 export default {
   methods: {
     async change(data) {
-      this.editUser.treeCode = data.treeCode;
+      this.editUser.treeCode = data[0].treeCode;
     },
     async create() {
       this.isedit = false;

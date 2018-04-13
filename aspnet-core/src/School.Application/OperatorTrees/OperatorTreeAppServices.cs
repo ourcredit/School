@@ -55,7 +55,11 @@ namespace School.OperatorTrees
                     c => c.TreeCode.Contains(current.TreeCode));
             var operatortrees = await query
                 .ToListAsync();
-
+            if (!current.IsAdmin && !current.TreeCode.IsNullOrWhiteSpace())
+            {
+                var node=  operatortrees.FirstOrDefault(c => c.TreeCode == current.TreeCode);
+                if (node != null) node.ParentId = null;
+            }
             //var operatortreeListDtos = ObjectMapper.Map<List <OperatorTreeListDto>>(operatortrees);
             var operatortreeListDtos = operatortrees.MapTo<List<OperatorTreeListDto>>();
 
