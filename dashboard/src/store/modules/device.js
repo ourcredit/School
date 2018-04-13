@@ -63,7 +63,9 @@ const point = {
                 skipCount: (state.currentPage - 1) * state.pageSize,
                 DeviceId: state.current
             }
-            let rep = await Util.ajax.get('/api/services/app/Other/GetPagedGoods');
+            let rep = await Util.ajax.get('/api/services/app/Other/GetPagedGoods', {
+                params: page
+            });
             state.goods = [];
             state.goods.push(...rep.data.result.items);
             state.totalCount = rep.data.result.totalCount;

@@ -35,6 +35,7 @@ namespace School.Models
     [Table("OperatorDeviceGoods")]
     public class OperatorDeviceGoods : CreationAuditedEntity<Guid>
     {
+        public OperatorDeviceGoods() { }
         public OperatorDeviceGoods(int dId,int gId,string name,int price)
         {
             OperatorDeviceId = dId;

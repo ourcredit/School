@@ -45,6 +45,7 @@ util.ajax.get('/AbpUserConfiguration/GetAll').then(result => {
             var t = {};
             t.id = item.id;
             t.title = item.treeName;
+            t.treeCode = item.treeCode;
             t.expand = true;
             if (item[pidField] == parentId) {
                 t.children = converToTreedata(data, item.id, pidField)
