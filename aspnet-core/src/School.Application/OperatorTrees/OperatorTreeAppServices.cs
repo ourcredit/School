@@ -48,9 +48,11 @@ namespace School.OperatorTrees
         /// <returns></returns>
         public async Task<ListResultDto<OperatorTreeListDto>> GetOperatorTrees(FilterInputDto input)
         {
-
+            var current =await AbpSession.CurrentAsync();
             var query = _operatortreeRepository.GetAll();
-            query = query.WhereIf(!input.Filter.IsNullOrWhiteSpace(), c => c.TreeCode.Contains(input.Filter));
+            query = query.WhereIf(!input.Filter.IsNullOrWhiteSpace(), c => c.TreeCode.Contains(input.Filter))
+                .WhereIf(!current.IsAdmin && !current.TreeCode.IsNullOrWhiteSpace(),
+                    c => c.TreeCode.Contains(current.TreeCode));
             var operatortrees = await query
                 .ToListAsync();
 

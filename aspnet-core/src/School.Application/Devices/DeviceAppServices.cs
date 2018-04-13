@@ -9,6 +9,7 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 
 using System.Linq.Dynamic.Core;
+using Abp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using School.Authorization;
 using School.Devices.Dtos;
@@ -53,7 +54,8 @@ namespace School.Devices
         /// <returns></returns>
         public async Task<PagedResultDto<DeviceListDto>> GetPagedDevices(GetDevicesInput input)
         {
-            var query = _deviceRepository.GetAllIncluding(c=>c.Point);
+            var query = _deviceRepository.GetAllIncluding(c => c.Point);
+               
             var deviceCount = await query.CountAsync();
             var devices = await query
                 .OrderBy(input.Sorting)
