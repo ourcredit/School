@@ -16,8 +16,8 @@ using System;
 namespace School.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    [Migration("20180413025839_Init")]
-    partial class Init
+    [Migration("20180413062920_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -984,6 +984,32 @@ namespace School.Migrations
                     b.ToTable("AbpUsers");
                 });
 
+            modelBuilder.Entity("School.Models.Channel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreateTime");
+
+                    b.Property<int>("Goods_Id");
+
+                    b.Property<bool>("Isdelete");
+
+                    b.Property<string>("Machine_Code");
+
+                    b.Property<float>("Quantity");
+
+                    b.Property<float>("QuantityLine");
+
+                    b.Property<int>("Site");
+
+                    b.Property<int>("State");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gx_vm_channel");
+                });
+
             modelBuilder.Entity("School.Models.Device", b =>
                 {
                     b.Property<int>("Id")
@@ -1010,6 +1036,30 @@ namespace School.Migrations
                     b.ToTable("s_device");
                 });
 
+            modelBuilder.Entity("School.Models.DeviceGood", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<int>("DeviceId");
+
+                    b.Property<int>("GoodsId");
+
+                    b.Property<string>("GoodsName");
+
+                    b.Property<int>("Price");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceId");
+
+                    b.ToTable("s_device_goods");
+                });
+
             modelBuilder.Entity("School.Models.OperatorDevice", b =>
                 {
                     b.Property<int>("Id")
@@ -1030,30 +1080,6 @@ namespace School.Migrations
                     b.HasIndex("OperatorId");
 
                     b.ToTable("s_operator_device");
-                });
-
-            modelBuilder.Entity("School.Models.OperatorDeviceGoods", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<int>("GoodsId");
-
-                    b.Property<string>("GoodsName");
-
-                    b.Property<int>("OperatorDeviceId");
-
-                    b.Property<int>("Price");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OperatorDeviceId");
-
-                    b.ToTable("OperatorDeviceGoods");
                 });
 
             modelBuilder.Entity("School.Models.OperatorTree", b =>
@@ -1082,6 +1108,44 @@ namespace School.Migrations
                     b.ToTable("s_operator_tree");
                 });
 
+            modelBuilder.Entity("School.Models.Orders", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedTime");
+
+                    b.Property<DateTime?>("DeliveryTime");
+
+                    b.Property<int>("Goods_Id");
+
+                    b.Property<string>("Goods_Name");
+
+                    b.Property<int>("Merchant_Id");
+
+                    b.Property<string>("Merchant_Name");
+
+                    b.Property<string>("OrderNum");
+
+                    b.Property<string>("PayAccount");
+
+                    b.Property<int>("PayChannel");
+
+                    b.Property<DateTime?>("PayTime");
+
+                    b.Property<string>("PickupCode");
+
+                    b.Property<int>("Status");
+
+                    b.Property<float>("Value");
+
+                    b.Property<string>("Vmid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gx_vm_order");
+                });
+
             modelBuilder.Entity("School.Models.Point", b =>
                 {
                     b.Property<int>("Id")
@@ -1106,6 +1170,28 @@ namespace School.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("s_point");
+                });
+
+            modelBuilder.Entity("School.Models.Show", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ChannelSite");
+
+                    b.Property<DateTime>("CreateTime");
+
+                    b.Property<bool>("Isdelete");
+
+                    b.Property<string>("Machine_Code");
+
+                    b.Property<float>("QuantityLine");
+
+                    b.Property<int>("ShowSite");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gx_vm_Show");
                 });
 
             modelBuilder.Entity("School.MultiTenancy.Tenant", b =>
@@ -1316,6 +1402,14 @@ namespace School.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("School.Models.DeviceGood", b =>
+                {
+                    b.HasOne("School.Models.Device")
+                        .WithMany("DeviceGoods")
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("School.Models.OperatorDevice", b =>
                 {
                     b.HasOne("School.Models.Device", "Device")
@@ -1326,14 +1420,6 @@ namespace School.Migrations
                     b.HasOne("School.Models.OperatorTree")
                         .WithMany("OperatorDevices")
                         .HasForeignKey("OperatorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("School.Models.OperatorDeviceGoods", b =>
-                {
-                    b.HasOne("School.Models.OperatorDevice")
-                        .WithMany("DeviceGoodses")
-                        .HasForeignKey("OperatorDeviceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

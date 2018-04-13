@@ -19,6 +19,12 @@ namespace School.Others
         /// <param name="input"></param>
         /// <returns></returns>
         Task<PagedResultDto<dsc_Goods>> GetPagedGoods(GetGoodsInput input);
-       
+
+        /// <summary>
+        /// 获取机构下机器内商品
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<DeviceGoodsListDto>> GetProducts(GetDeviceGoodsInput input);
     }
 }

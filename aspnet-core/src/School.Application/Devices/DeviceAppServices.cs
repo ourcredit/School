@@ -29,20 +29,17 @@ namespace School.Devices
         private readonly IRepository<Device, int> _deviceRepository;
         private readonly IRepository<Point, int> _pointRepository;
         private readonly IRepository<OperatorDevice, int> _operatorDeviceRepository;
-        private readonly IRepository<OperatorDeviceGoods,Guid> _goodsRepository;
-        private readonly IDeviceManager _deviceManager;
+        private readonly IRepository<DeviceGood> _goodsRepository;
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        public DeviceAppService(IRepository<Device, int> deviceRepository
-      , IDeviceManager deviceManager,
+        public DeviceAppService(IRepository<Device, int> deviceRepository,
             IRepository<Point, int> pointRepository, 
             IRepository<OperatorDevice, int> operatorDeviceRepository,
-            IRepository<OperatorDeviceGoods, Guid> goodsRepository)
+            IRepository<DeviceGood> goodsRepository)
         {
             _deviceRepository = deviceRepository;
-            _deviceManager = deviceManager;
             _pointRepository = pointRepository;
             _operatorDeviceRepository = operatorDeviceRepository;
             _goodsRepository = goodsRepository;
@@ -55,7 +52,6 @@ namespace School.Devices
         public async Task<PagedResultDto<DeviceListDto>> GetPagedDevices(GetDevicesInput input)
         {
             var query = _deviceRepository.GetAllIncluding(c => c.Point);
-               
             var deviceCount = await query.CountAsync();
             var devices = await query
                 .OrderBy(input.Sorting)
@@ -115,17 +111,17 @@ namespace School.Devices
         /// <returns></returns>
         public async Task BindDeviceGoods(BindGoodsInput input)
         {
-            var device = await _operatorDeviceRepository.FirstOrDefaultAsync(input.DeviceId);
+            var device = await _deviceRepository.FirstOrDefaultAsync(input.DeviceId);
             if (device != null)
             {
-                if (device.DeviceGoodses!=null&&device.DeviceGoodses.Any())
+                if (device.DeviceGoods!=null&&device.DeviceGoods.Any())
                 {
-                    await _goodsRepository.DeleteAsync(c => c.OperatorDeviceId == device.Id);
+                    await _goodsRepository.DeleteAsync(c => c.DeviceId == device.Id);
                 }
                 foreach (var i in input.Goods)
                 {
                     await _goodsRepository.InsertAsync(
-                        new OperatorDeviceGoods(device.Id, i.GoodId, i.GoodName, i.Price));
+                        new DeviceGood(device.Id, i.GoodId, i.GoodName, i.Price));
                 }
             }
         }

@@ -13,7 +13,7 @@ namespace School.EntityFrameworkCore
         /* Define a DbSet for each entity of the application */
         public virtual DbSet<Point> Points { get; set; }
         public virtual DbSet<Device> Devices { get; set; }
-        public virtual DbSet<OperatorDeviceGoods> OperatorDeviceGoodses { get; set; }
+        public virtual DbSet<DeviceGood> DeviceGoods { get; set; }
         public virtual DbSet<OperatorTree> OperatorTrees { get; set; }
         public virtual DbSet<OperatorDevice> OperatorDevices { get; set; }
 

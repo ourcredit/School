@@ -13,6 +13,7 @@ namespace School.Models
     [Table("Gx_vm_order")]
    public class Orders:Entity
     {
+        public string OrderNum { get; set; }
         /// <summary>
         /// 售货机id
         /// </summary>

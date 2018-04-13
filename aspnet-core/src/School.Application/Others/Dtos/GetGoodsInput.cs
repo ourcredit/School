@@ -3,6 +3,13 @@ using School.Dto;
 
 namespace School.Others.Dtos
 {
+    public class GetDeviceGoodsInput : PagedInputDto
+    {
+        /// <summary>
+        /// 机器码
+        /// </summary>
+        public string MachineCode { get; set; }
+    }
     public class GetGoodsInput : PagedAndSortedInputDto, IShouldNormalize
     {
         ////BCC/ BEGIN CUSTOM CODE SECTION

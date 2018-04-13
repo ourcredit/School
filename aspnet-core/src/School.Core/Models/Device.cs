@@ -34,6 +34,36 @@ namespace School.Models
         /// 点位对象
         /// </summary>
         public virtual Point Point { get; set; }
+        [ForeignKey("DeviceId")]
+        public  virtual ICollection<DeviceGood> DeviceGoods { get; set; }
+    }
 
+    /// <summary>
+    /// 设备下的商品绑定
+    /// </summary>
+    [Table("s_device_goods")]
+    public class DeviceGood : CreationAuditedEntity<int>
+    {
+        public DeviceGood() { }
+        public DeviceGood(int deviceId, int gId, string name, int price)
+        {
+            DeviceId = deviceId;
+            GoodsId = gId;
+            GoodsName = name;
+            Price = price;
+        }
+        public int DeviceId { get; set; }
+        /// <summary>
+        /// 商品id
+        /// </summary>
+        public int GoodsId { get; set; }
+        /// <summary>
+        /// 商品名
+        /// </summary>
+        public string GoodsName { get; set; }
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public int Price { get; set; }
     }
 }

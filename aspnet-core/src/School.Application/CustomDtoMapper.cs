@@ -18,6 +18,7 @@ using School.Devices.Dtos;
 using School.Models;
 using School.MultiTenancy;
 using School.OperatorTrees.Dtos;
+using School.Others.Dtos;
 using School.Points.Dtos;
 using School.Sessions.Dto;
 
@@ -62,6 +63,7 @@ namespace School
 
             configuration.CreateMap<OperatorTree, OperatorTreeListDto>();
             configuration.CreateMap<OperatorTreeEditDto, OperatorTree>();
+            configuration.CreateMap<DeviceGood, DeviceGoodsListDto>();
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace School.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -373,6 +373,70 @@ namespace School.Migrations
                         principalTable: "AbpUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Gx_vm_channel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreateTime = table.Column<DateTime>(nullable: false),
+                    Goods_Id = table.Column<int>(nullable: false),
+                    Isdelete = table.Column<bool>(nullable: false),
+                    Machine_Code = table.Column<string>(nullable: true),
+                    Quantity = table.Column<float>(nullable: false),
+                    QuantityLine = table.Column<float>(nullable: false),
+                    Site = table.Column<int>(nullable: false),
+                    State = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gx_vm_channel", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Gx_vm_order",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedTime = table.Column<DateTime>(nullable: false),
+                    DeliveryTime = table.Column<DateTime>(nullable: true),
+                    Goods_Id = table.Column<int>(nullable: false),
+                    Goods_Name = table.Column<string>(nullable: true),
+                    Merchant_Id = table.Column<int>(nullable: false),
+                    Merchant_Name = table.Column<string>(nullable: true),
+                    OrderNum = table.Column<string>(nullable: true),
+                    PayAccount = table.Column<string>(nullable: true),
+                    PayChannel = table.Column<int>(nullable: false),
+                    PayTime = table.Column<DateTime>(nullable: true),
+                    PickupCode = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    Value = table.Column<float>(nullable: false),
+                    Vmid = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gx_vm_order", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Gx_vm_Show",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ChannelSite = table.Column<string>(nullable: true),
+                    CreateTime = table.Column<DateTime>(nullable: false),
+                    Isdelete = table.Column<bool>(nullable: false),
+                    Machine_Code = table.Column<string>(nullable: true),
+                    QuantityLine = table.Column<float>(nullable: false),
+                    ShowSite = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gx_vm_Show", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -782,6 +846,30 @@ namespace School.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "s_device_goods",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    DeviceId = table.Column<int>(nullable: false),
+                    GoodsId = table.Column<int>(nullable: false),
+                    GoodsName = table.Column<string>(nullable: true),
+                    Price = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_s_device_goods", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_s_device_goods_s_device_DeviceId",
+                        column: x => x.DeviceId,
+                        principalTable: "s_device",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "s_operator_device",
                 columns: table => new
                 {
@@ -805,29 +893,6 @@ namespace School.Migrations
                         name: "FK_s_operator_device_s_operator_tree_OperatorId",
                         column: x => x.OperatorId,
                         principalTable: "s_operator_tree",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OperatorDeviceGoods",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    GoodsId = table.Column<int>(nullable: false),
-                    GoodsName = table.Column<string>(nullable: true),
-                    OperatorDeviceId = table.Column<int>(nullable: false),
-                    Price = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OperatorDeviceGoods", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_OperatorDeviceGoods_s_operator_device_OperatorDeviceId",
-                        column: x => x.OperatorDeviceId,
-                        principalTable: "s_operator_device",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1133,14 +1198,14 @@ namespace School.Migrations
                 columns: new[] { "TenantId", "UserId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OperatorDeviceGoods_OperatorDeviceId",
-                table: "OperatorDeviceGoods",
-                column: "OperatorDeviceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_s_device_PointId",
                 table: "s_device",
                 column: "PointId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_s_device_goods_DeviceId",
+                table: "s_device_goods",
+                column: "DeviceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_s_operator_device_DeviceId",
@@ -1227,7 +1292,19 @@ namespace School.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "OperatorDeviceGoods");
+                name: "Gx_vm_channel");
+
+            migrationBuilder.DropTable(
+                name: "Gx_vm_order");
+
+            migrationBuilder.DropTable(
+                name: "Gx_vm_Show");
+
+            migrationBuilder.DropTable(
+                name: "s_device_goods");
+
+            migrationBuilder.DropTable(
+                name: "s_operator_device");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChanges");
@@ -1239,19 +1316,16 @@ namespace School.Migrations
                 name: "AbpEditions");
 
             migrationBuilder.DropTable(
-                name: "s_operator_device");
+                name: "s_device");
+
+            migrationBuilder.DropTable(
+                name: "s_operator_tree");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChangeSets");
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");
-
-            migrationBuilder.DropTable(
-                name: "s_device");
-
-            migrationBuilder.DropTable(
-                name: "s_operator_tree");
 
             migrationBuilder.DropTable(
                 name: "s_point");
