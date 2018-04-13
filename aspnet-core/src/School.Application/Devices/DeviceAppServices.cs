@@ -117,7 +117,7 @@ namespace School.Devices
             var device = await _operatorDeviceRepository.FirstOrDefaultAsync(input.DeviceId);
             if (device != null)
             {
-                if (device.DeviceGoodses.Any())
+                if (device.DeviceGoodses!=null&&device.DeviceGoodses.Any())
                 {
                     await _goodsRepository.DeleteAsync(c => c.OperatorDeviceId == device.Id);
                 }
