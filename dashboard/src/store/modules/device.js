@@ -40,6 +40,21 @@ const point = {
             state.devices.push(...rep.data.result.items);
             state.totalCount = rep.data.result.totalCount;
         },
+        async getUnbind({
+            state
+        }, payload) {
+            let page = {
+                maxResultCount: state.pageSize,
+                skipCount: (state.currentPage - 1) * state.pageSize
+            }
+            let rep = await Util.ajax.get('/api/services/app/Device/GetPagedUnBindDevices', {
+                params: page
+            });
+            state.devices = [];
+            state.devices.push(...rep.data.result.items);
+            state.totalCount = rep.data.result.totalCount;
+        },
+
         async getOrgDevices({
             state
         }, payload) {

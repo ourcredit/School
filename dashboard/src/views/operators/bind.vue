@@ -21,7 +21,7 @@ export default {
     },
     async getpage() {
       await this.$store.dispatch({
-        type: "device/getAll"
+        type: "device/getUnbind"
       });
     }
   },

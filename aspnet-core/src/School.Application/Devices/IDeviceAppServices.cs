@@ -20,6 +20,12 @@ namespace School.Devices
         Task<PagedResultDto<DeviceListDto>> GetPagedDevices(GetDevicesInput input);
 
         /// <summary>
+        /// 获取未绑定设备信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<DeviceListDto>> GetPagedUnBindDevices(GetDevicesInput input);
+        /// <summary>
         /// 通过指定id获取DeviceListDto信息
         /// </summary>
         Task<DeviceListDto> GetDeviceByIdAsync(EntityDto<int> input);

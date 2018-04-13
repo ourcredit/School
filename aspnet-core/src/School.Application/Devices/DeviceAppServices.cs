@@ -64,6 +64,33 @@ namespace School.Devices
                 deviceListDtos
                 );
         }
+
+        /// <summary>
+        /// 获取未绑定设备信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<DeviceListDto>> GetPagedUnBindDevices(GetDevicesInput input)
+        {
+            var query = _deviceRepository.GetAllIncluding(c => c.Point);
+            var bindDevice =await _operatorDeviceRepository.GetAllListAsync();
+            var result = from c in query
+                join d in bindDevice on c.Id equals d.DeviceId into temp
+                from tt in temp.DefaultIfEmpty()
+                where tt == null
+                select c;
+            var deviceCount = await result.CountAsync();
+            var devices = await result
+                .OrderBy(input.Sorting)
+                .PageBy(input)
+                .ToListAsync();
+            //var deviceListDtos = ObjectMapper.Map<List <DeviceListDto>>(devices);
+            var deviceListDtos = devices.MapTo<List<DeviceListDto>>();
+            return new PagedResultDto<DeviceListDto>(
+                deviceCount,
+                deviceListDtos
+            );
+        }
         /// <summary>
         /// 获取机构树下的设备
         /// </summary>
