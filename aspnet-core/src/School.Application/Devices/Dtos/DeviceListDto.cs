@@ -13,5 +13,6 @@ namespace School.Devices.Dtos
         public string DeviceType { get; set; }
         public int PointId { get; set; }
         public string PointName { get; set; }
+        public bool State { get; set; }
     }
 }

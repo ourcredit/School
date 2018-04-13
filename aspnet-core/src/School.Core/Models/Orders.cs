@@ -59,7 +59,7 @@ namespace School.Models
         /// <summary>
         /// 订单状态 0等待支付、1支付成功、2正在出货、出货成功、出货失败、退款
         /// </summary>
-        public int Status { get; set; }
+        public string Status { get; set; }
         /// <summary>
         /// 支付账号
         /// </summary>
@@ -108,9 +108,20 @@ namespace School.Models
     public class Show : Entity
     {
         public string Machine_Code { get; set; }
+        public int Goods_id { get; set; }
+        public int Site { get; set; }
+        public bool Isdelete { get; set; }
+        public DateTime CreateTime { get; set; }
+    }
+    /// <summary>
+    /// 中间表
+    /// </summary>
+    [Table("Gx_vm_Show2Channel")]
+    public class ChannelShow : Entity
+    {
+        public string Machine_Code { get; set; }
         public int ShowSite { get; set; }
         public string ChannelSite { get; set; }
-        public float QuantityLine { get; set; }
         public bool Isdelete { get; set; }
         public DateTime CreateTime { get; set; }
     }

@@ -26,5 +26,62 @@ namespace School.Others
         /// <param name="input"></param>
         /// <returns></returns>
         Task<PagedResultDto<DeviceGoodsListDto>> GetProducts(GetDeviceGoodsInput input);
+
+        /// <summary>
+        /// 心跳程序 检查设备状态
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        Task Beat(DeviceStateInput input);
+
+        /// <summary>
+        /// 出货上报
+        /// </summary>
+        /// <returns></returns>
+        Task Order(DealOrderInput input);
+
+        /// <summary>
+        /// Vmc系统状态报告
+        /// </summary>
+        /// <returns></returns>
+        Task StatusReport(StateReportInput input);
+
+        /// <summary>
+        /// 余量调整
+        /// </summary>
+        /// <returns></returns>
+        Task ChannelStockReport(ChannelStockReportInput input);
+
+        /// <summary>
+        /// 状态调整
+        /// </summary>
+        /// <returns></returns>
+        Task ChannelStatusReport(StateReportInput input);
+
+        /// <summary>
+        /// 取货码验证
+        /// </summary>
+        /// <returns></returns>
+        Task<bool> CheckPickCode(CheckPickCodeInput input);
+
+        /// <summary>
+        /// 更新货道
+        /// </summary>
+        /// <returns></returns>
+        Task UpGxvmChannel(CreateOrUpdateChannelInput input);
+
+        /// <summary>
+        /// 更新货柜机展示
+        /// </summary>
+        /// <returns></returns>
+        Task UpGxvmShow(CreateOrUpdateShowInput input);
+
+        /// <summary>
+        /// 更新货柜机展示
+        /// </summary>
+        /// <returns></returns>
+        Task UpGxvmShow2Channel(CreateOrUpdateShowChannelInput input);
+
     }
 }

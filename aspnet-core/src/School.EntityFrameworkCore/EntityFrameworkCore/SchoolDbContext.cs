@@ -20,6 +20,7 @@ namespace School.EntityFrameworkCore
         public  virtual  DbSet<Orders > Orders { get; set; }
         public  virtual  DbSet<Channel > Channels { get; set; }
         public  virtual  DbSet<Show > Shows { get; set; }
+        public virtual DbSet<ChannelShow> ChannelShows { get; set; }
 
         public SchoolDbContext(DbContextOptions<SchoolDbContext> options)
             : base(options)

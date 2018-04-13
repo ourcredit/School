@@ -30,12 +30,14 @@ namespace School.Models
         /// 点位id
         /// </summary>
         public virtual int PointId { get; set; }
+        public bool State { get; set; }
         /// <summary>
         /// 点位对象
         /// </summary>
         public virtual Point Point { get; set; }
         [ForeignKey("DeviceId")]
         public  virtual ICollection<DeviceGood> DeviceGoods { get; set; }
+        
     }
 
     /// <summary>
