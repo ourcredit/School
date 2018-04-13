@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Abp.AspNetCore;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Extensions;
+using Microsoft.Extensions.PlatformAbstractions;
 using School.Authentication.JwtBearer;
 using School.Configuration;
 using School.Identity;
@@ -83,6 +85,8 @@ namespace School.Web.Host.Startup
                     In = "header",
                     Type = "apiKey"
                 });
+                options.IncludeXmlComments(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath,
+                    "School.Application.xml")); // 注意：此处替换成所生成的XML documentation的文件名。
                 // Assign scope requirements to operations based on AuthorizeAttribute
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
