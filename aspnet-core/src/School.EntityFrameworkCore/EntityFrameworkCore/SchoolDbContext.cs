@@ -22,11 +22,5 @@ namespace School.EntityFrameworkCore
         }
     }
 
-    public class OtherDbContext : AbpDbContext
-    {
-        public OtherDbContext(DbContextOptions<OtherDbContext> options)
-            : base(options)
-        {
-        }
-    }
+   
 }

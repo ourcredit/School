@@ -35,33 +35,24 @@ namespace School.Authorization.Users
         private readonly RoleManager _roleManager;
         private readonly IUserListExcelExporter _userListExcelExporter;
         private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
-        private readonly IRepository<RolePermissionSetting, long> _rolePermissionRepository;
-        private readonly IRepository<UserPermissionSetting, long> _userPermissionRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IEnumerable<IPasswordValidator<User>> _passwordValidators;
         private readonly IPasswordHasher<User> _passwordHasher;
-        private readonly IRepository<OrganizationUnit, long> _organizationUnitRepository;
 
         public UserAppService(
             RoleManager roleManager,
             IUserListExcelExporter userListExcelExporter,
             INotificationSubscriptionManager notificationSubscriptionManager,
-            IRepository<RolePermissionSetting, long> rolePermissionRepository,
-            IRepository<UserPermissionSetting, long> userPermissionRepository,
             IRepository<UserRole, long> userRoleRepository,
             IEnumerable<IPasswordValidator<User>> passwordValidators,
-            IPasswordHasher<User> passwordHasher,
-            IRepository<OrganizationUnit, long> organizationUnitRepository)
+            IPasswordHasher<User> passwordHasher)
         {
             _roleManager = roleManager;
             _userListExcelExporter = userListExcelExporter;
             _notificationSubscriptionManager = notificationSubscriptionManager;
-            _rolePermissionRepository = rolePermissionRepository;
-            _userPermissionRepository = userPermissionRepository;
             _userRoleRepository = userRoleRepository;
             _passwordValidators = passwordValidators;
             _passwordHasher = passwordHasher;
-            _organizationUnitRepository = organizationUnitRepository;
 
         }
 

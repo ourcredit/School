@@ -27,14 +27,14 @@ namespace School.Devices
         ////ECC/ END CUSTOM CODE SECTION
         private readonly IRepository<Device, int> _deviceRepository;
         private readonly IRepository<Point, int> _pointRepository;
-        private readonly IRepository<OperatorDevice, Guid> _operatorDeviceRepository;
+        private readonly IRepository<OperatorDevice, int> _operatorDeviceRepository;
         private readonly IDeviceManager _deviceManager;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public DeviceAppService(IRepository<Device, int> deviceRepository
-      , IDeviceManager deviceManager, IRepository<Point, int> pointRepository, IRepository<OperatorDevice, Guid> operatorDeviceRepository)
+      , IDeviceManager deviceManager, IRepository<Point, int> pointRepository, IRepository<OperatorDevice, int> operatorDeviceRepository)
         {
             _deviceRepository = deviceRepository;
             _deviceManager = deviceManager;

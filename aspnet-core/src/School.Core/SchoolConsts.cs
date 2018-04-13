@@ -8,4 +8,9 @@
 
         public const bool MultiTenancyEnabled = false;
     }
+
+    public class SchoolCache
+    {
+        public const string GoodsCache = "GoodsCache";
+    }
 }

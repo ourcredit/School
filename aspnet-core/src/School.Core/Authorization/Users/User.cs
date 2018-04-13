@@ -13,10 +13,16 @@ namespace School.Authorization.Users
     {
         public const string DefaultPassword = "123456";
         public virtual Guid? ProfilePictureId { get; set; }
-
-
         public DateTime? SignInTokenExpireTimeUtc { get; set; }
 
+        /// <summary>
+        /// 是否超管
+        /// </summary>
+        public bool IsAdmin { get; set; } = false;
+        /// <summary>
+        /// 机构树节点权限
+        /// </summary>
+        public string TreeCode { get; set; }
         public string SignInToken { get; set; }
         #region 隐藏无用字段
         private new string AuthenticationSource { get; set; }

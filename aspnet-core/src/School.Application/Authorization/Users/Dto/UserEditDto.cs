@@ -21,6 +21,11 @@ namespace School.Authorization.Users.Dto
         [Required]
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
+        /// <summary>
+        /// 机构数权限节点
+        /// </summary>
+        [Required]
+        public string TreeCode { get; set; }
         [StringLength(UserConsts.MaxPhoneNumberLength)]
         public string PhoneNumber { get; set; }
         // Not used "Required" attribute since empty value is used to 'not change password'
