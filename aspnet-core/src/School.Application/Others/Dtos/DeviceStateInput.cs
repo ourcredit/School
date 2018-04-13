@@ -46,5 +46,16 @@ namespace School.Others.Dtos
         public int Quantity { get; set; }
     }
 
+    public class CheckPickCodeInput
+    {
+        /// <summary>
+        /// 机器码
+        /// </summary>
+        public string MachineCode { get; set; }
+        /// <summary>
+        /// 货道号
+        /// </summary>
+        public string PickCode { get; set; }
+    }
 
 }

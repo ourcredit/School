@@ -412,7 +412,7 @@ namespace School.Migrations
                     PayChannel = table.Column<int>(nullable: false),
                     PayTime = table.Column<DateTime>(nullable: true),
                     PickupCode = table.Column<string>(nullable: true),
-                    Status = table.Column<int>(nullable: false),
+                    Status = table.Column<string>(nullable: true),
                     Value = table.Column<float>(nullable: false),
                     Vmid = table.Column<string>(nullable: true)
                 },
@@ -427,16 +427,32 @@ namespace School.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ChannelSite = table.Column<string>(nullable: true),
                     CreateTime = table.Column<DateTime>(nullable: false),
+                    Goods_id = table.Column<int>(nullable: false),
                     Isdelete = table.Column<bool>(nullable: false),
                     Machine_Code = table.Column<string>(nullable: true),
-                    QuantityLine = table.Column<float>(nullable: false),
-                    ShowSite = table.Column<int>(nullable: false)
+                    Site = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Gx_vm_Show", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Gx_vm_Show2Channel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ChannelSite = table.Column<string>(nullable: true),
+                    CreateTime = table.Column<DateTime>(nullable: false),
+                    Isdelete = table.Column<bool>(nullable: false),
+                    Machine_Code = table.Column<string>(nullable: true),
+                    ShowSite = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gx_vm_Show2Channel", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -752,7 +768,8 @@ namespace School.Migrations
                     DeviceName = table.Column<string>(nullable: true),
                     DeviceNum = table.Column<string>(maxLength: 128, nullable: false),
                     DeviceType = table.Column<string>(nullable: true),
-                    PointId = table.Column<int>(nullable: false)
+                    PointId = table.Column<int>(nullable: false),
+                    State = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1299,6 +1316,9 @@ namespace School.Migrations
 
             migrationBuilder.DropTable(
                 name: "Gx_vm_Show");
+
+            migrationBuilder.DropTable(
+                name: "Gx_vm_Show2Channel");
 
             migrationBuilder.DropTable(
                 name: "s_device_goods");

@@ -1009,6 +1009,26 @@ namespace School.Migrations
                     b.ToTable("Gx_vm_channel");
                 });
 
+            modelBuilder.Entity("School.Models.ChannelShow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ChannelSite");
+
+                    b.Property<DateTime>("CreateTime");
+
+                    b.Property<bool>("Isdelete");
+
+                    b.Property<string>("Machine_Code");
+
+                    b.Property<int>("ShowSite");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gx_vm_Show2Channel");
+                });
+
             modelBuilder.Entity("School.Models.Device", b =>
                 {
                     b.Property<int>("Id")
@@ -1027,6 +1047,8 @@ namespace School.Migrations
                     b.Property<string>("DeviceType");
 
                     b.Property<int>("PointId");
+
+                    b.Property<bool>("State");
 
                     b.HasKey("Id");
 
@@ -1134,7 +1156,7 @@ namespace School.Migrations
 
                     b.Property<string>("PickupCode");
 
-                    b.Property<int>("Status");
+                    b.Property<string>("Status");
 
                     b.Property<float>("Value");
 
@@ -1176,17 +1198,15 @@ namespace School.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ChannelSite");
-
                     b.Property<DateTime>("CreateTime");
+
+                    b.Property<int>("Goods_id");
 
                     b.Property<bool>("Isdelete");
 
                     b.Property<string>("Machine_Code");
 
-                    b.Property<float>("QuantityLine");
-
-                    b.Property<int>("ShowSite");
+                    b.Property<int>("Site");
 
                     b.HasKey("Id");
 
