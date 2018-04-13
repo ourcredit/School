@@ -51,9 +51,8 @@ namespace School.Others
             var temp = result.Items.WhereIf(!input.Filter.IsNullOrWhiteSpace(),
                 c => c.goods_name.Contains(input.Filter));
             var list = temp.OrderBy(c => c.goods_name).Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
-            if (ht == null || !ht.DeviceGoods.Any()) return new PagedResultDto<dsc_Goods>(count, list);
 
-            var arr = ht.DeviceGoods.ToList();
+            var arr = ht == null || !ht.DeviceGoods.Any()?new List<DeviceGood>() : ht.DeviceGoods.ToList();
             foreach (var goodse in list)
             {
                 var mo = arr.FirstOrDefault(c => c.GoodsId == goodse.goods_id);
@@ -61,6 +60,11 @@ namespace School.Others
                 {
                     goodse.IsSeal = true;
                     goodse.Price = mo.Price;
+                }
+                else
+                {
+                    goodse.IsSeal = false;
+                    goodse.Price = 0;
                 }
             }
             return new PagedResultDto<dsc_Goods>(count, list);

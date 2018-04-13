@@ -54,7 +54,7 @@ export default {
   },
   computed: {
     devices() {
-      return this.$store.state.device.devices;
+      return this.$store.state.device.unbindDevices;
     },
     totalCount() {
       return this.$store.state.device.totalCount;
@@ -67,7 +67,10 @@ export default {
     }
   },
   async created() {
-    this.models = [];
+    this.getpage();
+  },
+  activated() {
+    console.log(1);
     this.getpage();
   }
 };

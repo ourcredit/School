@@ -51,7 +51,7 @@
 
      <Modal v-model="bindModal" title="绑定设备" @on-ok="bindDevice" okText="保存" cancelText="关闭">
       <div>
-        <bind-form @cc.sync="setValues"></bind-form>
+        <bind-form  @cc.sync="setValues"></bind-form>
       </div>
       <div slot="footer">
         <Button @click="bindModal=false">关闭</Button>

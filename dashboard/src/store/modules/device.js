@@ -6,6 +6,7 @@ const point = {
     state: {
         devices: [],
         orgdevices: [],
+        unbindDevices: [],
         goods: [],
         current: null,
         points: [],
@@ -50,8 +51,8 @@ const point = {
             let rep = await Util.ajax.get('/api/services/app/Device/GetPagedUnBindDevices', {
                 params: page
             });
-            state.devices = [];
-            state.devices.push(...rep.data.result.items);
+            state.unbindDevices = [];
+            state.unbindDevices.push(...rep.data.result.items);
             state.totalCount = rep.data.result.totalCount;
         },
 
