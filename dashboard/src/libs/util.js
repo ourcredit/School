@@ -145,17 +145,17 @@ util.setCurrentPath = function (vm, name) {
     });
 
     let currentPathArr = [];
-    if (name === 'home_index') {
+    if (name === 'point') {
         currentPathArr = [{
-            title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
+            title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'point')),
             path: '',
-            name: 'home_index'
+            name: 'point'
         }];
-    } else if ((name.indexOf('_index') >= 0 || isOtherRouter) && name !== 'home_index') {
+    } else if ((name.indexOf('_index') >= 0 || isOtherRouter) && name !== 'point') {
         currentPathArr = [{
-                title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'home_index')),
-                path: '/home',
-                name: 'home_index'
+                title: util.handleTitle(vm, util.getRouterObjByName(vm.$store.state.app.routers, 'point')),
+                path: '/point/mamge',
+                name: 'point'
             },
             {
                 title: title,
@@ -181,17 +181,17 @@ util.setCurrentPath = function (vm, name) {
             }
         })[0];
 
-        if (currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
+        if (currentPathObj.children.length <= 1 && currentPathObj.name === 'point') {
             currentPathArr = [{
-                title: "首页",
+                title: "点位管理",
                 path: '',
-                name: 'home_index'
+                name: 'point'
             }];
-        } else if (currentPathObj.children.length <= 1 && currentPathObj.name !== 'home') {
+        } else if (currentPathObj.children.length <= 1 && currentPathObj.name !== 'point') {
             currentPathArr = [{
-                    title: "首页",
-                    path: '/home',
-                    name: 'home_index'
+                    title: "点位管理",
+                    path: '/point/mamge',
+                    name: 'point'
                 },
                 {
                     title: currentPathObj.title,
@@ -204,11 +204,6 @@ util.setCurrentPath = function (vm, name) {
                 return child.name === name;
             })[0];
             currentPathArr = [{
-                    title: "首页",
-                    path: '/home',
-                    name: 'home_index'
-                },
-                {
                     title: currentPathObj.title,
                     path: '',
                     name: currentPathObj.name

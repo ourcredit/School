@@ -11,21 +11,20 @@ const app = {
         cachePage: [],
         lang: '',
         isFullScreen: false,
-        openedSubmenuArr: ['administration'], // 要展开的菜单数组
+        openedSubmenuArr: ['point'], // 要展开的菜单数组
         menuTheme: 'dark', // 主题
-
         themeColor: '',
         initSignalR: false,
         pageOpenedList: [{
-            title: '首页',
+            title: '点位管理',
             path: '',
-            name: 'home_index'
+            name: 'pointmanage'
         }],
         currentPageName: '',
         currentPath: [{
-            title: '首页',
-            path: '',
-            name: 'home_index'
+            title: '点位管理',
+            path: '/point/pointmanage',
+            name: 'pointmanage'
         }],
         menuList: [],
         routers: [

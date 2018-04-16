@@ -2,9 +2,10 @@
     <div>
         <baidu-map :center="center" :zoom="15" :scroll-wheel-zoom="true" @ready="handler" class="bm-view">
             <bm-marker @click="showWindows(p)" :key="p.id" v-for="p in points" 
-            :icon="{url: './src/images/loc.png', size: {width: 100, height: 100}}" 
+            :icon="{url: './src/images/poi24.png', size: {width: 200, height: 200}}" 
              :position="{lng:p.longitude,lat:p.latitide }" :dragging="false" >
-            <bm-label :offset="100" :content="p.pointName" :position="{lng:p.longitude,lat:p.latitide }" :labelStyle="{ color: 'red', fontSize : '24px'}" title="Hover me"/>
+            <!-- <bm-label :offset="100" :content="p.pointName" :position="{lng:p.longitude,lat:p.latitide }"
+             :labelStyle="{ color: 'red', fontSize : '24px'}" title="Hover me"/> -->
             </bm-marker>
             
         </baidu-map>

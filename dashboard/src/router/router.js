@@ -53,15 +53,8 @@ export const locking = {
 export const otherRouter = {
     path: '/',
     name: 'otherRouter',
-    redirect: '/home',
     component: Main,
     children: [{
-        path: 'home',
-        title: '首页',
-        name: 'home_index',
-        component: () =>
-            import ('@/views/home/home.vue')
-    }, {
         path: 'setting',
         title: '商品配置',
         name: 'settings',

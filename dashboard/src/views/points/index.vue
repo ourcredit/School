@@ -27,11 +27,16 @@
           </FormItem>
         </Form>
         <baidu-map @click="draw" :center="center" :zoom="15" :scroll-wheel-zoom="true" @ready="handler" class="bm-view">
-          <bm-marker :position="point" :dragging="false">
+          <!-- <bm-marker :position="point" :dragging="false">
+          </bm-marker> -->
+          <bm-marker :icon="{url: './src/images/poi24.png', size: {width: 24, height: 24}}" :position="point" :dragging="false">
+            <!-- <bm-label :offset="100" :content="p.pointName" :position="{lng:p.longitude,lat:p.latitide }"
+             :labelStyle="{ color: 'red', fontSize : '24px'}" title="Hover me"/> -->
           </bm-marker>
-          
+          <!-- <bm-local-search :nearby="{center:point,radius:1000 }" 
+           @searchcomplete="getResults" :keyword="'*'"
+            :auto-viewport="true"></bm-local-search> -->
         </baidu-map>
-        
       </div>
       <div slot="footer">
         <Button @click="showEditModal=false">关闭</Button>
@@ -43,6 +48,9 @@
 <script>
 export default {
   methods: {
+    getResults(e) {
+      console.log(e);
+    },
     draw(e) {
       this.point = {
         lng: e.point.lng,
@@ -89,6 +97,7 @@ export default {
   data() {
     return {
       point: {},
+      keyword: "百度",
       center: {
         lng: 116.404,
         lat: 39.915
