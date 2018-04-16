@@ -17,7 +17,6 @@ namespace School.Others.Dtos
         public float QuantityLine { get; set; }
         public int Site { get; set; }
         public int State { get; set; }
-        public bool Isdelete { get; set; }
         public DateTime CreateTime { get; set; }
     }
 

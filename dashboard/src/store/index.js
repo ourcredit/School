@@ -9,6 +9,7 @@ import role from './modules/role'
 import point from './modules/point'
 import device from './modules/device'
 import org from './modules/org'
+import channels from './modules/channels'
 
 Vue.use(Vuex);
 
@@ -30,7 +31,8 @@ const store = new Vuex.Store({
         role,
         point,
         device,
-        org
+        org,
+        channels
     }
 });
 

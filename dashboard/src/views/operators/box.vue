@@ -24,7 +24,7 @@ export default {
   methods: {
     async init() {
       await this.$store.dispatch({
-        type: "org/getAll"
+        type: "channels/getShows"
       });
     },
     pageChange(page) {
@@ -36,10 +36,8 @@ export default {
       this.getpage();
     },
     async getpage() {
-      if (!this.parent || !this.parent.parentId) return;
       await this.$store.dispatch({
-        type: "device/getOrgDevices",
-        parentId: this.parent.parentId
+        type: "channels/getChannels"
       });
     }
   },
@@ -48,39 +46,39 @@ export default {
       channelsC: [
         {
           title: "货道编号",
-          key: "deviceName"
+          key: "site"
         },
         {
           title: "商品原料",
-          key: "deviceNum"
+          key: "goods_Name"
         },
         {
           title: "余量",
-          key: "deviceType"
+          key: "quantity"
         },
         {
           title: "状态",
-          key: "pointName"
+          key: "state"
         }
       ],
       boxsC: [
         {
           title: "展示位编号",
-          key: "deviceName"
+          key: "site"
         },
         {
           title: "商品",
-          key: "deviceNum"
+          key: "goods_Name"
         }
       ]
     };
   },
   computed: {
     channels() {
-      let orgs = this.$store.state.org.orgs;
+      return this.$store.state.channels.channels;
     },
     boxs() {
-      return this.$store.state.device.orgdevices;
+      return this.$store.state.channels.shows;
     },
     totalCount() {
       return this.$store.state.device.totalCount;
