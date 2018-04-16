@@ -76,7 +76,7 @@ namespace School.EntityFrameworkCore.Seed.Host
                     TenantId = null,
                     UserName = AbpUserBase.AdminUserName,
                     Name = "admin",
-                    IsAdmin = true,
+                    IsAdmin = false,
                     Surname = "admin",
                     EmailAddress = "admin@aspnetboilerplate.com",
                     IsEmailConfirmed = true,

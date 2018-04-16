@@ -6,10 +6,7 @@
     <div class="login" @keydown.enter="handleSubmit">
         <div class="login-con">
             <Card :bordered="false">
-                <p slot="title">
-                    <Icon type="log-in"></Icon>
-                    <span v-if="isMultiTenancyEnabled" class="multi-tenancy">{{'CurrentTenant'|l}}:<span v-if="tenant" class="tenant-name"> {{tenant.name}}</span><span v-if="!tenant"> {{'NotSelected'|l}}</span></span>
-                </p>
+             
                 <div class="form-con">
                     <Form ref="loginForm" :model="form" :rules="rules">
                         <FormItem prop="userNameOrEmailAddress">
@@ -27,29 +24,15 @@
                             </Input>
                         </FormItem>
                         <div style="margin-bottom:10px">
-                            <Checkbox v-model="form.rememberClient">记住我</Checkbox>
+                            <Checkbox v-model="form.isAdmin">超管登陆</Checkbox>
                         </div>
                         <FormItem>
                             <Button @click="handleSubmit" type="primary" long>登入</Button>
                         </FormItem>
                     </Form>
-                  
-                    <p class="login-tip">请使用账户或者邮箱登陆</p>
                 </div>
             </Card>
         </div>
-        <Modal
-         :title="'ChangeTenant'|l"
-         v-model="modalShow"
-         @on-ok="changeTenant"
-        >
-             <Input :placeholder="'TenancyName' | l" v-model="changedTenancyName"></Input>
-             <p>{{'LeaveEmptyToSwitchToHost' | l}}</p>
-             <div slot="footer">
-                <Button @click="modalShow=false">关闭</Button>
-                <Button @click="changeTenant" type="primary">保存</Button>
-             </div>
-        </Modal>
     </div>
 </template>
 
@@ -60,14 +43,10 @@ export default {
     return {
       languages: [],
       currentLanguage: {},
-      isMultiTenancyEnabled: abp.multiTenancy.isEnabled,
-      changedTenancyName: "",
-      modalShow: false,
-      isMultiTenancyEnabled: true,
       form: {
         userNameOrEmailAddress: "",
         password: "",
-        rememberClient: false
+        isAdmin: false
       },
       rules: {
         userNameOrEmailAddress: [
@@ -88,54 +67,6 @@ export default {
     };
   },
   methods: {
-    changeLanguage(languageName) {
-      abp.utils.setCookieValue(
-        "Abp.Localization.CultureName",
-        languageName,
-        new Date(new Date().getTime() + 5 * 365 * 86400000), //5 year
-        abp.appPath
-      );
-      location.reload();
-    },
-    showChangeModal() {
-      this.modalShow = true;
-    },
-    async changeTenant() {
-      if (!this.changedTenancyName) {
-        abp.multiTenancy.setTenantIdCookie(undefined);
-        this.modalShow = false;
-        location.reload();
-        return;
-      } else {
-        let tenant = await this.$store.dispatch({
-          type: "account/isTenantAvailable",
-          data: { tenancyName: this.changedTenancyName }
-        });
-        switch (tenant.state) {
-          case 1:
-            abp.multiTenancy.setTenantIdCookie(tenant.tenantId);
-            location.reload();
-            return;
-          case 2:
-            let message = `${this.changedTenancyName}未启用`;
-            this.$Modal.error({
-              title: "",
-              content: message
-            });
-            break;
-          case 3:
-            let message2 = `${this.changedTenancyName}未找到`;
-            this.$Modal.error({
-              title: "",
-              content: message2
-            });
-            break;
-        }
-
-        this.modalShow = false;
-        this.modalShow = true;
-      }
-    },
     async handleSubmit() {
       this.$refs.loginForm.validate(async valid => {
         if (valid) {
@@ -171,13 +102,7 @@ export default {
       });
     }
   },
-  created() {
-    this.languages = abp.localization.languages.filter(val => {
-      return !val.isDisabled;
-    });
-    this.currentLanguage = abp.localization.currentLanguage;
-    this.isMultiTenancyEnabled = abp.multiTenancy.isEnabled;
-  },
+  created() {},
   computed: {
     tenant() {
       return this.$store.state.session.tenant;

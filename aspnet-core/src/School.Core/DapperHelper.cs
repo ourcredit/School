@@ -38,6 +38,32 @@ namespace School
                return new ListResultDto<T>( res.ToList());
            }
        }
+       /// <summary>
+       /// 分页查询数据
+       /// </summary>
+       /// <typeparam name="T"></typeparam>
+       /// <returns></returns>
+       public static  ListResultDto<T> GetSqlResult<T>(string sql) where T : class, new()
+       {
+           using (MySqlConnection conn = new MySqlConnection(Host))
+           {
+               var res =  conn.Query<T>(sql);
+               return new ListResultDto<T>(res.ToList());
+           }
+       }
+       /// <summary>
+       /// 分页查询数据
+       /// </summary>
+       /// <typeparam name="T"></typeparam>
+       /// <returns></returns>
+       public static async Task<ListResultDto<T>> GetSqlResultAsync<T>(string sql) where T : class, new()
+       {
+           using (MySqlConnection conn = new MySqlConnection(Host))
+           {
+               var res = await conn.QueryAsync<T>(sql);
+               return new ListResultDto<T>(res.ToList());
+           }
+       }
         /// <summary>
         /// 分页查询数据
         /// </summary>

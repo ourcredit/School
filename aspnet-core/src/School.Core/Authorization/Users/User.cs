@@ -12,7 +12,6 @@ namespace School.Authorization.Users
     public class User : AbpUser<User>
     {
         public const string DefaultPassword = "123456";
-        public virtual Guid? ProfilePictureId { get; set; }
         public DateTime? SignInTokenExpireTimeUtc { get; set; }
 
         /// <summary>
@@ -23,6 +22,14 @@ namespace School.Authorization.Users
         /// 机构树节点权限
         /// </summary>
         public string TreeCode { get; set; }
+        /// <summary>
+        /// hash 盐
+        /// </summary>
+        public string Salt { get; set; }
+        /// <summary>
+        /// 外链id
+        /// </summary>
+        public int? KeyId { get; set; }
         public string SignInToken { get; set; }
         #region 隐藏无用字段
         private new string AuthenticationSource { get; set; }
@@ -62,7 +69,28 @@ namespace School.Authorization.Users
 
             return user;
         }
+        /// <summary>
+        /// create user for a tenant
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="userName"></param>
+        /// <param name="name"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public static User CreateTenantUser(int tenantId, string userName,string name,string email)
+        {
+            var user = new User
+            {
+                TenantId = tenantId,
+                UserName = userName,
+                Name = name,
+                EmailAddress = email
+            };
 
+            user.SetNormalizedNames();
+
+            return user;
+        }
         public static string CreateRandomPassword()
         {
             return Guid.NewGuid().ToString("N").Truncate(16);

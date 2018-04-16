@@ -224,7 +224,9 @@ namespace School.Others
         }
         private async Task<ListResultDto<dsc_Goods>> GetGoodsFromCache()
         {
-            var res = await DapperHelper.GetResult<dsc_Goods>();
+            var current =await AbpSession.CurrentAsync();
+            if(!current.KeyId.HasValue)throw new UserFriendlyException("当前用户不是超管用户");
+            var res = await DapperHelper.GetResult<dsc_Goods>($" where user_id={current.KeyId} ");
             return res;
         }
     }

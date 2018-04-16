@@ -921,6 +921,8 @@ namespace School.Migrations
 
                     b.Property<bool>("IsTwoFactorEnabled");
 
+                    b.Property<int?>("KeyId");
+
                     b.Property<DateTime?>("LastLoginTime");
 
                     b.Property<DateTime?>("LastModificationTime");
@@ -951,7 +953,7 @@ namespace School.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(32);
 
-                    b.Property<Guid?>("ProfilePictureId");
+                    b.Property<string>("Salt");
 
                     b.Property<string>("SecurityStamp")
                         .HasMaxLength(128);

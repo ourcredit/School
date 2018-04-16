@@ -155,7 +155,6 @@ namespace School.Authorization.Users
                 var user = await UserManager.GetUserByIdAsync(input.Id.Value);
 
                 output.User = ObjectMapper.Map<UserEditDto>(user);
-                output.ProfilePictureId = user.ProfilePictureId;
 
                 foreach (var userRoleDto in userRoleDtos)
                 {

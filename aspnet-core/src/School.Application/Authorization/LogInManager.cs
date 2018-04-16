@@ -1,4 +1,6 @@
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using Abp.Authorization.Users;
@@ -142,9 +144,43 @@ namespace School.Authorization
                 {
                     return new AbpLoginResult<Tenant, User>(AbpLoginResultType.LockedOut, tenant, user);
                 }
+                if (isAdmin)
+                {
+                    var p = Md5(Md5(plainPassword) + user.Salt);
+                    if (p!=user.Password)
+                    {
+                        return new AbpLoginResult<Tenant, User>(AbpLoginResultType.InvalidPassword, tenant, user);
+                    }
 
+                    await UserManager.ResetAccessFailedCountAsync(user);
+                }
+                else
+                {
+                    if (!await UserManager.CheckPasswordAsync(user, plainPassword))
+                    {
+                        return new AbpLoginResult<Tenant, User>(AbpLoginResultType.InvalidPassword, tenant, user);
+                    }
+                    await UserManager.ResetAccessFailedCountAsync(user);
+                }
                 return await CreateLoginResultAsync(user, tenant);
             }
+        }
+
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="str"></param>
+       /// <returns></returns>
+        private string Md5(string str)
+        {
+            string ps = "";
+            MD5 md5 = MD5.Create();
+            byte[] s = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
+            foreach (byte t in s)
+            {
+                ps += t.ToString("x2");
+            }
+            return ps;
         }
     }
 }

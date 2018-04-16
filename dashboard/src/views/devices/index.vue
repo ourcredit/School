@@ -24,10 +24,10 @@
           </FormItem>
           <FormItem label="设备类型" prop="deviceType">
               <Select style="width:162px" v-model="device.deviceType" placeholder="请选择">
-                <Option value="A">A</Option>
-                <Option value="B">B</Option>
-                <Option value="C">C</Option>
-                <Option value="D">D</Option>
+                <Option value="A">格子机</Option>
+                <Option value="B">无人销售机</Option>
+                <Option value="C">咖啡机</Option>
+                <Option value="D">饮料机</Option>
               </Select>
           </FormItem>
           <FormItem label="所属点位" prop="pointId">
