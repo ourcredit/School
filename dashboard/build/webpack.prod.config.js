@@ -46,15 +46,6 @@ module.exports = merge(webpackBaseConfig, {
                 warnings: false
             }
         }),
-        // new UglifyJsParallelPlugin({
-        //     workers: os.cpus().length,
-        //     mangle: true,
-        //     compressor: {
-        //       warnings: false,
-        //       drop_console: true,
-        //       drop_debugger: true
-        //      }
-        // }),
         new CopyWebpackPlugin([{
                 from: 'abp.ico'
             },
