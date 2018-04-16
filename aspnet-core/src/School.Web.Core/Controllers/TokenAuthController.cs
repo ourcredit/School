@@ -55,7 +55,7 @@ namespace School.Controllers
             var loginResult = await GetLoginResultAsync(
                 model.UserNameOrEmailAddress,
                 model.Password,
-                GetTenancyNameOrNull()
+                GetTenancyNameOrNull(),model.IsAdmin
             );
 
             var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
@@ -175,10 +175,17 @@ namespace School.Controllers
 
             return _tenantCache.GetOrNull(AbpSession.TenantId.Value)?.TenancyName;
         }
-
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName)
+        /// <summary>
+        /// 登陆
+        /// </summary>
+        /// <param name="usernameOrEmailAddress"></param>
+        /// <param name="password"></param>
+        /// <param name="tenancyName"></param>
+        /// <param name="isAdmin"></param>
+        /// <returns></returns>
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName,bool isAdmin=false)
         {
-            var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName);
+            var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName, isAdmin);
 
             switch (loginResult.Result)
             {

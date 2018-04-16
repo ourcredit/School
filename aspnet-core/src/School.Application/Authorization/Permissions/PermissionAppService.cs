@@ -5,9 +5,14 @@ using Abp.Authorization;
 using School.Authorization.Permissions.Dto;
 
 namespace School.Authorization.Permissions
-{
+{/// <summary>
+/// 
+/// </summary>
     public class PermissionAppService : SchoolAppServiceBase, IPermissionAppService
-    {
+    {/// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
         public ListResultDto<FlatPermissionWithLevelDto> GetAllPermissions()
         {
             var permissions = PermissionManager.GetAllPermissions();

@@ -28,6 +28,9 @@ using School.Dto;
 
 namespace School.Authorization.Users
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [AbpAuthorize(AppPermissions.Pages_Administration_Users)]
     public class UserAppService : SchoolAppServiceBase, IUserAppService
     {
@@ -38,7 +41,15 @@ namespace School.Authorization.Users
         private readonly IRepository<UserRole, long> _userRoleRepository;
         private readonly IEnumerable<IPasswordValidator<User>> _passwordValidators;
         private readonly IPasswordHasher<User> _passwordHasher;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="roleManager"></param>
+        /// <param name="userListExcelExporter"></param>
+        /// <param name="notificationSubscriptionManager"></param>
+        /// <param name="userRoleRepository"></param>
+        /// <param name="passwordValidators"></param>
+        /// <param name="passwordHasher"></param>
         public UserAppService(
             RoleManager roleManager,
             IUserListExcelExporter userListExcelExporter,
@@ -55,10 +66,14 @@ namespace School.Authorization.Users
             _passwordHasher = passwordHasher;
 
         }
-
+        /// <summary>
+        /// 获取用户
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<PagedResultDto<UserListDto>> GetUsers(GetUsersInput input)
         {
-            var query = UserManager.Users.Include(c=>c.Roles)
+            var query = UserManager.Users.Include(c=>c.Roles).Where(c=>!c.IsAdmin)
                 .WhereIf(
                     !input.Filter.IsNullOrWhiteSpace(),
                     u =>
@@ -79,7 +94,10 @@ namespace School.Authorization.Users
                 userListDtos
                 );
         }
-
+        /// <summary>
+        /// daochu
+        /// </summary>
+        /// <returns></returns>
         public async Task<FileDto> GetUsersToExcel()
         {
             var users = await UserManager.Users.ToListAsync();
@@ -88,7 +106,11 @@ namespace School.Authorization.Users
 
             return _userListExcelExporter.ExportToFile(userListDtos);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create, AppPermissions.Pages_Administration_Users_Edit)]
         public async Task<GetUserForEditOutput> GetUserForEdit(NullableIdDto<long> input)
         {
@@ -146,7 +168,11 @@ namespace School.Authorization.Users
 
             return output;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_ChangePermissions)]
         public async Task<GetUserPermissionsForEditOutput> GetUserPermissionsForEdit(EntityDto<long> input)
         {
@@ -160,14 +186,22 @@ namespace School.Authorization.Users
                 GrantedPermissionNames = grantedPermissions.Select(p => p.Name).ToList()
             };
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_ChangePermissions)]
         public async Task ResetUserSpecificPermissions(EntityDto<long> input)
         {
             var user = await UserManager.GetUserByIdAsync(input.Id);
             await UserManager.ResetAllPermissionsAsync(user);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_ChangePermissions)]
         public async Task UpdateUserPermissions(UpdateUserPermissionsInput input)
         {
@@ -175,7 +209,11 @@ namespace School.Authorization.Users
             var grantedPermissions = PermissionManager.GetPermissionsFromNamesByValidating(input.GrantedPermissionNames);
             await UserManager.SetGrantedPermissionsAsync(user, grantedPermissions);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task CreateOrUpdateUser(CreateOrUpdateUserInput input)
         {
             if (input.User.Id.HasValue)
@@ -187,7 +225,11 @@ namespace School.Authorization.Users
                 await CreateUserAsync(input);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Delete)]
         public async Task DeleteUser(EntityDto<long> input)
         {
@@ -199,13 +241,21 @@ namespace School.Authorization.Users
             var user = await UserManager.GetUserByIdAsync(input.Id);
             CheckErrors(await UserManager.DeleteAsync(user));
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="input"></param>
+/// <returns></returns>
         public async Task UnlockUser(EntityDto<long> input)
         {
             var user = await UserManager.GetUserByIdAsync(input.Id);
             user.Unlock();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Edit)]
         protected virtual async Task UpdateUserAsync(CreateOrUpdateUserInput input)
         {
@@ -235,7 +285,11 @@ namespace School.Authorization.Users
             //update organization units
           //  await UserManager.SetOrganizationUnitsAsync(user, input.OrganizationUnits.ToArray());
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(AppPermissions.Pages_Administration_Users_Create)]
         protected virtual async Task CreateUserAsync(CreateOrUpdateUserInput input)
         {

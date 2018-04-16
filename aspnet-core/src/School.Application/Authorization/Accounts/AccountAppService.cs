@@ -12,6 +12,9 @@ using School.MultiTenancy;
 
 namespace School.Authorization.Accounts
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AccountAppService : SchoolAppServiceBase, IAccountAppService
     {
 
@@ -19,7 +22,12 @@ namespace School.Authorization.Accounts
         private readonly UserRegistrationManager _userRegistrationManager;
         private readonly IImpersonationManager _impersonationManager;
         private readonly IPasswordHasher<User> _passwordHasher;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userRegistrationManager"></param>
+        /// <param name="impersonationManager"></param>
+        /// <param name="passwordHasher"></param>
         public AccountAppService(
             UserRegistrationManager userRegistrationManager,
             IImpersonationManager impersonationManager,
@@ -29,7 +37,11 @@ namespace School.Authorization.Accounts
             _impersonationManager = impersonationManager;
             _passwordHasher = passwordHasher;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
        
         public async Task<RegisterOutput> Register(RegisterInput input)
         {
@@ -49,7 +61,11 @@ namespace School.Authorization.Accounts
         }
 
        
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<ResetPasswordOutput> ResetPassword(ResetPasswordInput input)
         {
             var user = await UserManager.GetUserByIdAsync(input.UserId);
@@ -72,7 +88,11 @@ namespace School.Authorization.Accounts
         }
 
      
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
       
         [AbpAuthorize]
         public virtual async Task<ImpersonateOutput> Impersonate(ImpersonateInput input)
@@ -83,7 +103,10 @@ namespace School.Authorization.Accounts
                 TenancyName = await GetTenancyNameOrNullAsync(input.TenantId)
             };
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public virtual async Task<ImpersonateOutput> BackToImpersonator()
         {
             return new ImpersonateOutput
@@ -94,7 +117,11 @@ namespace School.Authorization.Accounts
         }
 
       
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
         private async Task<Tenant> GetActiveTenantAsync(int tenantId)
         {
             var tenant = await TenantManager.FindByIdAsync(tenantId);

@@ -5,7 +5,9 @@ using Abp.Authorization;
 using Abp.Runtime.Validation;
 
 namespace School.Authorization.Permissions
-{
+{/// <summary>
+/// 
+/// </summary>
     public static class PermissionManagerExtensions
     {
         /// <summary>

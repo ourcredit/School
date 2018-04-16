@@ -5,8 +5,18 @@ using Abp.UI;
 
 namespace School.Authorization
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class AbpLoginResultTypeHelper : SchoolAppServiceBase, ITransientDependency
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="usernameOrEmailAddress"></param>
+        /// <param name="tenancyName"></param>
+        /// <returns></returns>
         public Exception CreateExceptionForFailedLoginAttempt(AbpLoginResultType result, string usernameOrEmailAddress, string tenancyName)
         {
             switch (result)
@@ -26,12 +36,20 @@ namespace School.Authorization
                     return new UserFriendlyException(L("LoginFailed"), L("UserEmailIsNotConfirmedAndCanNotLogin"));
                 case AbpLoginResultType.LockedOut:
                     return new UserFriendlyException(L("LoginFailed"), L("UserLockedOutMessage"));
+                case AbpLoginResultType.UserPhoneNumberIsNotConfirmed:
+                    return new UserFriendlyException(L("登陆失败"), L("当前用户不是超管用户"));
                 default: //Can not fall to default actually. But other result types can be added in the future and we may forget to handle it
                     Logger.Warn("Unhandled login fail reason: " + result);
                     return new UserFriendlyException(L("LoginFailed"));
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="usernameOrEmailAddress"></param>
+        /// <param name="tenancyName"></param>
+        /// <returns></returns>
         public string CreateLocalizedMessageForFailedLoginAttempt(AbpLoginResultType result, string usernameOrEmailAddress, string tenancyName)
         {
             switch (result)
@@ -51,6 +69,8 @@ namespace School.Authorization
                     return L("UserEmailIsNotConfirmedAndCanNotLogin");
                 case AbpLoginResultType.LockedOut:
                     return L("UserLockedOutMessage");
+                case AbpLoginResultType.UserPhoneNumberIsNotConfirmed:
+                    return   L("当前用户不是超管用户");
                 default: //Can not fall to default actually. But other result types can be added in the future and we may forget to handle it
                     Logger.Warn("Unhandled login fail reason: " + result);
                     return L("LoginFailed");

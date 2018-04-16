@@ -12,16 +12,25 @@ using School.Authorization.Users.Dto;
 
 namespace School.Authorization.Users
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [AbpAuthorize]
     public class UserLoginAppService : SchoolAppServiceBase, IUserLoginAppService
     {
         private readonly IRepository<UserLoginAttempt, long> _userLoginAttemptRepository;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userLoginAttemptRepository"></param>
         public UserLoginAppService(IRepository<UserLoginAttempt, long> userLoginAttemptRepository)
         {
             _userLoginAttemptRepository = userLoginAttemptRepository;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [DisableAuditing]
         public async Task<ListResultDto<UserLoginAttemptDto>> GetRecentUserLoginAttempts()
         {

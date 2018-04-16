@@ -12,7 +12,9 @@ namespace School.Models.TokenAuth
         [Required]
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]
         public string Password { get; set; }
-        
-        public bool RememberClient { get; set; }
+        /// <summary>
+        /// 是否超管登陆
+        /// </summary>
+        public bool IsAdmin { get; set; }
     }
 }

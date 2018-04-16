@@ -6,15 +6,21 @@ using Abp.Extensions;
 using School.Validation;
 
 namespace School.Authorization.Accounts.Dto
-{
+{/// <summary>
+/// 
+/// </summary>
     public class RegisterInput : IValidatableObject
-    {
+    {/// <summary>
+    /// 
+    /// </summary>
         [Required]
         [StringLength(AbpUserBase.MaxNameLength)]
         public string Name { get; set; }
 
        
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Required]
         [StringLength(AbpUserBase.MaxUserNameLength)]
         public string UserName { get; set; }
