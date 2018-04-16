@@ -29,6 +29,7 @@ namespace School.Devices
         private readonly IRepository<Device, int> _deviceRepository;
         private readonly IRepository<Point, int> _pointRepository;
         private readonly IRepository<OperatorDevice, int> _operatorDeviceRepository;
+        private readonly IRepository<OperatorTree> _treeRepository;
         private readonly IRepository<DeviceGood> _goodsRepository;
 
         /// <summary>
@@ -37,12 +38,13 @@ namespace School.Devices
         public DeviceAppService(IRepository<Device, int> deviceRepository,
             IRepository<Point, int> pointRepository, 
             IRepository<OperatorDevice, int> operatorDeviceRepository,
-            IRepository<DeviceGood> goodsRepository)
+            IRepository<DeviceGood> goodsRepository, IRepository<OperatorTree> treeRepository)
         {
             _deviceRepository = deviceRepository;
             _pointRepository = pointRepository;
             _operatorDeviceRepository = operatorDeviceRepository;
             _goodsRepository = goodsRepository;
+            _treeRepository = treeRepository;
         }
         /// <summary>
         /// 获取Device的分页列表信息
@@ -98,8 +100,11 @@ namespace School.Devices
         /// <returns></returns>
         public async Task<PagedResultDto<DeviceListDto>> GetOperatorTreeDevices(GetOrgsDevicesInput input)
         {
+            var org = await _treeRepository.FirstOrDefaultAsync(c => c.Id == input.OrgId);
+            var orgs = await _treeRepository.GetAllListAsync(c => c.TreeCode.Contains(org.TreeCode));
+            var temp = orgs.Select(c => c.Id).ToList();
             var query = _operatorDeviceRepository.GetAllIncluding(c => c.Device,c=>c.Device.Point);
-            query = query.Where(c => c.OperatorId == input.OrgId);
+            query = query.Where(c => temp.Any(w=>w==c.OperatorId));
             var deviceCount = await query.CountAsync();
             var devices = await query
                 .OrderBy(input.Sorting)
