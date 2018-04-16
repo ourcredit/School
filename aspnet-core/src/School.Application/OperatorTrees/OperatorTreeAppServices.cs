@@ -51,12 +51,10 @@ namespace School.OperatorTrees
             var current =await AbpSession.CurrentAsync();
             var query = _operatortreeRepository.GetAll();
             query = query.WhereIf(!input.Filter.IsNullOrWhiteSpace(), c => c.TreeCode.Contains(input.Filter))
-                .WhereIf(!current.IsAdmin && !current.TreeCode.IsNullOrWhiteSpace(),
+                .WhereIf(!current.TreeCode.IsNullOrWhiteSpace(),
                     c => c.TreeCode.Contains(current.TreeCode));
             var operatortrees = await query
                 .ToListAsync();
-           
-            //var operatortreeListDtos = ObjectMapper.Map<List <OperatorTreeListDto>>(operatortrees);
             var operatortreeListDtos = operatortrees.MapTo<List<OperatorTreeListDto>>();
             if (!current.IsAdmin && !current.TreeCode.IsNullOrWhiteSpace())
             {

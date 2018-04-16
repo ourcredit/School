@@ -3,6 +3,9 @@ using School.Dto;
 
 namespace School.Others.Dtos
 {
+    /// <summary>
+    /// 获取设备商品input
+    /// </summary>
     public class GetDeviceGoodsInput : PagedInputDto
     {
         /// <summary>
@@ -10,6 +13,9 @@ namespace School.Others.Dtos
         /// </summary>
         public string MachineCode { get; set; }
     }
+    /// <summary>
+    /// 获取商品input
+    /// </summary>
     public class GetGoodsInput : PagedAndSortedInputDto, IShouldNormalize
     {
         ////BCC/ BEGIN CUSTOM CODE SECTION

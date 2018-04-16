@@ -42,8 +42,37 @@ namespace School
        /// 分页查询数据
        /// </summary>
        /// <typeparam name="T"></typeparam>
+       /// <param name="where"></param>
        /// <returns></returns>
-       public static  ListResultDto<T> GetSqlResult<T>(string sql) where T : class, new()
+       public static async Task<ListResultDto<T>> GetGoodsResult<T>(string where = "") where T : class, new()
+       {
+           var sql = $@"SELECT
+	a.goods_id,
+	a.goods_name,
+	a.cost_price,
+	a.cat_id,
+	a.user_cat,
+	a.goods_sn,
+	a.bar_code,
+	a.goods_name_style,
+	a.brand_id,
+	a.provider_name,
+	a.goods_number, b.cat_name 
+FROM
+	dsc_goods a
+	LEFT JOIN dsc_category b ON a.cat_id = b.cat_id {where}";
+           using (MySqlConnection conn = new MySqlConnection(Host))
+           {
+               var res = await conn.QueryAsync<T>(sql);
+               return new ListResultDto<T>(res.ToList());
+           }
+       }
+        /// <summary>
+        /// 分页查询数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static  ListResultDto<T> GetSqlResult<T>(string sql) where T : class, new()
        {
            using (MySqlConnection conn = new MySqlConnection(Host))
            {

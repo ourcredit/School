@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using School.Models;
 using School.Others.Dtos;
-using School.Points.Dtos;
 
 namespace School.Others
 {
@@ -27,6 +25,18 @@ namespace School.Others
         /// <returns></returns>
         Task<PagedResultDto<DeviceGoodsListDto>> GetProducts(GetDeviceGoodsInput input);
 
+        /// <summary>
+        /// 获取货道列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<ChannelListDto>> GetPagedChannels(GetDeviceGoodsInput input);
+        /// <summary>
+        /// 获取展示位列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<ShowListDto>> GetPagedBoxs(GetDeviceGoodsInput input);
         /// <summary>
         /// 心跳程序 检查设备状态
         /// </summary>

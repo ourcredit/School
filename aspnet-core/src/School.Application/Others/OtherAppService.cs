@@ -7,6 +7,7 @@ using Abp.AutoMapper;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
+using Abp.Linq.Extensions;
 using Abp.Runtime.Caching;
 using Abp.UI;
 using Abp.UI.Inputs;
@@ -77,6 +78,69 @@ namespace School.Others
                 }
             }
             return new PagedResultDto<dsc_Goods>(count, list);
+        }
+
+        /// <summary>
+        /// 获取货道列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<ChannelListDto>> GetPagedChannels(GetDeviceGoodsInput input)
+        {
+            var hts = _channelRepository.GetAll();
+            hts = hts.WhereIf(!input.MachineCode.IsNullOrWhiteSpace(), c => c.Machine_Code.Equals(input.MachineCode));
+            var deviceCount = await hts.CountAsync();
+            var devices = await hts
+                .OrderByDescending(c=>c.CreateTime)
+                .PageBy(input)
+                .ToListAsync();
+
+            var result = await _cacheManager.GetCache(SchoolCache.GoodsCache)
+                .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
+
+            var tr=new List<ChannelListDto>();
+            foreach (var goodse in devices)
+            {
+                var model = goodse.MapTo<ChannelListDto>();
+                var mo = result.Items.FirstOrDefault(c => c.goods_id == goodse.Goods_Id);
+                if (mo != null)
+                {
+                    model.Goods_Name = mo.goods_name;
+                }
+             tr.Add(model);
+            }
+            return new PagedResultDto<ChannelListDto>(deviceCount, tr);
+        }
+        /// <summary>
+        /// 获取展示位列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<ShowListDto>> GetPagedBoxs(GetDeviceGoodsInput input)
+        {
+            var hts = _showRepository.GetAll();
+            hts = hts.WhereIf(!input.MachineCode.IsNullOrWhiteSpace(), c => c.Machine_Code.Equals(input.MachineCode));
+            var deviceCount = await hts.CountAsync();
+            var devices = await hts
+                .OrderByDescending(c => c.CreateTime)
+                .PageBy(input)
+                .ToListAsync();
+
+            var result = await _cacheManager.GetCache(SchoolCache.GoodsCache)
+                .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
+
+            var tr = new List<ShowListDto>();
+            foreach (var goodse in devices)
+            {
+                var model = goodse.MapTo<ShowListDto>();
+                var mo = result.Items.FirstOrDefault(c => c.goods_id == goodse.Goods_id);
+                if (mo != null)
+                {
+                    model.Goods_Name = mo.goods_name;
+                }
+                tr.Add(model);
+            }
+            return new PagedResultDto<ShowListDto>(deviceCount, tr);
         }
 
         /// <summary>
@@ -161,10 +225,10 @@ namespace School.Others
         public async Task<bool> CheckPickCode(CheckPickCodeInput input)
         {
             var order = await _orderRepository.FirstOrDefaultAsync(c => c.Merchant_Name == input.MachineCode);
-            if(order==null) throw new UserFriendlyException("该订单不存在");
-            if(order.Status.Equals("0")) throw new UserFriendlyException("该订单未支付");
-            if(order.Status.Equals("4")) throw new UserFriendlyException("该订单已出货");
-            if(!order.PickupCode.Equals(input.PickCode)) throw new UserFriendlyException("提货码错误");
+            if (order == null) throw new UserFriendlyException("该订单不存在");
+            if (order.Status.Equals("0")) throw new UserFriendlyException("该订单未支付");
+            if (order.Status.Equals("4")) throw new UserFriendlyException("该订单已出货");
+            if (!order.PickupCode.Equals(input.PickCode)) throw new UserFriendlyException("提货码错误");
             return true;
         }
         /// <summary>
@@ -184,7 +248,8 @@ namespace School.Others
                     Quantity = c.Quantity,
                     QuantityLine = c.QuantityLine,
                     Site = c.Site,
-                    State = c.State
+                    State = c.State,
+                    CreateTime = DateTime.Now
                 });
             }
         }
@@ -201,7 +266,9 @@ namespace School.Others
                 {
                     Machine_Code = c.MachineCode,
                     Goods_id = c.Goods_id,
-                    Site = c.Site
+                    Site = c.Site,
+                    CreateTime = DateTime.Now
+
                 });
             }
         }
@@ -218,15 +285,16 @@ namespace School.Others
                 {
                     Machine_Code = c.MachineCode,
                     ChannelSite = c.ChannelSite,
-                    ShowSite = c.ShowSite
+                    ShowSite = c.ShowSite,
+                    CreateTime = DateTime.Now
                 });
             }
         }
         private async Task<ListResultDto<dsc_Goods>> GetGoodsFromCache()
         {
-            var current =await AbpSession.CurrentAsync();
-            if(!current.KeyId.HasValue)throw new UserFriendlyException("当前用户不是超管用户");
-            var res = await DapperHelper.GetResult<dsc_Goods>($" where user_id={current.KeyId} ");
+            var current = await AbpSession.CurrentAsync();
+            if (!current.KeyId.HasValue) throw new UserFriendlyException("当前用户不是超管用户");
+            var res = await DapperHelper.GetGoodsResult<dsc_Goods>($" where a.user_id={current.KeyId} ");
             return res;
         }
     }

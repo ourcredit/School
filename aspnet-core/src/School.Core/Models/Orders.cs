@@ -81,7 +81,8 @@ namespace School.Models
         public string provider_name { get; set; }
         public int goods_number { get; set; }
         public int user_id { get; set; }
-        public int click_count { get; set; }
+        public string cat_name { get; set; }
+
         public bool IsSeal { get; set; }
         public int Price { get; set; }
     }

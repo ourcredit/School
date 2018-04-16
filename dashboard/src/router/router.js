@@ -161,7 +161,7 @@ export const appRouter = [{
         name: 'boxs',
         permission: 'Pages.Operator.Boxs',
         component: () =>
-            import ('@/views/operators/index.vue')
+            import ('@/views/operators/box.vue')
     }]
 }, {
     path: '/admin',

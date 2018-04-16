@@ -64,6 +64,10 @@ namespace School
             configuration.CreateMap<OperatorTree, OperatorTreeListDto>();
             configuration.CreateMap<OperatorTreeEditDto, OperatorTree>();
             configuration.CreateMap<DeviceGood, DeviceGoodsListDto>();
+
+            configuration.CreateMap<Channel, ChannelListDto>();
+            configuration.CreateMap<Show, ShowListDto>();
+            
         }
     }
 }

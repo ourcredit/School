@@ -62,7 +62,7 @@ export default {
         },
         {
           title: "商品类型",
-          key: "cat_id"
+          key: "cat_name"
         },
         {
           title: "是否售卖",
@@ -91,16 +91,6 @@ export default {
                     this.tempArr = this.tempArr.filter(
                       c => c.goodId != params.row.goods_id
                     );
-                    // var model = this.tempArr.find(
-                    //   c => c.goodId == params.row.goods_id
-                    // );
-                    // if (model) {
-                    //   this.tempArr.remove({
-                    //     goodId: params.row.goods_id,
-                    //     goodName: params.row.goods_name,
-                    //     price: 0
-                    //   });
-                    // }
                   }
                   console.log(this.tempArr);
                 }
