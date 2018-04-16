@@ -12,8 +12,8 @@
                 :open-names="openedSubmenuArr"
                 :menu-list="menuList">
                 <div slot="top" class="logo-con">
-                    <img v-show="!shrink"  src="../images/logo.jpg" key="max-logo" class="regular-logo" />
-                    <img v-show="shrink" src="../images/logo-min.jpg" key="min-logo" class="small-logo" />
+                  <div v-show="!shrink"> 高校平台</div>
+                  <div v-show="shrink"> </div>
                 </div>
             </shrinkable-menu>
         </div>
