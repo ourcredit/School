@@ -23,7 +23,7 @@
              <i-button @click="create" type="primary">查询</i-button>
           </i-col>
           <i-col span="12">
-            <i-button @click="bind" type="primary">绑定</i-button>
+            <i-button v-if="this.parent!=null&&this.parent.length==6" @click="bind" type="primary">绑定</i-button>
           </i-col>
         </Row>
         <Table :columns="columns" border :data="devices"></Table>
@@ -71,7 +71,8 @@ export default {
       if (data.length == 1) {
         this.parent = {
           parentId: data[0].id,
-          parentName: data[0].title
+          parentName: data[0].title,
+          length: data[0].treeLength
         };
         this.org.parentName = this.parent.parentName;
         await this.getpage();
@@ -105,6 +106,11 @@ export default {
         this.parent && this.parent.parentId ? this.parent.parentId : null;
       const Name =
         this.parent && this.parent.parentName ? this.parent.parentName : "";
+      const length = this.parent && this.parent.length ? this.parent.length : 0;
+      if (length >= 6) {
+        this.$Message.warning("层级过多");
+        return;
+      }
       this.org = {
         parentId: Id,
         parentName: Name
