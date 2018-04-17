@@ -56,7 +56,7 @@ namespace School.Others
                 .FirstOrDefaultAsync(c => c.Id == input.DeviceId);
 
             var result = await _cacheManager.GetCache(SchoolCache.GoodsCache)
-                .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
+                .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCacheByAuth);
             var temp = result.Items.WhereIf(!input.Name.IsNullOrWhiteSpace(), c => c.goods_name.Contains(input.Name))
                 .WhereIf(!input.Sn.IsNullOrWhiteSpace(), c => c.goods_sn.Contains(input.Sn))
                 .WhereIf(!input.Cate.IsNullOrWhiteSpace(), c => c.cat_name.Contains(input.Cate));
@@ -310,11 +310,16 @@ namespace School.Others
                 });
             }
         }
-        private async Task<ListResultDto<dsc_Goods>> GetGoodsFromCache()
+        private async Task<ListResultDto<dsc_Goods>> GetGoodsFromCacheByAuth()
         {
             var current = await AbpSession.CurrentAsync();
             if (!current.KeyId.HasValue) throw new UserFriendlyException("当前用户不是超管用户");
             var res = await DapperHelper.GetGoodsResult<dsc_Goods>($" where a.user_id={current.KeyId} ");
+            return res;
+        }
+        private async Task<ListResultDto<dsc_Goods>> GetGoodsFromCache()
+        {
+            var res = await DapperHelper.GetGoodsResult<dsc_Goods>();
             return res;
         }
     }
