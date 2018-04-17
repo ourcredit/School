@@ -289,10 +289,18 @@ namespace School.Devices
         [AbpAuthorize(AppPermissions.Pages_Device_Manage_Delete)]
         public async Task DeleteDevice(EntityDto<int> input)
         {
-
             await _deviceRepository.DeleteAsync(input.Id);
         }
-
+        /// <summary>
+        /// 删除Device信息的方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAuthorize(AppPermissions.Pages_Device_Manage_Delete)]
+        public async Task DeleteRelationDevice(EntityDto<int> input)
+        {
+            await _operatorDeviceRepository.DeleteAsync(input.Id);
+        }
         /// <summary>
         /// 批量删除Device的方法
         /// </summary>
