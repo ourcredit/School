@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace School.Models
 {
@@ -13,57 +15,59 @@ namespace School.Models
     [Table("Gx_vm_order")]
    public class Orders:Entity
     {
-        public string OrderNum { get; set; }
+        public string order_id { get; set; }
+        public string transaction_id { get; set; }
         /// <summary>
         /// 售货机id
         /// </summary>
-        public string Vmid { get; set; }
+        public string vmid { get; set; }
         /// <summary>
         /// 商品id
         /// </summary>
-        public int Goods_Id { get; set; }
+        public int goods_id { get; set; }
         /// <summary>
         /// 商品名
         /// </summary>
-        public string Goods_Name { get; set; }
+        public string goods_name { get; set; }
         /// <summary>
         /// 价格
         /// </summary>
-        public float Value { get; set; }
+        public float pay_price { get; set; }
         //支付渠道
-        public int PayChannel { get; set; }
+        public int pay_Channel { get; set; }
         /// <summary>
         /// 商户编号
         /// </summary>
-        public int Merchant_Id { get; set; }
+        public int merchant_id { get; set; }
         /// <summary>
         /// 商户名
         /// </summary>
-        public string Merchant_Name { get; set; }
+        public string merchant_name { get; set; }
         /// <summary>
         /// 取货码
         /// </summary>
-        public string PickupCode { get; set; }
+        public string pickup_code { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreatedTime { get; set; }
+        public DateTime created_time { get; set; }
         /// <summary>
         /// 支付时间
         /// </summary>
-        public DateTime? PayTime { get; set; }
+        public DateTime? pay_time { get; set; }
         /// <summary>
         /// 出货时间
         /// </summary>
-        public DateTime? DeliveryTime { get; set; }
+        public DateTime? delivery_time { get; set; }
         /// <summary>
         /// 订单状态 0等待支付、1支付成功、2正在出货、出货成功、出货失败、退款
         /// </summary>
-        public string Status { get; set; }
+        public string status { get; set; }
         /// <summary>
         /// 支付账号
         /// </summary>
-        public string PayAccount { get; set; }
+        public string pay_account { get; set; }
+        public string notify_url { get; set; }
     }
     /// <summary>
     /// 商品表

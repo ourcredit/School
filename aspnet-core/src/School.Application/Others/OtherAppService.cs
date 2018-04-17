@@ -199,13 +199,13 @@ namespace School.Others
         /// <returns></returns>
         public async Task Order(DealOrderInput input)
         {
-            var order = await _orderRepository.FirstOrDefaultAsync(c => c.OrderNum == input.OrderId);
+            var order = await _orderRepository.FirstOrDefaultAsync(c => c.order_id == input.OrderId);
             if (order == null) throw new UserFriendlyException("该订单不存在");
             if (input.OrderStatus.Equals("4"))
             {
-                order.DeliveryTime = DateTime.Now;
+                order.delivery_time = DateTime.Now;
             }
-            order.Status = input.OrderStatus;
+            order.status = input.OrderStatus;
 
         }
         /// <summary>
@@ -244,11 +244,13 @@ namespace School.Others
         /// <returns></returns>
         public async Task<bool> CheckPickCode(CheckPickCodeInput input)
         {
-            var order = await _orderRepository.FirstOrDefaultAsync(c => c.Merchant_Name == input.MachineCode);
-            if (order == null) throw new UserFriendlyException("该订单不存在");
-            if (order.Status.Equals("0")) throw new UserFriendlyException("该订单未支付");
-            if (order.Status.Equals("4")) throw new UserFriendlyException("该订单已出货");
-            if (!order.PickupCode.Equals(input.PickCode)) throw new UserFriendlyException("提货码错误");
+            var orders = await _orderRepository.GetAllListAsync(c => c.vmid == input.MachineCode);
+            if (orders == null||!orders.Any()) throw new UserFriendlyException("该设备下暂无订单");
+            var order = orders.FirstOrDefault(c => c.pickup_code == input.PickCode);
+            if(order==null) throw new UserFriendlyException("该订单不存在");
+            if (order.status.Equals("0")) throw new UserFriendlyException("该订单未支付");
+            if (order.status.Equals("4")) throw new UserFriendlyException("该订单已出货");
+            if (!order.pickup_code.Equals(input.PickCode)) throw new UserFriendlyException("提货码错误");
             return true;
         }
         /// <summary>
