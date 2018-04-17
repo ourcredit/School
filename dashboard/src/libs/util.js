@@ -15,8 +15,8 @@ util.title = function (title) {
 const ajaxUrl = env === 'development' ?
     AppConsts.remoteServiceBaseUrl :
     env === 'production' ?
-    'http://47.104.29.75' :
-    'http://47.104.29.75';
+    AppConsts.productionUrl :
+    AppConsts.productionUrl;
 
 util.ajax = axios.create({
     baseURL: ajaxUrl,
