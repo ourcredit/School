@@ -278,7 +278,7 @@ export default {
                         cancelText: "否",
                         onOk: async () => {
                           await this.$store.dispatch({
-                            type: "device/delete",
+                            type: "device/deleteRelation",
                             data: this.devices[params.index]
                           });
                           await this.getpage();

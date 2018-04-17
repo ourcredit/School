@@ -31,6 +31,12 @@ namespace School.Devices
         Task<DeviceListDto> GetDeviceByIdAsync(EntityDto<int> input);
 
         /// <summary>
+        /// 删除Device信息的方法
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task DeleteRelationDevice(EntityDto<int> input);
+        /// <summary>
         /// 绑定设备和价格
         /// </summary>
         /// <param name="input"></param>

@@ -107,6 +107,12 @@ const point = {
         }, payload) {
             await Util.ajax.delete('/api/services/app/Device/DeleteDevice?Id=' + payload.data.id);
         },
+        async deleteRelation({
+            state
+        }, payload) {
+            await Util.ajax.delete('/api/services/app/Device/DeleteRelationDevice?Id=' + payload.data.id);
+        },
+
         async bindDevice({
             state
         }, payload) {

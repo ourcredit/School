@@ -3,29 +3,29 @@
     <Card>
       <p slot="title">商品配置</p>
       <Row :gutter="8" slot="extra">
-        <i-col span="6">
+        <i-col span="5">
           <Input placeholder="商品名" v-model="params.name">
           </Input>
         </i-col>
-        <i-col span="6">
+        <i-col span="5">
           <Input placeholder="商品编号" v-model="params.sn">
           </Input>
         </i-col>
-        <i-col span="6">
+        <i-col span="4">
           <Input placeholder="商品类型" v-model="params.cate">
           </Input>
         </i-col>
-        <i-col span="6">
-          <Select style="width:140px" v-model="params.isSeal" placeholder="请选择">
+        <i-col span="4">
+          <Select style="width:100px" v-model="params.isSeal" placeholder="请选择">
             <Option value="null">全部</Option>
             <Option value="true">售卖</Option>
             <Option value="false">非售卖</Option>
           </Select>
         </i-col>
-        <i-col span="3">
+        <i-col span="2">
           <i-button @click="getpage" type="primary">查询</i-button>
         </i-col>
-        <i-col span="3">
+        <i-col span="2">
           <i-button @click="save" type="primary">保存</i-button>
         </i-col>
       </Row>
