@@ -15,9 +15,6 @@ namespace School.OperatorTrees.DomainServices
     /// </summary>
     public class OperatorTreeManager : SchoolDomainServiceBase, IOperatorTreeManager
     {
-        ////BCC/ BEGIN CUSTOM CODE SECTION
-        ////ECC/ END CUSTOM CODE SECTION
-        private readonly IRepository<OperatorTree, int> _operatortreeRepository;
 
         private readonly IRepository<Role> _roleRepository;
         private readonly IRepository<User,long> _userRepository;
@@ -26,25 +23,17 @@ namespace School.OperatorTrees.DomainServices
         /// <summary>
         /// OperatorTree的构造方法
         /// </summary>
-        public OperatorTreeManager(IRepository<OperatorTree, int> operatortreeRepository,
+        public OperatorTreeManager(
             IRepository<OperatorTree> orgRepository,
             IRepository<User, long> userRepository,
             IRepository<Role> roleRepository, IRepository<UserRole,long> userRoleRepository)
         {
-            _operatortreeRepository = operatortreeRepository;
             _orgRepository = orgRepository;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
         }
 
-        //TODO:编写领域业务代码
-        /// <summary>
-        ///     初始化
-        /// </summary>
-        public void InitOperatorTree()
-        {
-        }
         public void GenderAdmins()
         {
             var sql = @"SELECT
@@ -58,7 +47,7 @@ FROM
 	dsc_drp_shop a
 	LEFT JOIN dsc_users b ON a.user_id = b.user_id";
             var result = DapperHelper.GetSqlResult<dsc_drp_shop>(sql);
-            var adminRole = _roleRepository.FirstOrDefaultAsync(c => c.Name == StaticRoleNames.Tenants.Admin);
+            var adminRole = _roleRepository.FirstOrDefault(c => c.Name == StaticRoleNames.Tenants.Admin);
             foreach (var item in result.Items)
             {
               
@@ -91,7 +80,7 @@ FROM
                     temp.Salt = item.ec_salt;
                     temp.KeyId = item.user_id;
                   temp=  _userRepository.Insert(temp);
-                    _userRoleRepository.InsertAsync(new UserRole(1, temp.Id, adminRole.Id));
+                    _userRoleRepository.Insert(new UserRole(1, temp.Id, adminRole.Id));
                 }
                 else
                 {

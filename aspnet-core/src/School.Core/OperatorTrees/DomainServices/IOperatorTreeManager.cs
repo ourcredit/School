@@ -9,10 +9,7 @@ namespace School.OperatorTrees.DomainServices
     public interface IOperatorTreeManager : IDomainService
     {
 
-        /// <summary>
-        /// 初始化方法
-        /// </summary>
-        void InitOperatorTree();
+       
 
         void GenderAdmins();
 
