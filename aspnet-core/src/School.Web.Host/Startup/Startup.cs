@@ -16,8 +16,6 @@ using Abp.Hangfire;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.Extensions.PlatformAbstractions;
-using School.Authentication.JwtBearer;
-using School.Authorization;
 using School.Configuration;
 using School.Identity;
 
@@ -109,7 +107,6 @@ namespace School.Web.Host.Startup
                 )
             );
         }
-
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp(options => { options.UseAbpRequestLocalization = false; }); // Initializes ABP framework.
@@ -119,13 +116,7 @@ namespace School.Web.Host.Startup
             app.UseStaticFiles();
 
             app.UseAuthentication();
-            //Hangfire dashboard & server (Enable to use Hangfire instead of default job manager)
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            {
-                Authorization = new[] { new AbpHangfireAuthorizationFilter() }
-            });
-            //app.UseHangfireServer();
-            app.UseAbpRequestLocalization();
+          
 
 #if FEATURE_SIGNALR
             // Integrate with OWIN
@@ -157,6 +148,10 @@ namespace School.Web.Host.Startup
                 options.InjectOnCompleteJavaScript("/swagger/ui/on-complete.js");
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "School API V1");
             }); // URL: /swagger
+            //Hangfire dashboard & server (Enable to use Hangfire instead of default job manager)
+            app.UseHangfireDashboard();
+            //app.UseHangfireServer();
+            app.UseAbpRequestLocalization();
         }
 
 #if FEATURE_SIGNALR
@@ -177,5 +172,8 @@ namespace School.Web.Host.Startup
             });
         }
 #endif
+       
     }
+
+  
 }
