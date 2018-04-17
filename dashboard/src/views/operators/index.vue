@@ -91,7 +91,11 @@ export default {
     },
     remove() {
       if (!this.parent) {
-        abp.message.warn("请选择机构进行操作", "");
+        this.$Message.warning("请选择机构进行操作");
+        return;
+      }
+      if (this.parent.length == 1) {
+        this.$Message.warning("根节点不可删除");
         return;
       }
       this.$Modal.confirm({

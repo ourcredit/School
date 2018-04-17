@@ -32,7 +32,7 @@
         <baidu-map @click="draw" :center="center" :zoom="15" :scroll-wheel-zoom="true" @ready="handler" class="bm-view">
           <!-- <bm-marker :position="point" :dragging="false">
           </bm-marker> -->
-          <bm-marker :icon="{url: './src/images/poi24.png', size: {width: 24, height: 24}}" :position="point" :dragging="false">
+          <bm-marker :icon="{url: './images/poi24.png', size: {width: 24, height: 24}}" :position="point" :dragging="false">
             <!-- <bm-label :offset="100" :content="p.pointName" :position="{lng:p.longitude,lat:p.latitide }"
              :labelStyle="{ color: 'red', fontSize : '24px'}" title="Hover me"/> -->
           </bm-marker>
