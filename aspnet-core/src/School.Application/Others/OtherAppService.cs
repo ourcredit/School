@@ -201,7 +201,7 @@ namespace School.Others
         {
             var order = await _orderRepository.FirstOrDefaultAsync(c => c.order_id == input.OrderId);
             if (order == null) throw new UserFriendlyException("该订单不存在");
-            if (input.OrderStatus.Equals("4"))
+            if (input.OrderStatus.Equals("10004"))
             {
                 order.delivery_time = DateTime.Now;
             }
@@ -248,8 +248,8 @@ namespace School.Others
             if (orders == null||!orders.Any()) throw new UserFriendlyException("该设备下暂无订单");
             var order = orders.FirstOrDefault(c => c.pickup_code == input.PickCode);
             if(order==null) throw new UserFriendlyException("该订单不存在");
-            if (order.status.Equals("0")) throw new UserFriendlyException("该订单未支付");
-            if (order.status.Equals("4")) throw new UserFriendlyException("该订单已出货");
+            if (order.status.IsNullOrWhiteSpace()) throw new UserFriendlyException("该订单未支付");
+            if (order.status.Equals("10004")) throw new UserFriendlyException("该订单已出货");
             if (!order.pickup_code.Equals(input.PickCode)) throw new UserFriendlyException("提货码错误");
             return true;
         }
