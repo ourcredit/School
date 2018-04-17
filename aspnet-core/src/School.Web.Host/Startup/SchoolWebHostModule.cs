@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
+using Hangfire;
 using School.Configuration;
+using School.OperatorTrees.DomainServices;
 
 namespace School.Web.Host.Startup
 {

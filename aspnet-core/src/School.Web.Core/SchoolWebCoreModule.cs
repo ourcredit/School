@@ -85,16 +85,9 @@ namespace School
         public override void PostInitialize()
         {
             SetAppFolders();
-            RecurringJob.AddOrUpdate(()=>GenderAdmins(),Cron.Daily);
+        
         }
-        /// <summary>
-        /// 每天同步用户数据
-        /// </summary>
-        private void GenderAdmins()
-        {
-            var manager = IocManager.Resolve<IOperatorTreeManager>();
-            manager.GenderAdmins();
-        }
+      
         private void SetAppFolders()
         {
             var appFolders = IocManager.Resolve<AppFolders>();

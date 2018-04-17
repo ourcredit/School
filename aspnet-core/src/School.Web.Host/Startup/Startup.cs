@@ -11,6 +11,7 @@ using Castle.Facilities.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 using Abp.AspNetCore;
 using Abp.Castle.Logging.Log4Net;
+using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Hangfire;
 using Hangfire;
@@ -18,7 +19,7 @@ using Hangfire.MemoryStorage;
 using Microsoft.Extensions.PlatformAbstractions;
 using School.Configuration;
 using School.Identity;
-
+using School.OperatorTrees.DomainServices;
 #if FEATURE_SIGNALR
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Cors;
@@ -55,7 +56,6 @@ namespace School.Web.Host.Startup
 #if FEATURE_SIGNALR_ASPNETCORE
             services.AddSignalR();
 #endif
-
             // Configure CORS for angular2 UI
             services.AddCors(
                 options => options.AddPolicy(
@@ -153,6 +153,8 @@ namespace School.Web.Host.Startup
             //app.UseHangfireServer();
             app.UseAbpRequestLocalization();
         }
+       
+       
 
 #if FEATURE_SIGNALR
         private static void ConfigureOwinServices(IAppBuilder app)
@@ -172,7 +174,7 @@ namespace School.Web.Host.Startup
             });
         }
 #endif
-       
+
     }
 
   
