@@ -24,7 +24,7 @@ const point = {
             let page = {
                 maxResultCount: state.pageSize,
                 skipCount: (state.currentPage - 1) * state.pageSize,
-                filter: payload.filter
+                filter: payload.data
             }
             let rep = await Util.ajax.get('/api/services/app/Point/GetPagedPoints', {
                 params: page

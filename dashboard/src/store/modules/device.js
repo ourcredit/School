@@ -32,7 +32,9 @@ const point = {
             let page = {
                 maxResultCount: state.pageSize,
                 skipCount: (state.currentPage - 1) * state.pageSize,
-                filter: payload.filter
+                name: payload.data.name,
+                num: payload.data.num,
+                cate: payload.data.cate
             }
             let rep = await Util.ajax.get('/api/services/app/Device/GetPagedDevices', {
                 params: page
@@ -46,7 +48,9 @@ const point = {
         }, payload) {
             let page = {
                 maxResultCount: state.pageSize,
-                skipCount: (state.currentPage - 1) * state.pageSize
+                skipCount: (state.currentPage - 1) * state.pageSize,
+                name: payload.data.name,
+                num: payload.data.num
             }
             let rep = await Util.ajax.get('/api/services/app/Device/GetPagedUnBindDevices', {
                 params: page
@@ -62,7 +66,9 @@ const point = {
             let page = {
                 maxResultCount: state.pageSize,
                 skipCount: (state.currentPage - 1) * state.pageSize,
-                OrgId: payload.parentId
+                OrgId: payload.parentId,
+                name: payload.name,
+                num: payload.num
             }
             let rep = await Util.ajax.get('/api/services/app/Device/GetOperatorTreeDevices', {
                 params: page
@@ -77,7 +83,10 @@ const point = {
             let page = {
                 maxResultCount: state.pageSize,
                 skipCount: (state.currentPage - 1) * state.pageSize,
-                DeviceId: state.current
+                DeviceId: state.current,
+                name: payload.name,
+                sn: payload.sn,
+                cate: payload.cate
             }
             let rep = await Util.ajax.get('/api/services/app/Other/GetPagedGoods', {
                 params: page

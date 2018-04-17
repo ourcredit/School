@@ -2,10 +2,27 @@
   <div>
     <Card>
       <p slot="title">设备管理</p>
-      <Row slot="extra">
-        <i-col span="12">
+      <Row :gutter="8" slot="extra">
+        <i-col span="6">
+          <Input placeholder="设备名" v-model="params.name">
+          </Input>
         </i-col>
-        <i-col span="12">
+        <i-col span="6">
+          <Input placeholder="设备编号" v-model="params.num">
+          </Input>
+        </i-col>
+        <i-col span="6">
+          <Select style="width:140px" v-model="params.cate" placeholder="请选择">
+              <Option value="格子机">格子机</Option>
+              <Option value="无人销售机">无人销售机</Option>
+              <Option value="咖啡机">咖啡机</Option>
+              <Option value="饮料机">饮料机</Option>
+            </Select>
+        </i-col>
+        <i-col span="3">
+          <i-button @click="getpage" type="primary">查询</i-button>
+        </i-col>
+        <i-col span="3">
           <i-button @click="create" type="primary">添加</i-button>
         </i-col>
       </Row>
@@ -23,12 +40,12 @@
             <Input v-model="device.deviceNum" :maxlength="120" :minlength="1"></Input>
           </FormItem>
           <FormItem label="设备类型" prop="deviceType">
-              <Select style="width:162px" v-model="device.deviceType" placeholder="请选择">
-                <Option value="A">格子机</Option>
-                <Option value="B">无人销售机</Option>
-                <Option value="C">咖啡机</Option>
-                <Option value="D">饮料机</Option>
-              </Select>
+            <Select style="width:162px" v-model="device.deviceType" placeholder="请选择">
+              <Option value="格子机">格子机</Option>
+              <Option value="无人销售机">无人销售机</Option>
+              <Option value="咖啡机">咖啡机</Option>
+              <Option value="饮料机">饮料机</Option>
+            </Select>
           </FormItem>
           <FormItem label="所属点位" prop="pointId">
             <Select style="width:162px" v-model="device.pointId" placeholder="请选择">
@@ -78,12 +95,18 @@ export default {
     },
     async getpage() {
       await this.$store.dispatch({
-        type: "device/getAll"
+        type: "device/getAll",
+        data: this.params
       });
     }
   },
   data() {
     return {
+      params: {
+        name: "",
+        num: "",
+        cate: ""
+      },
       device: {
         pointId: null,
         deviceType: ""

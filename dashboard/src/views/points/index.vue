@@ -2,10 +2,13 @@
   <div>
     <Card>
       <p slot="title">点位信息</p>
-      <Row slot="extra">
-        <i-col span="12">
+      <Row :gutter="8" slot="extra">
+        <i-col span="19" >
+          <Input placeholder="点位名" v-model="filter">
+          <Button @click="getpage" slot="append" icon="ios-search"></Button>
+          </Input>
         </i-col>
-        <i-col span="12">
+        <i-col span="4">
           <i-button @click="create" type="primary">添加</i-button>
         </i-col>
       </Row>
@@ -89,13 +92,15 @@ export default {
     },
     async getpage() {
       await this.$store.dispatch({
-        type: "point/getAll"
+        type: "point/getAll",
+        data: this.filter
       });
     },
     handler({ BMap, map }) {}
   },
   data() {
     return {
+      filter: "",
       point: {},
       keyword: "百度",
       center: {

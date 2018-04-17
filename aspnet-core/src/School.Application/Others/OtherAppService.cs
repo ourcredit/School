@@ -57,27 +57,28 @@ namespace School.Others
 
             var result = await _cacheManager.GetCache(SchoolCache.GoodsCache)
                 .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
-            var count = result.Items.Count;
-            var temp = result.Items.WhereIf(!input.Filter.IsNullOrWhiteSpace(),
-                c => c.goods_name.Contains(input.Filter));
-            var list = temp.OrderBy(c => c.goods_name).Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
-
+            var temp = result.Items.WhereIf(!input.Name.IsNullOrWhiteSpace(), c => c.goods_name.Contains(input.Name))
+                .WhereIf(!input.Sn.IsNullOrWhiteSpace(), c => c.goods_sn.Contains(input.Sn))
+                .WhereIf(!input.Cate.IsNullOrWhiteSpace(), c => c.cat_name.Contains(input.Cate));
             var arr = ht == null || !ht.DeviceGoods.Any() ? new List<DeviceGood>() : ht.DeviceGoods.ToList();
+            var t = from c in temp
+                join d in arr on c.goods_id equals d.GoodsId into h
+                from tt in h.DefaultIfEmpty()
+                select new {c, tt};
+            t = t.WhereIf(input.IsSeal.HasValue && input.IsSeal.Value, c => c.tt != null)
+                .WhereIf(input.IsSeal.HasValue && !input.IsSeal.Value, c => c.tt == null);
+            var count =t.Count();
+          
+            var list = t.OrderBy(c => c.c.goods_name).Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
+            var res=new List<dsc_Goods>();
             foreach (var goodse in list)
             {
-                var mo = arr.FirstOrDefault(c => c.GoodsId == goodse.goods_id);
-                if (mo != null)
-                {
-                    goodse.IsSeal = true;
-                    goodse.Price = mo.Price;
-                }
-                else
-                {
-                    goodse.IsSeal = false;
-                    goodse.Price = 0;
-                }
+                var te = goodse.c;
+                te.IsSeal = goodse.tt != null;
+                te.Price = goodse.tt != null ? goodse.tt.Price : 0;
+                res.Add(te);
             }
-            return new PagedResultDto<dsc_Goods>(count, list);
+            return new PagedResultDto<dsc_Goods>(count, res);
         }
 
         /// <summary>

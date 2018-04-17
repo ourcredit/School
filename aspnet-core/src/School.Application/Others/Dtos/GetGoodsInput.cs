@@ -23,7 +23,19 @@ namespace School.Others.Dtos
         /// <summary>
         /// 模糊搜索使用的关键字
         /// </summary>
-        public string Filter { get; set; }
+        public string Name { get; set; }
+        /// <summary>
+        /// leixin
+        /// </summary>
+        public string Sn { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Cate { get; set; }
+        /// <summary>
+        /// 是否售卖
+        /// </summary>
+        public bool? IsSeal { get; set; }
         /// <summary>
         /// 设备id
         /// </summary>

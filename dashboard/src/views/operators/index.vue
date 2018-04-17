@@ -18,11 +18,19 @@
       <Col span="15">
       <Card>
         <p slot="title">设备信息</p>
-        <Row slot="extra">
-          <i-col span="12">
-             <i-button @click="create" type="primary">查询</i-button>
+        <Row :gutter="8" slot="extra">
+          <i-col span="8">
+            <Input placeholder="设备名" v-model="params.name">
+            </Input>
           </i-col>
-          <i-col span="12">
+            <i-col span="8">
+            <Input placeholder="设备编号" v-model="params.num">
+            </Input>
+          </i-col>
+          <i-col span="3">
+            <i-button @click="getpage" type="primary">查询</i-button>
+          </i-col>
+          <i-col span="3">
             <i-button v-if="this.parent!=null&&this.parent.length==6" @click="bind" type="primary">绑定</i-button>
           </i-col>
         </Row>
@@ -49,9 +57,9 @@
       </div>
     </Modal>
 
-     <Modal v-model="bindModal" title="绑定设备" @on-ok="bindDevice" okText="保存" cancelText="关闭">
+    <Modal v-model="bindModal" title="绑定设备" @on-ok="bindDevice" okText="保存" cancelText="关闭">
       <div>
-        <bind-form  @cc.sync="setValues"></bind-form>
+        <bind-form @cc.sync="setValues"></bind-form>
       </div>
       <div slot="footer">
         <Button @click="bindModal=false">关闭</Button>
@@ -154,7 +162,10 @@ export default {
         abp.message.warn("请选择设备");
         return;
       }
-      const params = { orgId: this.parent.parentId, devices: des };
+      const params = {
+        orgId: this.parent.parentId,
+        devices: des
+      };
       await this.$store.dispatch({
         type: "device/bindDevice",
         data: params
@@ -174,12 +185,18 @@ export default {
       if (!this.parent || !this.parent.parentId) return;
       await this.$store.dispatch({
         type: "device/getOrgDevices",
-        parentId: this.parent.parentId
+        parentId: this.parent.parentId,
+        name: this.params.name,
+        num: this.params.num
       });
     }
   },
   data() {
     return {
+      params: {
+        name: "",
+        num: ""
+      },
       selectModels: [],
       bindModal: false,
       parent: null,

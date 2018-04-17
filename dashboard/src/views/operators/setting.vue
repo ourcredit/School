@@ -1,20 +1,40 @@
 <template>
-    <div>
-        <Card>
+  <div>
+    <Card>
       <p slot="title">商品配置</p>
-      <Row slot="extra">
-        <i-col span="12">
+      <Row :gutter="8" slot="extra">
+        <i-col span="6">
+          <Input placeholder="商品名" v-model="params.name">
+          </Input>
         </i-col>
-        <i-col span="12">
+        <i-col span="6">
+          <Input placeholder="商品编号" v-model="params.sn">
+          </Input>
+        </i-col>
+        <i-col span="6">
+          <Input placeholder="商品类型" v-model="params.cate">
+          </Input>
+        </i-col>
+        <i-col span="6">
+          <Select style="width:140px" v-model="params.isSeal" placeholder="请选择">
+            <Option value="null">全部</Option>
+            <Option value="true">售卖</Option>
+            <Option value="false">非售卖</Option>
+          </Select>
+        </i-col>
+        <i-col span="3">
+          <i-button @click="getpage" type="primary">查询</i-button>
+        </i-col>
+        <i-col span="3">
           <i-button @click="save" type="primary">保存</i-button>
         </i-col>
       </Row>
-      <Table  :columns="columns" border :data="goods"></Table>
-        <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
-            :current="currentPage"></Page>
+      <Table :columns="columns" border :data="goods"></Table>
+      <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
+        :current="currentPage"></Page>
     </Card>
-       
-    </div>
+
+  </div>
 </template>
 <script>
 export default {
@@ -25,14 +45,21 @@ export default {
         return;
       }
       if (!this.current) {
-        this.$router.push({ name: "operatormanage" });
+        this.$router.push({
+          name: "operatormanage"
+        });
         return;
       }
       await this.$store.dispatch({
         type: "device/bindGoods",
-        data: { deviceId: this.current, goods: this.tempArr }
+        data: {
+          deviceId: this.current,
+          goods: this.tempArr
+        }
       });
-      this.$router.push({ name: "operatormanage" });
+      this.$router.push({
+        name: "operatormanage"
+      });
     },
     pageChange(page) {
       this.$store.commit("device/setCurrentPage", page);
@@ -50,6 +77,12 @@ export default {
   },
   data() {
     return {
+      params: {
+        name: "",
+        sn: "",
+        cate: "",
+        isSeal: null
+      },
       tempArr: [],
       columns: [
         {
@@ -144,7 +177,9 @@ export default {
   },
   async created() {
     if (!this.current) {
-      this.$router.push({ name: "operatormanage" });
+      this.$router.push({
+        name: "operatormanage"
+      });
     }
     this.getpage();
   }

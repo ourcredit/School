@@ -5,14 +5,23 @@ using School.Models;
 
 namespace School.Devices.Dtos
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class GetDevicesInput : PagedAndSortedInputDto, IShouldNormalize
     {
-        ////BCC/ BEGIN CUSTOM CODE SECTION
-        ////ECC/ END CUSTOM CODE SECTION
+       /// <summary>
+       /// 名称
+       /// </summary>
+        public string Name { get; set; }
         /// <summary>
-        /// 模糊搜索使用的关键字
+        /// 编号
         /// </summary>
-        public string Filter { get; set; }
+        public string Num { get; set; }
+        /// <summary>
+        /// 类型
+        /// </summary>
+        public string Cate { get; set; }
 
         /// <summary>
         /// 正常化排序使用
@@ -36,6 +45,14 @@ namespace School.Devices.Dtos
         /// </summary>
         public int OrgId { get; set; }
 
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// 编号
+        /// </summary>
+        public string Num { get; set; }
         /// <summary>
         /// 正常化排序使用
         /// </summary>

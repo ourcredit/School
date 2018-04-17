@@ -7,6 +7,7 @@ using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 
 using System.Linq.Dynamic.Core;
+using Abp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using School.Authorization;
 using School.Points.Dtos;
@@ -46,7 +47,7 @@ namespace School.Points
         {
 
             var query = _pointRepository.GetAll();
-            //TODO:根据传入的参数添加过滤条件
+            query = query.WhereIf(!input.Filter.IsNullOrWhiteSpace(), c => c.PointName.Contains(input.Filter));
             var pointCount = await query.CountAsync();
 
             var points = await query

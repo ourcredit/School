@@ -54,6 +54,9 @@ namespace School.Devices
         public async Task<PagedResultDto<DeviceListDto>> GetPagedDevices(GetDevicesInput input)
         {
             var query = _deviceRepository.GetAllIncluding(c => c.Point);
+            query = query.WhereIf(!input.Name.IsNullOrWhiteSpace(), c => c.DeviceName.Contains(input.Name))
+                .WhereIf(!input.Num.IsNullOrWhiteSpace(), c => c.DeviceNum.Contains(input.Num))
+                .WhereIf(!input.Cate.IsNullOrWhiteSpace(), c => c.DeviceType.Contains(input.Cate));
             var deviceCount = await query.CountAsync();
             var devices = await query
                 .OrderBy(input.Sorting)
@@ -75,6 +78,8 @@ namespace School.Devices
         public async Task<PagedResultDto<DeviceListDto>> GetPagedUnBindDevices(GetDevicesInput input)
         {
             var query = _deviceRepository.GetAllIncluding(c => c.Point);
+            query = query.WhereIf(!input.Name.IsNullOrWhiteSpace(), c => c.DeviceName.Contains(input.Name))
+                .WhereIf(!input.Num.IsNullOrWhiteSpace(), c => c.DeviceNum.Contains(input.Num));
             var bindDevice =await _operatorDeviceRepository.GetAllListAsync();
             var result = from c in query
                 join d in bindDevice on c.Id equals d.DeviceId into temp
@@ -104,7 +109,9 @@ namespace School.Devices
             var orgs = await _treeRepository.GetAllListAsync(c => c.TreeCode.Contains(org.TreeCode));
             var temp = orgs.Select(c => c.Id).ToList();
             var query = _operatorDeviceRepository.GetAllIncluding(c => c.Device,c=>c.Device.Point);
-            query = query.Where(c => temp.Any(w=>w==c.OperatorId));
+            query = query.Where(c => temp.Any(w => w == c.OperatorId))
+                .WhereIf(!input.Name.IsNullOrWhiteSpace(), c => c.Device.DeviceName.Contains(input.Name))
+                .WhereIf(!input.Num.IsNullOrWhiteSpace(), c => c.Device.DeviceNum.Contains(input.Num));
             var deviceCount = await query.CountAsync();
             var devices = await query
                 .OrderBy(input.Sorting)

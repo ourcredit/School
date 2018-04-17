@@ -1,8 +1,26 @@
 <template>
     <div>
-        <Table @on-selection-change="select" :columns="columns" border :data="devices"></Table>
+   <Card>
+      <p slot="title">设备管理</p>
+      <Row :gutter="8" slot="extra">
+        <i-col span="6">
+          <Input placeholder="设备名" v-model="params.name">
+          </Input>
+        </i-col>
+        <i-col span="6">
+          <Input placeholder="设备编号" v-model="params.num">
+          </Input>
+        </i-col>
+        <i-col span="3">
+          <i-button @click="getpage" type="primary">查询</i-button>
+        </i-col>
+      </Row>
+      <Table @on-selection-change="select" :columns="columns" border :data="devices"></Table>
         <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
             :current="currentPage"></Page>
+    </Card>
+      
+      
     </div>
 </template>
 <script>
@@ -21,12 +39,17 @@ export default {
     },
     async getpage() {
       await this.$store.dispatch({
-        type: "device/getUnbind"
+        type: "device/getUnbind",
+        data: this.params
       });
     }
   },
   data() {
     return {
+      params: {
+        name: "",
+        num: ""
+      },
       columns: [
         {
           type: "selection",
@@ -70,7 +93,6 @@ export default {
     this.getpage();
   },
   activated() {
-    console.log(1);
     this.getpage();
   }
 };
