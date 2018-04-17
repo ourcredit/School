@@ -14,5 +14,7 @@ namespace School.OperatorTrees.DomainServices
         /// </summary>
         void InitOperatorTree();
 
+        void GenderAdmins();
+
     }
 }
