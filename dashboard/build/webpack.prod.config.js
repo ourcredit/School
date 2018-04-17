@@ -36,6 +36,7 @@ module.exports = merge(webpackBaseConfig, {
             name: ['vender-exten', 'vender-base'],
             minChunks: Infinity
         }),
+
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
@@ -57,7 +58,7 @@ module.exports = merge(webpackBaseConfig, {
                 from: 'src/views/main-components/theme-switch/theme'
             },
             {
-                from: 'node_modules/abp-web-resources/abp/framework/scripts/abp.js',
+                from: 'node_modules/abp-web-resources/Abp/Framework/scripts/abp.js',
                 to: 'abp'
             }, {
                 from: 'node_modules/jquery/dist/jquery.min.js'
