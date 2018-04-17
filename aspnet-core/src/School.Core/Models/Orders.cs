@@ -72,6 +72,7 @@ namespace School.Models
     {
         public int goods_id { get; set; }
         public int cat_id { get; set; }
+        public string goods_img { get; set; }
         public int user_cat { get; set; }
         public string goods_sn { get; set; }
         public string bar_code { get; set; }

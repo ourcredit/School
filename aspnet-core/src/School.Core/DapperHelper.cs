@@ -56,7 +56,7 @@ namespace School
 	a.bar_code,
 	a.goods_name_style,
 	a.brand_id,
-	a.provider_name,
+	a.provider_name,a.goods_img,
 	a.goods_number, b.cat_name 
 FROM
 	dsc_goods a

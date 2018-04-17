@@ -5,8 +5,14 @@ using Abp.Application.Services.Dto;
 
 namespace School.Others.Dtos
 {
+    /// <summary>
+    /// 
+    /// </summary>
    public class DeviceGoodsListDto:EntityDto
     {
+        /// <summary>
+        /// 操作对象id
+        /// </summary>
         public int OperatorDeviceId { get; set; }
         /// <summary>
         /// 商品id

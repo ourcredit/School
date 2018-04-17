@@ -81,6 +81,43 @@ namespace School.Others
         }
 
         /// <summary>
+        /// 获取商品列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<ProductListDto>> GetProducts(GetDeviceGoodsInput input)
+        {
+            var ht = await _deviceRepository.GetAllIncluding(c => c.DeviceGoods)
+                .FirstOrDefaultAsync(c => c.DeviceNum == input.MachineCode);
+            if (ht == null || ht.DeviceGoods == null || !ht.DeviceGoods.Any())
+            {
+                return new PagedResultDto<ProductListDto>();
+            }
+            var temp = await _cacheManager.GetCache(SchoolCache.GoodsCache)
+                .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
+            var count = ht.DeviceGoods.Count;
+
+            var list = ht.DeviceGoods.OrderBy(c => c.CreationTime).Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
+            var result = new List<ProductListDto>();
+            foreach (var g in list)
+            {
+                var model = new ProductListDto()
+                {
+                    price = g.Price,
+                    product_id = g.GoodsId,
+                    product_name = g.GoodsName
+                };
+                var mo = temp.Items.FirstOrDefault(c => c.goods_id == g.GoodsId);
+                if (mo != null)
+                {
+                    model.img_url = "http://image.ishenran.cn/"+ mo.goods_img;
+                }
+               result.Add(model);
+            }
+            return new PagedResultDto<ProductListDto>(count, result);
+        }
+
+        /// <summary>
         /// 获取货道列表
         /// </summary>
         /// <param name="input"></param>
@@ -91,14 +128,14 @@ namespace School.Others
             hts = hts.WhereIf(!input.MachineCode.IsNullOrWhiteSpace(), c => c.Machine_Code.Equals(input.MachineCode));
             var deviceCount = await hts.CountAsync();
             var devices = await hts
-                .OrderByDescending(c=>c.CreateTime)
+                .OrderByDescending(c => c.CreateTime)
                 .PageBy(input)
                 .ToListAsync();
 
             var result = await _cacheManager.GetCache(SchoolCache.GoodsCache)
                 .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
 
-            var tr=new List<ChannelListDto>();
+            var tr = new List<ChannelListDto>();
             foreach (var goodse in devices)
             {
                 var model = goodse.MapTo<ChannelListDto>();
@@ -107,7 +144,7 @@ namespace School.Others
                 {
                     model.Goods_Name = mo.goods_name;
                 }
-             tr.Add(model);
+                tr.Add(model);
             }
             return new PagedResultDto<ChannelListDto>(deviceCount, tr);
         }
@@ -143,24 +180,6 @@ namespace School.Others
             return new PagedResultDto<ShowListDto>(deviceCount, tr);
         }
 
-        /// <summary>
-        /// 获取机构下机器内商品
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public async Task<PagedResultDto<DeviceGoodsListDto>> GetProducts(GetDeviceGoodsInput input)
-        {
-            var device = await _deviceRepository.GetAllIncluding(c => c.DeviceGoods)
-                .FirstOrDefaultAsync(c => c.DeviceNum.Equals(input.MachineCode));
-            if (device == null || device.DeviceGoods == null || !device.DeviceGoods.Any())
-                return new PagedResultDto<DeviceGoodsListDto>(0, new List<DeviceGoodsListDto>());
-
-            var count = device.DeviceGoods.Count;
-            var temp = device.DeviceGoods.OrderBy(c => c.CreationTime).Skip(input.SkipCount)
-                .Take(input.MaxResultCount).ToList();
-            var result = temp.MapTo<List<DeviceGoodsListDto>>();
-            return new PagedResultDto<DeviceGoodsListDto>(count, result);
-        }
         /// <summary>
         /// 心跳程序 检查设备状态
         /// </summary>
