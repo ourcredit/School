@@ -30,12 +30,12 @@ module.exports = merge(webpackBaseConfig, {
             filename: '[name].[hash].css',
             allChunks: true
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            // name: 'vendors',
-            // filename: 'vendors.[hash].js'
-            name: ['vender-exten', 'vender-base'],
-            minChunks: Infinity
-        }),
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     // name: 'vendors',
+        //     // filename: 'vendors.[hash].js'
+        //     name: ['vender-exten', 'vender-base'],
+        //     minChunks: Infinity
+        // }),
         // new webpack.optimize.splitChunks({
         //     cacheGroups: {
         //         commons: {
