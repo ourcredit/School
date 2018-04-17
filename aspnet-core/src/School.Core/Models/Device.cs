@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
 namespace School.Models
@@ -11,7 +12,7 @@ namespace School.Models
     /// 设备表
     /// </summary>
     [Table("s_device")]
-  public  class Device:CreationAuditedEntity
+  public  class Device:CreationAuditedEntity,ISoftDelete
     {
         /// <summary>
         /// 设备编号
@@ -37,14 +38,15 @@ namespace School.Models
         public virtual Point Point { get; set; }
         [ForeignKey("DeviceId")]
         public  virtual ICollection<DeviceGood> DeviceGoods { get; set; }
-        
+
+        public bool IsDeleted { get; set; }
     }
 
     /// <summary>
     /// 设备下的商品绑定
     /// </summary>
     [Table("s_device_goods")]
-    public class DeviceGood : CreationAuditedEntity<int>
+    public class DeviceGood : CreationAuditedEntity<int>,ISoftDelete
     {
         public DeviceGood() { }
         public DeviceGood(int deviceId, int gId, string name, int price)
@@ -67,5 +69,7 @@ namespace School.Models
         /// 价格
         /// </summary>
         public int Price { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

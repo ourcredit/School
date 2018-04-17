@@ -12,8 +12,12 @@ using Swashbuckle.AspNetCore.Swagger;
 using Abp.AspNetCore;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Extensions;
+using Abp.Hangfire;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.Extensions.PlatformAbstractions;
 using School.Authentication.JwtBearer;
+using School.Authorization;
 using School.Configuration;
 using School.Identity;
 
@@ -91,6 +95,12 @@ namespace School.Web.Host.Startup
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
+            //Hangfire (Enable to use Hangfire instead of default job manager)
+            services.AddHangfire(config =>
+            {
+                config.UseMemoryStorage();
+            });
+
             // Configure Abp and Dependency Injection
             return services.AddAbp<SchoolWebHostModule>(
                 // Configure Log4Net logging
@@ -109,7 +119,12 @@ namespace School.Web.Host.Startup
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
+            //Hangfire dashboard & server (Enable to use Hangfire instead of default job manager)
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new AbpHangfireAuthorizationFilter() }
+            });
+            //app.UseHangfireServer();
             app.UseAbpRequestLocalization();
 
 #if FEATURE_SIGNALR

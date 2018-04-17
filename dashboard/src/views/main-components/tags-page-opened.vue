@@ -26,7 +26,7 @@
                     :name="item.name" 
                     @on-close="closePage"
                     @click.native="linkTo(item)"
-                    :closable="item.name==='home_index'?false:true"
+                    :closable="item.name==='pointmanage'?false:true"
                     :color="item.children?(item.children[0].name===currentPageName?'blue':'default'):(item.name===currentPageName?'blue':'default')"
                 >{{ itemTitle(item) | l}}</Tag>
             </transition-group>
@@ -152,7 +152,7 @@ export default {
       if (type === "clearAll") {
         this.$store.commit("clearAllTags");
         this.$router.push({
-          name: "home_index"
+          name: "pointmanage"
         });
       } else {
         this.$store.commit("clearOtherTags", this);

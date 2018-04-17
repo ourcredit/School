@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
 namespace School.Models
@@ -11,7 +12,7 @@ namespace School.Models
     /// 点位表
     /// </summary>
     [Table("s_point")]
-   public class Point:CreationAuditedEntity
+   public class Point:CreationAuditedEntity,ISoftDelete
     {
         /// <summary>
         /// 点位名称
@@ -34,5 +35,7 @@ namespace School.Models
         /// 维度
         /// </summary>
         public string Latitide { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

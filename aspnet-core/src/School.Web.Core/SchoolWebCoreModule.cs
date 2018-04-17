@@ -6,6 +6,7 @@ using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.SignalR;
 using Abp.Configuration.Startup;
 using Abp.Dependency;
+using Abp.Hangfire;
 using Abp.IO;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
@@ -31,6 +32,7 @@ namespace School
         ,typeof(AbpWebSignalRModule)
 #elif FEATURE_SIGNALR_ASPNETCORE
         ,typeof(AbpAspNetCoreSignalRModule)
+        , typeof(AbpHangfireAspNetCoreModule)
 #endif
      )]
     public class SchoolWebCoreModule : AbpModule
