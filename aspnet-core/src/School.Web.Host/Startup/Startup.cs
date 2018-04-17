@@ -150,8 +150,10 @@ namespace School.Web.Host.Startup
             }); // URL: /swagger
             //Hangfire dashboard & server (Enable to use Hangfire instead of default job manager)
             app.UseHangfireDashboard();
+            app.UseHangfireServer();
             //app.UseHangfireServer();
             app.UseAbpRequestLocalization();
+            RecurringJob.AddOrUpdate<IOperatorTreeManager>(i=>i.GenderAdmins(),Cron.Daily);
         }
        
        

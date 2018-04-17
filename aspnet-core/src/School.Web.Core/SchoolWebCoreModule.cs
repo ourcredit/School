@@ -5,20 +5,16 @@ using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.AspNetCore.SignalR;
 using Abp.Configuration.Startup;
-using Abp.Dependency;
 using Abp.Hangfire;
 using Abp.IO;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
-using Abp.Zero.Configuration;
-using Hangfire;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using School.Authentication.JwtBearer;
 using School.Configuration;
 using School.EntityFrameworkCore;
-using School.OperatorTrees.DomainServices;
 
 #if FEATURE_SIGNALR
 using Abp.Web.SignalR;
@@ -85,7 +81,7 @@ namespace School
         public override void PostInitialize()
         {
             SetAppFolders();
-        
+
         }
       
         private void SetAppFolders()
