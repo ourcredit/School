@@ -8,7 +8,7 @@ const AppConsts = {
     authorization: {
         encrptedAuthTokenName: 'enc_auth_token'
     },
-    appBaseUrl: "http://47.104.29.75",
-    remoteServiceBaseUrl: "http://47.104.29.75"
+    appBaseUrl: "http://vmapi.ishenran.cn",
+    remoteServiceBaseUrl: "http://vmapi.ishenran.cn"
 }
 export default AppConsts
