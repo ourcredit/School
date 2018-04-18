@@ -31,6 +31,38 @@ namespace School.Models
         /// 点位id
         /// </summary>
         public virtual int PointId { get; set; }
+        /// <summary>
+        /// 销售状态
+        /// </summary>
+        public int SaleStatus { get; set; }
+        /// <summary>
+        /// 工作模式
+        /// </summary>
+        public int WorkPattern { get; set; }
+        /// <summary>
+        /// 门状态
+        /// </summary>
+        public int DoorSw { get; set; }
+        /// <summary>
+        /// 应急链接状态
+        /// </summary>
+        public int CoinConnection { get; set; }
+        /// <summary>
+        /// 纸币连接状态
+        /// </summary>
+        public int BillConnection { get; set; }
+        /// <summary>
+        /// 硬币 5 角缺币状态。(0:不缺币;1:缺币)
+        /// </summary>
+        public int Cointype0Lack { get; set; }
+        /// <summary>
+        /// 硬币 1 元缺币状态。(0:不缺币;1:缺币)
+        /// </summary>
+        public int Cointype1Lack { get; set; }
+        /// <summary>
+        /// 纸币器停用状态。(0:未停用;1:停用)
+        /// </summary>
+        public int BillStatus { get; set; }
         public bool State { get; set; }
         /// <summary>
         /// 点位对象

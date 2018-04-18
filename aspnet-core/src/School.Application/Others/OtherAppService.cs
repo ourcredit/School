@@ -62,15 +62,15 @@ namespace School.Others
                 .WhereIf(!input.Cate.IsNullOrWhiteSpace(), c => c.cat_name.Contains(input.Cate));
             var arr = ht == null || !ht.DeviceGoods.Any() ? new List<DeviceGood>() : ht.DeviceGoods.ToList();
             var t = from c in temp
-                join d in arr on c.goods_id equals d.GoodsId into h
-                from tt in h.DefaultIfEmpty()
-                select new {c, tt};
+                    join d in arr on c.goods_id equals d.GoodsId into h
+                    from tt in h.DefaultIfEmpty()
+                    select new { c, tt };
             t = t.WhereIf(input.IsSeal.HasValue && input.IsSeal.Value, c => c.tt != null)
                 .WhereIf(input.IsSeal.HasValue && !input.IsSeal.Value, c => c.tt == null);
-            var count =t.Count();
-          
+            var count = t.Count();
+
             var list = t.OrderBy(c => c.c.goods_name).Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
-            var res=new List<dsc_Goods>();
+            var res = new List<dsc_Goods>();
             foreach (var goodse in list)
             {
                 var te = goodse.c;
@@ -111,9 +111,9 @@ namespace School.Others
                 var mo = temp.Items.FirstOrDefault(c => c.goods_id == g.GoodsId);
                 if (mo != null)
                 {
-                    model.img_url = "http://image.ishenran.cn/"+ mo.goods_img;
+                    model.img_url = "http://image.ishenran.cn/" + mo.goods_img;
                 }
-               result.Add(model);
+                result.Add(model);
             }
             return new PagedResultDto<ProductListDto>(count, result);
         }
@@ -191,22 +191,42 @@ namespace School.Others
         {
             var device = await _deviceRepository.FirstOrDefaultAsync(c => c.DeviceNum == input.MachineCode);
             if (device == null) throw new UserFriendlyException("该设备不存在");
-            device.State = input.State;
+            device.SaleStatus = input.status_code;
         }
         /// <summary>
-        /// 出货上报
+        /// 线上出货上报
         /// </summary>
         /// <returns></returns>
-        public async Task Order(DealOrderInput input)
+        public async Task OnlineOrder(DealOrderInput input)
         {
-            var order = await _orderRepository.FirstOrDefaultAsync(c => c.order_id == input.OrderId);
-            if (order == null) throw new UserFriendlyException("该订单不存在");
-            if (input.OrderStatus.Equals("10004"))
+            var orders = await _orderRepository.GetAllListAsync(c => input.orders.Any(w => w.orderId == c.order_id));
+            foreach (var order in orders)
             {
-                order.delivery_time = DateTime.Now;
+                var state = input.orders.FirstOrDefault(c => c.orderId == order.order_id);
+                order.status = state.orderStatus;
             }
-            order.status = input.OrderStatus;
 
+        }
+        /// <summary>
+        /// 现金出货上报
+        /// </summary>
+        /// <returns></returns>
+        public async Task CachOrder(CashOrderInput input)
+        {
+            foreach (var order in input.orders)
+            {
+                var model = new Orders()
+                {
+                    created_time = DateTime.Now,
+                    delivery_time = order.venDoutDate,
+                    goods_id = order.productId,
+                    order_id = Guid.NewGuid().ToString("N"),
+                    pay_price = order.price,
+                    status = order.orderStatus,
+                    vmid = input.MachineCode,pay_time=DateTime.Now
+                };
+                await _orderRepository.InsertAsync(model);
+            }
         }
         /// <summary>
         /// Vmc系统状态报告
@@ -214,9 +234,17 @@ namespace School.Others
         /// <returns></returns>
         public async Task StatusReport(StateReportInput input)
         {
-            var channel = await _channelRepository.FirstOrDefaultAsync(c =>
-                c.Machine_Code == input.MachineCode && c.Site == input.BillStatus);
-            channel.State = input.Cointype0Lack;
+            var device = await _deviceRepository.FirstOrDefaultAsync(c =>
+                c.DeviceNum == input.MachineCode);
+            if (device == null) throw new UserFriendlyException("该设备不存在");
+            device.SaleStatus = input.SaleStatus;
+            device.WorkPattern = input.WorkPattern;
+            device.DoorSw = input.DoorSw;
+            device.CoinConnection = input.CoinConnection;
+            device.BillConnection = input.BillConnection;
+            device.Cointype0Lack = input.Cointype0Lack;
+            device.Cointype1Lack = input.Cointype1Lack;
+            device.BillStatus = input.BillStatus;
         }
         /// <summary>
         /// 余量调整
@@ -224,34 +252,50 @@ namespace School.Others
         /// <returns></returns>
         public async Task ChannelStockReport(ChannelStockReportInput input)
         {
-            var channel = await _channelRepository.FirstOrDefaultAsync(c =>
-                c.Machine_Code == input.MachineCode && c.Site == input.BillStatus);
-            channel.Quantity = input.Quantity;
+            var channels = await _channelRepository.GetAllListAsync(c =>
+                c.Machine_Code == input.MachineCode);
+            foreach (var statu in input.Status)
+            {
+                var model = channels.FirstOrDefault(c => c.Site == statu.column);
+                if (model != null)
+                {
+                    model.Quantity = statu.quantity;
+                }
+            }
         }
         /// <summary>
         /// 状态调整
         /// </summary>
         /// <returns></returns>
-        public async Task ChannelStatusReport(StateReportInput input)
+        public async Task ChannelStatusReport(ChannelStatusReportInput input)
         {
-            var channel = await _channelRepository.FirstOrDefaultAsync(c =>
-                c.Machine_Code == input.MachineCode && c.Site == input.BillStatus);
-            channel.State = input.Cointype0Lack;
+            var channels = await _channelRepository.GetAllListAsync(c =>
+                c.Machine_Code == input.MachineCode);
+            foreach (var statu in input.Status)
+            {
+                var model = channels.FirstOrDefault(c => c.Site == statu.column);
+                if (model != null)
+                {
+                    model.State = statu.state;
+                }
+            }
         }
         /// <summary>
         /// 取货码验证
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> CheckPickCode(CheckPickCodeInput input)
+        public async Task<CheckPickCodeResult> CheckPickCode(CheckPickCodeInput input)
         {
+            var result = new CheckPickCodeResult();
             var orders = await _orderRepository.GetAllListAsync(c => c.vmid == input.MachineCode);
-            if (orders == null||!orders.Any()) throw new UserFriendlyException("该设备下暂无订单");
+            if (orders == null || !orders.Any()) result.IsTrue = false;
             var order = orders.FirstOrDefault(c => c.pickup_code == input.PickCode);
-            if(order==null) throw new UserFriendlyException("该订单不存在");
-            if (order.status.IsNullOrWhiteSpace()) throw new UserFriendlyException("该订单未支付");
-            if (order.status.Equals("10004")) throw new UserFriendlyException("该订单已出货");
-            if (!order.pickup_code.Equals(input.PickCode)) throw new UserFriendlyException("提货码错误");
-            return true;
+            if (order == null) result.IsTrue = false;
+            if (!order.status.IsNullOrWhiteSpace()||order.status.Equals("10004")) result.IsTrue = false;
+            if (!order.pickup_code.Equals(input.PickCode)) result.IsTrue = false;
+            result.IsTrue = true;
+            result.ProductId = order.goods_id;
+            return result;
         }
         /// <summary>
         /// 更新货道

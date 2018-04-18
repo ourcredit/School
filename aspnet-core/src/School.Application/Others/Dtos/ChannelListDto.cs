@@ -28,4 +28,10 @@ namespace School.Others.Dtos
         public int Site { get; set; }
         public DateTime CreateTime { get; set; }
     }
+
+    public class CheckPickCodeResult
+    {
+        public bool IsTrue { get; set; }
+        public int ProductId { get; set; }
+    }
 }

@@ -46,11 +46,16 @@ namespace School.Others
         Task Beat(DeviceStateInput input);
 
         /// <summary>
-        /// 出货上报
+        /// 线上出货上报
         /// </summary>
         /// <returns></returns>
-        Task Order(DealOrderInput input);
+        Task OnlineOrder(DealOrderInput input);
 
+        /// <summary>
+        /// 现金出货上报
+        /// </summary>
+        /// <returns></returns>
+        Task CachOrder(CashOrderInput input);
         /// <summary>
         /// Vmc系统状态报告
         /// </summary>
@@ -67,13 +72,13 @@ namespace School.Others
         /// 状态调整
         /// </summary>
         /// <returns></returns>
-        Task ChannelStatusReport(StateReportInput input);
+        Task ChannelStatusReport(ChannelStatusReportInput input);
 
         /// <summary>
         /// 取货码验证
         /// </summary>
         /// <returns></returns>
-        Task<bool> CheckPickCode(CheckPickCodeInput input);
+        Task<CheckPickCodeResult> CheckPickCode(CheckPickCodeInput input);
 
         /// <summary>
         /// 更新货道
