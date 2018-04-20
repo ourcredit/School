@@ -26,6 +26,11 @@ namespace School.Others
         Task<PagedResultDto<ProductListDto>> GetProducts(GetDeviceGoodsInput input);
 
         /// <summary>
+        /// 更新售货机工控编号接口
+        /// </summary>
+        /// <returns></returns>
+        Task UpdateDeviceControlCode(MachineCodeInput input);
+        /// <summary>
         /// 获取货道列表
         /// </summary>
         /// <param name="input"></param>

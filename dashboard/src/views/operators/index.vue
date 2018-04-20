@@ -17,14 +17,14 @@
       </Col>
       <Col span="15">
       <Card>
-        <p slot="title">设备信息</p>
+        <p slot="title">售货机信息</p>
         <Row :gutter="8" slot="extra">
           <i-col span="8">
-            <Input placeholder="设备名" v-model="params.name">
+            <Input placeholder="售货机名" v-model="params.name">
             </Input>
           </i-col>
             <i-col span="8">
-            <Input placeholder="设备编号" v-model="params.num">
+            <Input placeholder="售货机编号" v-model="params.num">
             </Input>
           </i-col>
           <i-col span="3">
@@ -57,7 +57,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="bindModal" title="绑定设备" @on-ok="bindDevice" okText="保存" cancelText="关闭">
+    <Modal v-model="bindModal" title="绑定售货机" @on-ok="bindDevice" okText="保存" cancelText="关闭">
       <div>
         <bind-form @cc.sync="setValues"></bind-form>
       </div>
@@ -163,7 +163,7 @@ export default {
       }
       let des = Array.from(this.selectModels, c => c.id);
       if (!des || des.length <= 0) {
-        abp.message.warn("请选择设备");
+        abp.message.warn("请选择售货机");
         return;
       }
       const params = {
@@ -219,15 +219,15 @@ export default {
       },
       columns: [
         {
-          title: "设备名",
+          title: "售货机名",
           key: "deviceName"
         },
         {
-          title: "设备编号",
+          title: "售货机编号",
           key: "deviceNum"
         },
         {
-          title: "设备类型",
+          title: "售货机类型",
           key: "deviceType"
         },
         {
@@ -240,6 +240,30 @@ export default {
           width: 150,
           render: (h, params) => {
             return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.$store.commit(
+                        "device/setCurrentCode",
+                        params.row.deviceNum
+                      );
+                      this.$router.push({
+                        name: "boxs"
+                      });
+                    }
+                  }
+                },
+                "详情"
+              ),
               h(
                 "Button",
                 {
@@ -273,7 +297,7 @@ export default {
                     click: async () => {
                       this.$Modal.confirm({
                         title: "",
-                        content: "删除设备信息",
+                        content: "删除售货机信息",
                         okText: "是",
                         cancelText: "否",
                         onOk: async () => {

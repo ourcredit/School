@@ -1,14 +1,14 @@
 <template>
   <div>
     <Card>
-      <p slot="title">设备管理</p>
+      <p slot="title">售货机管理</p>
       <Row :gutter="8" slot="extra">
         <i-col span="6">
-          <Input placeholder="设备名" v-model="params.name">
+          <Input placeholder="售货机名" v-model="params.name">
           </Input>
         </i-col>
         <i-col span="6">
-          <Input placeholder="设备编号" v-model="params.num">
+          <Input placeholder="售货机编号" v-model="params.num">
           </Input>
         </i-col>
         <i-col span="6">
@@ -30,16 +30,16 @@
       <Page :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize"
         :current="currentPage"></Page>
     </Card>
-    <Modal v-model="showEditModal" title="编辑设备" @on-ok="save" okText="保存" cancelText="关闭">
+    <Modal v-model="showEditModal" title="编辑售货机" @on-ok="save" okText="保存" cancelText="关闭">
       <div>
         <Form inline ref="roleForm" label-position="top" :rules="rule" :model="device">
-          <FormItem label="设备名称" prop="deviceName">
+          <FormItem label="售货机名称" prop="deviceName">
             <Input v-model="device.deviceName" :maxlength="120" :minlength="1"></Input>
           </FormItem>
-          <FormItem label="设备编号" prop="deviceNum">
+          <FormItem label="售货机编号" prop="deviceNum">
             <Input v-model="device.deviceNum" :maxlength="120" :minlength="1"></Input>
           </FormItem>
-          <FormItem label="设备类型" prop="deviceType">
+          <FormItem label="售货机类型" prop="deviceType">
             <Select style="width:162px" v-model="device.deviceType" placeholder="请选择">
               <Option value="格子机">格子机</Option>
               <Option value="无人销售机">无人销售机</Option>
@@ -116,14 +116,14 @@ export default {
         deviceName: [
           {
             required: true,
-            message: "设备名称必填",
+            message: "售货机名称必填",
             trigger: "blur"
           }
         ],
         deviceNum: [
           {
             required: true,
-            message: "设备编号必填",
+            message: "售货机编号必填",
             trigger: "blur"
           }
         ]
@@ -135,15 +135,15 @@ export default {
           align: "center"
         },
         {
-          title: "设备名称",
+          title: "售货机名称",
           key: "deviceName"
         },
         {
-          title: "设备编号",
+          title: "售货机编号",
           key: "deviceNum"
         },
         {
-          title: "设备类型",
+          title: "售货机类型",
           key: "deviceType"
         },
         {
@@ -193,7 +193,7 @@ export default {
                     click: async () => {
                       this.$Modal.confirm({
                         title: "",
-                        content: "删除设备信息",
+                        content: "删除售货机信息",
                         okText: "是",
                         cancelText: "否",
                         onOk: async () => {

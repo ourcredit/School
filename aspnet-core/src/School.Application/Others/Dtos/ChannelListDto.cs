@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using Abp.Application.Services.Dto;
 
@@ -28,10 +29,27 @@ namespace School.Others.Dtos
         public int Site { get; set; }
         public DateTime CreateTime { get; set; }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class CheckPickCodeResult
     {
         public bool IsTrue { get; set; }
         public int ProductId { get; set; }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class MachineCodeInput
+    {
+        /// <summary>
+        /// 机器码
+        /// </summary>
+        [Required]
+        public string Machine_Code { get; set; }
+        /// <summary>
+        /// 工控
+        /// </summary>
+        public string Control_Code { get; set; }
     }
 }

@@ -9,6 +9,7 @@ const point = {
         unbindDevices: [],
         goods: [],
         current: null,
+        currentCode: "",
         points: [],
         totalCount: 0,
         pageSize: 10,
@@ -23,6 +24,9 @@ const point = {
         },
         setCurrent(state, model) {
             state.current = model;
+        },
+        setCurrentCode(state, code) {
+            state.currentCode = code;
         }
     },
     actions: {

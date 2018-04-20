@@ -25,7 +25,8 @@ const point = {
             let page = {
                 maxResultCount: state.pageSize,
                 skipCount: (state.currentPage - 1) * state.pageSize,
-                machineCode: payload.filter
+                machineCode: payload.filter,
+                MachineCode: payload.data
             }
             let rep = await Util.ajax.get('/api/services/app/Other/GetPagedChannels', {
                 params: page
@@ -40,7 +41,7 @@ const point = {
             let page = {
                 maxResultCount: state.pageSize,
                 skipCount: (state.currentPage - 1) * state.pageSize,
-                machineCode: payload.filter
+                MachineCode: payload.data
             }
             let rep = await Util.ajax.get('/api/services/app/Other/GetPagedBoxs', {
                 params: page

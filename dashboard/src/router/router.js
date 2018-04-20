@@ -61,6 +61,13 @@ export const otherRouter = {
         permission: 'Pages.Device.Manage.Create',
         component: () =>
             import ('@/views/operators/setting.vue')
+    }, {
+        path: 'box',
+        title: '货道管理',
+        name: 'boxs',
+        permission: 'Pages.Operator.Boxs',
+        component: () =>
+            import ('@/views/operators/box.vue')
     }]
 };
 
@@ -89,12 +96,12 @@ export const appRouter = [{
 }, {
     path: '/device',
     icon: 'magnet',
-    title: '设备信息',
+    title: '售货机信息',
     name: 'device',
     component: Main,
     children: [{
         path: 'manage',
-        title: '设备管理',
+        title: '售货机管理',
         name: 'devicemanage',
         permission: 'Pages.Device.Manage',
         component: () =>
@@ -148,13 +155,6 @@ export const appRouter = [{
         permission: 'Pages.Operator.Orgs',
         component: () =>
             import ('@/views/operators/index.vue')
-    }, {
-        path: 'box',
-        title: '货道管理',
-        name: 'boxs',
-        permission: 'Pages.Operator.Boxs',
-        component: () =>
-            import ('@/views/operators/box.vue')
     }]
 }, {
     path: '/admin',

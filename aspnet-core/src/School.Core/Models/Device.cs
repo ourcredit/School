@@ -24,6 +24,10 @@ namespace School.Models
         /// </summary>
         public string DeviceName { get; set; }
         /// <summary>
+        /// 工控编号
+        /// </summary>
+        public string ControlNum { get; set; }
+        /// <summary>
         /// 设备类型
         /// </summary>
         public string DeviceType { get; set; }

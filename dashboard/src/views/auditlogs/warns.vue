@@ -35,15 +35,15 @@ export default {
       showModal: false,
       columns: [
         {
-          title: "设备编号",
+          title: "售货机编号",
           key: "name"
         },
         {
-          title: "设备名称",
+          title: "售货机名称",
           key: "displayName"
         },
         {
-          title: "设备类型",
+          title: "售货机类型",
           key: "displayName"
         },
         {

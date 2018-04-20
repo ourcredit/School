@@ -24,7 +24,8 @@ export default {
   methods: {
     async init() {
       await this.$store.dispatch({
-        type: "channels/getShows"
+        type: "channels/getShows",
+        data: this.currentCode
       });
     },
     pageChange(page) {
@@ -37,7 +38,8 @@ export default {
     },
     async getpage() {
       await this.$store.dispatch({
-        type: "channels/getChannels"
+        type: "channels/getChannels",
+        data: this.currentCode
       });
     }
   },
@@ -88,6 +90,9 @@ export default {
     },
     pageSize() {
       return this.$store.state.device.pageSize;
+    },
+    currentCode() {
+      return this.$store.state.device.currentCode;
     }
   },
   async created() {

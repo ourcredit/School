@@ -156,6 +156,15 @@ namespace School.Others
             return new PagedResultDto<ChannelListDto>(deviceCount, tr);
         }
         /// <summary>
+        /// 更新售货机工控编号接口
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdateDeviceControlCode(MachineCodeInput input)
+        {
+            var device = await _deviceRepository.FirstOrDefaultAsync(c => c.DeviceNum == input.Machine_Code);
+            device.ControlNum = input.Control_Code;
+        }
+        /// <summary>
         /// 获取展示位列表
         /// </summary>
         /// <param name="input"></param>

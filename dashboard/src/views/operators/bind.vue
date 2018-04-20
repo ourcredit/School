@@ -1,14 +1,14 @@
 <template>
     <div>
    <Card>
-      <p slot="title">设备管理</p>
+      <p slot="title">售货机管理</p>
       <Row :gutter="8" slot="extra">
         <i-col span="6">
-          <Input placeholder="设备名" v-model="params.name">
+          <Input placeholder="售货机名" v-model="params.name">
           </Input>
         </i-col>
         <i-col span="6">
-          <Input placeholder="设备编号" v-model="params.num">
+          <Input placeholder="售货机编号" v-model="params.num">
           </Input>
         </i-col>
         <i-col span="3">
@@ -57,15 +57,15 @@ export default {
           align: "center"
         },
         {
-          title: "设备名",
+          title: "售货机名",
           key: "deviceName"
         },
         {
-          title: "设备编号",
+          title: "售货机编号",
           key: "deviceNum"
         },
         {
-          title: "设备类型",
+          title: "售货机类型",
           key: "deviceType"
         },
         {

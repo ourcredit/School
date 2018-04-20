@@ -13,6 +13,10 @@ namespace School.Devices.Dtos
         /// </summary>
         [Required, MaxLength(128)]
         public string DeviceNum { get; set; }
+        /// <summary>
+        /// 工控编号
+        /// </summary>
+        public string ControlNum { get; set; }
         public string DeviceName { get; set; }
         public string DeviceType { get; set; }
         public int PointId { get; set; }
