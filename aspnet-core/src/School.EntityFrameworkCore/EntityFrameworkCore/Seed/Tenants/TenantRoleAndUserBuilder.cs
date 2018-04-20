@@ -102,15 +102,15 @@ namespace School.EntityFrameworkCore.Seed.Tenants
         private  void CreateSuperAdminsFromDb(Role adminRole)
         {
             var sql = @"SELECT
-	a.shop_name,
-	b.user_id,
-	b.email,
-	b.user_name,
-	b.`password`,ec_salt
-	
+	a.user_id,
+	a.email,
+	a.user_name,
+	a.`password`,
+	a.ec_salt,
+	b.shop_name ,b.ru_id
 FROM
-	dsc_drp_shop a
-	LEFT JOIN dsc_admin_user b ON a.user_id = b.user_id";
+	dsc_admin_user a
+	LEFT JOIN dsc_seller_shopinfo b ON a.ru_id = b.ru_id";
             var result =  DapperHelper.GetSqlResult<dsc_drp_shop>(sql);
             foreach (var item in result.Items)
             {
@@ -122,6 +122,7 @@ FROM
                     family = new OperatorTree()
                     {
                         TreeLength = 1,
+                        ShopId = item.ru_id,
                         TreeName = item.shop_name,
                         TreeCode = Guid.NewGuid().ToString("D").Split('-').Last()
                     };
@@ -132,6 +133,7 @@ FROM
 
                 temp = User.CreateTenantUser(_tenantId, item.user_name, item.user_name, item.email);
                 temp.Password =item.password;
+                temp.ShopId = item.ru_id;
                 temp.IsEmailConfirmed = true;
                 temp.IsActive = true;
                 temp.IsAdmin = true;

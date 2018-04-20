@@ -37,15 +37,15 @@ namespace School.OperatorTrees.DomainServices
         public void GenderAdmins()
         {
             var sql = @"SELECT
-	a.shop_name,
-	b.user_id,
-	b.email,
-	b.user_name,
-	b.`password`,ec_salt
-	
+	a.user_id,
+	a.email,
+	a.user_name,
+	a.`password`,
+	a.ec_salt,
+	b.shop_name ,b.ru_id
 FROM
-	dsc_drp_shop a
-	LEFT JOIN dsc_admin_user b ON a.user_id = b.user_id";
+	dsc_admin_user a
+	LEFT JOIN dsc_seller_shopinfo b ON a.ru_id = b.ru_id where 1=1";
             var result = DapperHelper.GetSqlResult<dsc_drp_shop>(sql);
             var adminRole = _roleRepository.FirstOrDefault(c => c.Name == StaticRoleNames.Tenants.Admin);
             foreach (var item in result.Items)
@@ -57,6 +57,7 @@ FROM
                     family = new OperatorTree()
                     {
                         TreeLength = 1,
+                        ShopId = item.ru_id,
                         TreeName = item.shop_name,
                         TreeCode = Guid.NewGuid().ToString("D").Split('-').Last()
                     };
@@ -65,6 +66,7 @@ FROM
                 else
                 {
                     family.TreeName = item.shop_name;
+                    family.ShopId = item.ru_id;
                 }
                 _orgRepository.InsertOrUpdate(family);
                 var temp = _userRepository.FirstOrDefault(u =>
@@ -76,6 +78,7 @@ FROM
                     temp.IsEmailConfirmed = true;
                     temp.IsActive = true;
                     temp.IsAdmin = true;
+                    temp.ShopId = item.ru_id;
                     temp.TreeCode = family.TreeCode;
                     temp.Salt = item.ec_salt;
                     temp.KeyId = item.user_id;
@@ -87,8 +90,9 @@ FROM
                     temp.Password = item.password;
                     temp.Salt = item.ec_salt;
                     temp.KeyId = item.user_id;
+                    temp.ShopId = item.ru_id;
                     temp.UserName = item.user_name;
-                   temp= _userRepository.Update(temp);
+                    _userRepository.Update(temp);
                 }
             }
         }

@@ -23,6 +23,10 @@ namespace School.Authorization.Users
         /// </summary>
         public string TreeCode { get; set; }
         /// <summary>
+        ///从属商铺id
+        /// </summary>
+        public int? ShopId { get; set; }
+        /// <summary>
         /// hash 盐
         /// </summary>
         public string Salt { get; set; }

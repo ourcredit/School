@@ -35,6 +35,10 @@ namespace School.Models
         /// </summary>
         public  virtual  OperatorTree Parent { get; set; }
         /// <summary>
+        /// shopId
+        /// </summary>
+        public int ShopId { get; set; }
+        /// <summary>
         /// 子节点
         /// </summary>
         [ForeignKey("ParentId")]
@@ -57,5 +61,6 @@ namespace School.Models
         public string user_name { get; set; }
         public string password { get; set; }
         public string ec_salt { get; set; }
+        public int ru_id { get; set; }
     }
 }

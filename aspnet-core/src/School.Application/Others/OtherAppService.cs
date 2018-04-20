@@ -30,12 +30,13 @@ namespace School.Others
         private readonly IRepository<Channel> _channelRepository;
         private readonly IRepository<Show> _showRepository;
         private readonly IRepository<ChannelShow> _channelShowRepository;
+        private readonly IRepository<OperatorTree> _treeRepository;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public OtherAppService(ICacheManager cacheManager,
-            IRepository<Orders> orderRepository, IRepository<Device> deviceRepository, IRepository<Show> showRepository, IRepository<Channel> channelRepository, IRepository<ChannelShow> channelShowRepository)
+            IRepository<Orders> orderRepository, IRepository<Device> deviceRepository, IRepository<Show> showRepository, IRepository<Channel> channelRepository, IRepository<ChannelShow> channelShowRepository, IRepository<OperatorTree> treeRepository)
         {
             _cacheManager = cacheManager;
             _orderRepository = orderRepository;
@@ -43,6 +44,7 @@ namespace School.Others
             _showRepository = showRepository;
             _channelRepository = channelRepository;
             _channelShowRepository = channelShowRepository;
+            _treeRepository = treeRepository;
         }
 
         /// <summary>
@@ -52,12 +54,16 @@ namespace School.Others
         /// <returns></returns>
         public async Task<PagedResultDto<dsc_Goods>> GetPagedGoods(GetGoodsInput input)
         {
+            var current =await AbpSession.CurrentAsync();
+            var otre = await _treeRepository.FirstOrDefaultAsync(c => c.TreeCode.Equals(current.TreeCode));
             var ht = await _deviceRepository.GetAllIncluding(c => c.DeviceGoods)
                 .FirstOrDefaultAsync(c => c.Id == input.DeviceId);
-
+          
             var result = await _cacheManager.GetCache(SchoolCache.GoodsCache)
-                .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCacheByAuth);
-            var temp = result.Items.WhereIf(!input.Name.IsNullOrWhiteSpace(), c => c.goods_name.Contains(input.Name))
+                .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
+            var temp = result.Items
+                .Where(c=>c.user_id==otre.ShopId)
+                .WhereIf(!input.Name.IsNullOrWhiteSpace(), c => c.goods_name.Contains(input.Name))
                 .WhereIf(!input.Sn.IsNullOrWhiteSpace(), c => c.goods_sn.Contains(input.Sn))
                 .WhereIf(!input.Cate.IsNullOrWhiteSpace(), c => c.cat_name.Contains(input.Cate));
             var arr = ht == null || !ht.DeviceGoods.Any() ? new List<DeviceGood>() : ht.DeviceGoods.ToList();
@@ -356,13 +362,14 @@ namespace School.Others
                 });
             }
         }
-        private async Task<ListResultDto<dsc_Goods>> GetGoodsFromCacheByAuth()
-        {
-            var current = await AbpSession.CurrentAsync();
-            if (!current.KeyId.HasValue) throw new UserFriendlyException("当前用户不是超管用户");
-            var res = await DapperHelper.GetGoodsResult<dsc_Goods>($" where a.user_id={current.KeyId} ");
-            return res;
-        }
+        //private async Task<ListResultDto<dsc_Goods>> GetGoodsFromCacheByAuth()
+        //{
+        //    var current = await AbpSession.CurrentAsync();
+        //    if (!current.KeyId.HasValue) throw new UserFriendlyException("当前用户不是超管用户");
+        //    if (!current.ShopId.HasValue) throw new UserFriendlyException("未找到丛属店铺信息");
+        //    var res = await DapperHelper.GetGoodsResult<dsc_Goods>($" where a.user_id={current.ShopId.Value} ");
+        //    return res;
+        //}
         private async Task<ListResultDto<dsc_Goods>> GetGoodsFromCache()
         {
             var res = await DapperHelper.GetGoodsResult<dsc_Goods>();

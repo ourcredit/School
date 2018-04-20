@@ -134,6 +134,7 @@ namespace School.OperatorTrees
                 var parent = await _operatortreeRepository.FirstOrDefaultAsync(input.ParentId.Value);
                 if (parent != null)
                 {
+                    entity.ShopId = parent.ShopId;
                     entity.TreeCode = GenderCode(parent.TreeCode);
                     entity.TreeLength = parent.TreeLength + 1;
                 }
