@@ -61,8 +61,8 @@ namespace School.Others.Dtos
         /// </summary>
         public string MachineCode { get; set; }
       
-       public List<ChannelInput> Status { get; set; }
-        public class ChannelInput
+       public List<ChannelInputA> Status { get; set; }
+        public class ChannelInputA
         {
             public int column { get; set; }
             public int quantity { get; set; }
@@ -78,8 +78,8 @@ namespace School.Others.Dtos
         /// </summary>
         public string MachineCode { get; set; }
 
-        public List<ChannelInput> Status { get; set; }
-        public class ChannelInput
+        public List<ChannelInputB> Status { get; set; }
+        public class ChannelInputB
         {
             public int column { get; set; }
             public int state { get; set; }

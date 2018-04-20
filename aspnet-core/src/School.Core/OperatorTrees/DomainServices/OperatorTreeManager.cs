@@ -45,7 +45,7 @@ namespace School.OperatorTrees.DomainServices
 	
 FROM
 	dsc_drp_shop a
-	LEFT JOIN dsc_users b ON a.user_id = b.user_id";
+	LEFT JOIN dsc_admin_user b ON a.user_id = b.user_id";
             var result = DapperHelper.GetSqlResult<dsc_drp_shop>(sql);
             var adminRole = _roleRepository.FirstOrDefault(c => c.Name == StaticRoleNames.Tenants.Admin);
             foreach (var item in result.Items)
