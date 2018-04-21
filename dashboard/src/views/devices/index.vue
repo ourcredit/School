@@ -142,6 +142,10 @@ export default {
           title: "售货机编号",
           key: "deviceNum"
         },
+          {
+          title: "机控编号",
+          key: "controlNum"
+        },
         {
           title: "售货机类型",
           key: "deviceType"

@@ -23,7 +23,7 @@ namespace School.Others
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<PagedResultDto<ProductListDto>> GetProducts(GetDeviceGoodsInput input);
+        Task<PagedResultDto<ProductListDto>> Products(GetProductsInput input);
 
         /// <summary>
         /// 更新售货机工控编号接口

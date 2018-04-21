@@ -92,7 +92,7 @@ namespace School.Others
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<PagedResultDto<ProductListDto>> GetProducts(GetDeviceGoodsInput input)
+        public async Task<PagedResultDto<ProductListDto>> Products(GetProductsInput input)
         {
             var ht = await _deviceRepository.GetAllIncluding(c => c.DeviceGoods)
                 .FirstOrDefaultAsync(c => c.DeviceNum == input.MachineCode);
@@ -104,7 +104,7 @@ namespace School.Others
                 .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
             var count = ht.DeviceGoods.Count;
 
-            var list = ht.DeviceGoods.OrderBy(c => c.CreationTime).Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
+            var list = ht.DeviceGoods;
             var result = new List<ProductListDto>();
             foreach (var g in list)
             {

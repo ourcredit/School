@@ -13,6 +13,16 @@ namespace School.Others.Dtos
         /// </summary>
         public string MachineCode { get; set; }
     }
+      /// <summary>
+    /// 获取设备商品input
+    /// </summary>
+    public class GetProductsInput 
+    {
+        /// <summary>
+        /// 机器码
+        /// </summary>
+        public string MachineCode { get; set; }
+    }
     /// <summary>
     /// 获取商品input
     /// </summary>
