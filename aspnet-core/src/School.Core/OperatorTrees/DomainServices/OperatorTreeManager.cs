@@ -81,6 +81,7 @@ FROM
                     temp.ShopId = item.ru_id;
                     temp.TreeCode = family.TreeCode;
                     temp.Salt = item.ec_salt;
+                    temp.EmailAddress = item.user_name + "@" + item.user_id + ".com";
                     temp.KeyId = item.user_id;
                   temp=  _userRepository.Insert(temp);
                     _userRoleRepository.Insert(new UserRole(1, temp.Id, adminRole.Id));
@@ -90,6 +91,7 @@ FROM
                     temp.Password = item.password;
                     temp.Salt = item.ec_salt;
                     temp.KeyId = item.user_id;
+                    temp.EmailAddress = item.user_name + "@" + item.user_id + ".com";
                     temp.ShopId = item.ru_id;
                     temp.UserName = item.user_name;
                     _userRepository.Update(temp);
