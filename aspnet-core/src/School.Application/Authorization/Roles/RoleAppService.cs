@@ -20,12 +20,16 @@ namespace School.Authorization.Roles
     public class RoleAppService : SchoolAppServiceBase, IRoleAppService
     {
         private readonly RoleManager _roleManager;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public RoleAppService(RoleManager roleManager)
         {
             _roleManager = roleManager;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public async Task<ListResultDto<RoleListDto>> GetRoles(GetRolesInput input)
         {
             var roles = await _roleManager
@@ -38,7 +42,9 @@ namespace School.Authorization.Roles
 
             return new ListResultDto<RoleListDto>(ObjectMapper.Map<List<RoleListDto>>(roles));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [AbpAuthorize(AppPermissions.Pages_Administration_Roles_Create, AppPermissions.Pages_Administration_Roles_Edit)]
         public async Task<GetRoleForEditOutput> GetRoleForEdit(NullableIdDto input)
         {
@@ -64,7 +70,9 @@ namespace School.Authorization.Roles
                 GrantedPermissionNames = grantedPermissions.Select(p => p.Name).ToList()
             };
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public async Task CreateOrUpdateRole(CreateOrUpdateRoleInput input)
         {
             if (input.Role.Id.HasValue)
@@ -76,7 +84,9 @@ namespace School.Authorization.Roles
                 await CreateRoleAsync(input);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [AbpAuthorize(AppPermissions.Pages_Administration_Roles_Delete)]
         public async Task DeleteRole(EntityDto input)
         {
@@ -90,7 +100,9 @@ namespace School.Authorization.Roles
 
             CheckErrors(await _roleManager.DeleteAsync(role));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [AbpAuthorize(AppPermissions.Pages_Administration_Roles_Edit)]
         protected virtual async Task UpdateRoleAsync(CreateOrUpdateRoleInput input)
         {
@@ -102,7 +114,9 @@ namespace School.Authorization.Roles
 
             await UpdateGrantedPermissionsAsync(role, input.GrantedPermissionNames);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [AbpAuthorize(AppPermissions.Pages_Administration_Roles_Create)]
         protected virtual async Task CreateRoleAsync(CreateOrUpdateRoleInput input)
         {

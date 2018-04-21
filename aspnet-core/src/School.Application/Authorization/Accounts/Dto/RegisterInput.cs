@@ -26,15 +26,23 @@ namespace School.Authorization.Accounts.Dto
         public string UserName { get; set; }
 
     
-
+/// <summary>
+        /// awd
+        /// </summary>
         [Required]
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]
         [DisableAuditing]
+        
         public string Password { get; set; }
-
+ /// <summary>
+        /// 
+        /// </summary>
         [DisableAuditing]
+       
         public string CaptchaResponse { get; set; }
-
+ /// <summary>
+        /// 
+        /// </summary>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (!UserName.IsNullOrEmpty())
