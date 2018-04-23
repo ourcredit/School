@@ -65,7 +65,7 @@ namespace School
 	a.goods_name_style,
 	a.brand_id,
 	a.provider_name,a.goods_img,
-	a.goods_number, b.cat_name 
+	a.goods_number, b.cat_name ,a.user_id
 FROM
 	dsc_goods a
 	LEFT JOIN dsc_category b ON a.cat_id = b.cat_id {where}";
