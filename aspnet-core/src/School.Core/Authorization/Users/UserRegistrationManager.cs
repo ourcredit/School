@@ -39,7 +39,7 @@ namespace School.Authorization.Users
             AbpSession = NullAbpSession.Instance;
         }
         public async Task<User> RegisterAdminAsync(string name,
-            string userName, string plainPassword)
+            string userName, string plainPassword,string salt)
         {
             CheckForTenant();
             // CheckSelfRegistrationIsEnabled();
@@ -53,6 +53,7 @@ namespace School.Authorization.Users
                 Name = name,
                 EmailAddress = $"{userName}.{name}@qq.com",
                 IsActive = true,
+                Salt = salt,
                 IsAdmin = true,
                 UserName = userName,
                 IsEmailConfirmed = false,
@@ -60,15 +61,10 @@ namespace School.Authorization.Users
                 Roles = new List<UserRole>()
             };
 
-            user.SetNormalizedNames();
-
-           // user.Password = _passwordHasher.HashPassword(user, plainPassword);
-            var adminRole = _roleManager.Roles.FirstOrDefaultAsync(c => c.Name == StaticRoleNames.Tenants.Admin);
-           
-             user.Roles.Add(new UserRole(tenant.Id, user.Id, adminRole.Id));
+          //  user.SetNormalizedNames();
+             user.Roles.Add(new UserRole(tenant.Id, user.Id, 2));
             CheckErrors(await _userManager.CreateAsync(user));
-            await CurrentUnitOfWork.SaveChangesAsync();
-
+          //  await CurrentUnitOfWork.SaveChangesAsync();
             //Notifications
           //  await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
 

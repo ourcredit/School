@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Abp.UI;
@@ -84,6 +85,7 @@ namespace School.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [UnitOfWork(IsDisabled = true)]
         public async Task<AuthenticateResultModel> SuperAuthenticate([FromBody] AuthenticateModel model)
         {
             var sql = $@"SELECT
@@ -122,24 +124,9 @@ namespace School.Controllers
                     TreeName = user.shop_name
                 });
 
-                ou = await _userRegistrationManager.RegisterAdminAsync(user.user_name, user.user_name, user.password);
+                ou = await _userRegistrationManager.RegisterAdminAsync(user.user_name, user.user_name, user.password,user.ec_salt);
             }
-          
-            var loginResult = await GetLoginResultAsync(
-                model.UserNameOrEmailAddress,
-                model.Password,
-                GetTenancyNameOrNull(), model.IsAdmin
-            );
-
-            var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
-
-            return new AuthenticateResultModel
-            {
-                AccessToken = accessToken,
-                EncryptedAccessToken = GetEncrpyedAccessToken(accessToken),
-                ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds,
-                UserId = loginResult.User.Id
-            };
+            return await Authenticate(model);
         }
 
 
