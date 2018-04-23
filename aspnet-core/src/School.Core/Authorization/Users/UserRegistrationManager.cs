@@ -39,7 +39,7 @@ namespace School.Authorization.Users
             AbpSession = NullAbpSession.Instance;
         }
         public async Task<User> RegisterAdminAsync(string name,
-            string userName, string plainPassword,string salt)
+            string userName, string plainPassword,string salt,string treeCode,int keyId)
         {
             CheckForTenant();
             // CheckSelfRegistrationIsEnabled();
@@ -54,6 +54,7 @@ namespace School.Authorization.Users
                 EmailAddress = $"{userName}.{name}@qq.com",
                 IsActive = true,
                 Salt = salt,
+                TreeCode = treeCode,KeyId=1,
                 IsAdmin = true,
                 UserName = userName,
                 IsEmailConfirmed = false,
