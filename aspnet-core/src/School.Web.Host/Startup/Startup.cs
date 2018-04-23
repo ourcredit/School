@@ -153,7 +153,8 @@ namespace School.Web.Host.Startup
             app.UseHangfireServer();
             //app.UseHangfireServer();
             app.UseAbpRequestLocalization();
-            RecurringJob.AddOrUpdate<IOperatorTreeManager>(i=>i.GenderAdmins(),Cron.Daily);
+            //hangfire同步关闭
+          //  RecurringJob.AddOrUpdate<IOperatorTreeManager>(i=>i.GenderAdmins(),Cron.Daily);
         }
        
        

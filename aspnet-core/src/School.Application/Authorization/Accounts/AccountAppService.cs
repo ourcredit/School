@@ -49,7 +49,6 @@ namespace School.Authorization.Accounts
                 input.Name,
                 input.UserName,
                 input.Password
-              
             );
 
             var isEmailConfirmationRequiredForLogin = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.IsEmailConfirmationRequiredForLogin);

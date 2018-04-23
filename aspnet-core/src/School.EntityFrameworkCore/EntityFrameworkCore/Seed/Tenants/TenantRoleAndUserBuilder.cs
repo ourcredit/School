@@ -6,6 +6,8 @@ using Abp.Authorization;
 using Abp.Authorization.Roles;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using School.Authorization;
 using School.Authorization.Roles;
 using School.Authorization.Users;
@@ -69,34 +71,36 @@ namespace School.EntityFrameworkCore.Seed.Tenants
             }
 
             // Admin user
-            CreateSuperAdminsFromDb(adminRole);
-            //var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
-            //if (adminUser == null)
-            //{
-            //    adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
-            //    adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
-            //    adminUser.IsEmailConfirmed = true;
-            //    adminUser.IsActive = true;
-            //    _context.Users.Add(adminUser);
-            //    _context.SaveChanges();
+          
+            var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
+            if (adminUser == null)
+            {
+                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
+                adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
+                adminUser.IsEmailConfirmed = true;
+                adminUser.IsActive = true;
+                _context.Users.Add(adminUser);
+                _context.SaveChanges();
 
-            //    // Assign Admin role to admin user
-            //    _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
-            //    _context.SaveChanges();
+                // Assign Admin role to admin user
+                _context.UserRoles.Add(new UserRole(_tenantId, adminUser.Id, adminRole.Id));
+                _context.SaveChanges();
 
-            //    // User account of admin user
-            //    if (_tenantId == 1)
-            //    {
-            //        _context.UserAccounts.Add(new UserAccount
-            //        {
-            //            TenantId = _tenantId,
-            //            UserId = adminUser.Id,
-            //            UserName = AbpUserBase.AdminUserName,
-            //            EmailAddress = adminUser.EmailAddress
-            //        });
-            //        _context.SaveChanges();
-            //    }
-            //}
+                // User account of admin user
+                if (_tenantId == 1)
+                {
+                    _context.UserAccounts.Add(new UserAccount
+                    {
+                        TenantId = _tenantId,
+                        UserId = adminUser.Id,
+                        UserName = AbpUserBase.AdminUserName,
+                        EmailAddress = adminUser.EmailAddress
+                    });
+                    _context.SaveChanges();
+                }
+            }
+
+            //  CreateSuperAdminsFromDb(adminRole);
         }
 
         private  void CreateSuperAdminsFromDb(Role adminRole)
@@ -138,6 +142,7 @@ FROM
                 temp.IsActive = true;
                 temp.IsAdmin = true;
                 temp.TreeCode = family.TreeCode;
+                temp.EmailAddress = item.user_name + "@" + item.user_id + ".com";
                 temp.Salt = item.ec_salt;
                 temp.KeyId = item.user_id;
                 _context.Users.Add(temp);

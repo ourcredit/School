@@ -22,13 +22,21 @@ namespace School
                return res;
            }
        }
-       /// <summary>
-       /// 分页查询数据
-       /// </summary>
-       /// <typeparam name="T"></typeparam>
-       /// <param name="where"></param>
-       /// <returns></returns>
-       public static async Task<ListResultDto<T>> GetResult<T>(string where = "") where T : class, new()
+       public static async Task<IEnumerable<T>> ExecuteSql<T>(string sql) where T : class, new()
+       {
+           using (MySqlConnection conn = new MySqlConnection(Host))
+           {
+               var res = await conn.QueryAsync<T>(sql);
+               return res;
+           }
+       }
+        /// <summary>
+        /// 分页查询数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public static async Task<ListResultDto<T>> GetResult<T>(string where = "") where T : class, new()
        {
            var name = typeof(T).Name;
             var sql = $"select  * from {name}  {where}";

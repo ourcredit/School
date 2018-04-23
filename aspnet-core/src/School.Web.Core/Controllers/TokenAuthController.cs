@@ -8,13 +8,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Abp.Authorization;
 using Abp.Authorization.Users;
+using Abp.Domain.Repositories;
 using Abp.MultiTenancy;
 using Abp.Runtime.Security;
 using Abp.UI;
 using School.Authentication.External;
 using School.Authentication.JwtBearer;
 using School.Authorization;
+using School.Authorization.Accounts;
+using School.Authorization.Accounts.Dto;
 using School.Authorization.Users;
+using School.Models;
 using School.Models.TokenAuth;
 using School.MultiTenancy;
 
@@ -24,6 +28,8 @@ namespace School.Controllers
     public class TokenAuthController : SchoolControllerBase
     {
         private readonly LogInManager _logInManager;
+        private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<OperatorTree> _treeRepository;
         private readonly ITenantCache _tenantCache;
         private readonly AbpLoginResultTypeHelper _abpLoginResultTypeHelper;
         private readonly TokenAuthConfiguration _configuration;
@@ -38,7 +44,9 @@ namespace School.Controllers
             TokenAuthConfiguration configuration,
             IExternalAuthConfiguration externalAuthConfiguration,
             IExternalAuthManager externalAuthManager,
-            UserRegistrationManager userRegistrationManager)
+            UserRegistrationManager userRegistrationManager,
+            IRepository<User, long> userRepository,
+            IRepository<OperatorTree> treeRepository)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -47,6 +55,8 @@ namespace School.Controllers
             _externalAuthConfiguration = externalAuthConfiguration;
             _externalAuthManager = externalAuthManager;
             _userRegistrationManager = userRegistrationManager;
+            _userRepository = userRepository;
+            _treeRepository = treeRepository;
         }
 
         [HttpPost]
@@ -55,7 +65,7 @@ namespace School.Controllers
             var loginResult = await GetLoginResultAsync(
                 model.UserNameOrEmailAddress,
                 model.Password,
-                GetTenancyNameOrNull(),model.IsAdmin
+                GetTenancyNameOrNull(), model.IsAdmin
             );
 
             var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
@@ -68,6 +78,70 @@ namespace School.Controllers
                 UserId = loginResult.User.Id
             };
         }
+        /// <summary>
+        /// 超管登陆
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<AuthenticateResultModel> SuperAuthenticate([FromBody] AuthenticateModel model)
+        {
+            var sql = $@"SELECT
+            a.user_id,
+            a.email,
+            a.user_name,
+            a.`password`,
+            a.ec_salt,
+            b.shop_name,
+            b.ru_id
+                FROM
+            dsc_admin_user a
+            LEFT JOIN dsc_seller_shopinfo b ON a.ru_id = b.ru_id
+            WHERE
+            a.user_name = '{model.UserNameOrEmailAddress}'";
+            var users = await DapperHelper.ExecuteSql<dsc_drp_shop>(sql);
+            var user = users.FirstOrDefault();
+            if (user == null)
+            {
+                throw new UserFriendlyException(L("登陆失败"), L("该用户不存在"));
+            }
+            var pd = LogInManager.Md5(LogInManager.Md5(model.Password) + user.ec_salt);
+            if (!pd.Equals(user.password))
+            {
+                throw new UserFriendlyException(L("登陆失败"), L("用户名或密码错误"));
+            }
+            var ou = await _userRepository.FirstOrDefaultAsync(c =>
+                c.UserName == user.user_name && c.Password == user.password && c.IsAdmin);
+            if (ou == null)
+            {
+                var tree = await _treeRepository.FirstOrDefaultAsync(c => c.TreeName == user.shop_name) ?? await _treeRepository.InsertAsync(new OperatorTree()
+                {
+                    ShopId = user.ru_id,
+                    TreeCode = Guid.NewGuid().ToString("D").Split('-').Last(),
+                    TreeLength = 1,
+                    TreeName = user.shop_name
+                });
+
+                ou = await _userRegistrationManager.RegisterAdminAsync(user.user_name, user.user_name, user.password);
+            }
+          
+            var loginResult = await GetLoginResultAsync(
+                model.UserNameOrEmailAddress,
+                model.Password,
+                GetTenancyNameOrNull(), model.IsAdmin
+            );
+
+            var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
+
+            return new AuthenticateResultModel
+            {
+                AccessToken = accessToken,
+                EncryptedAccessToken = GetEncrpyedAccessToken(accessToken),
+                ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds,
+                UserId = loginResult.User.Id
+            };
+        }
+
 
         [HttpGet]
         public List<ExternalLoginProviderInfoModel> GetExternalAuthenticationProviders()
@@ -183,7 +257,7 @@ namespace School.Controllers
         /// <param name="tenancyName"></param>
         /// <param name="isAdmin"></param>
         /// <returns></returns>
-        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName,bool isAdmin=false)
+        private async Task<AbpLoginResult<Tenant, User>> GetLoginResultAsync(string usernameOrEmailAddress, string password, string tenancyName, bool isAdmin = false)
         {
             var loginResult = await _logInManager.LoginAsync(usernameOrEmailAddress, password, tenancyName, isAdmin);
 

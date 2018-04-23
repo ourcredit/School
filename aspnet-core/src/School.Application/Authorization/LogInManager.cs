@@ -2,6 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Abp;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.Configuration;
@@ -10,6 +11,7 @@ using Abp.Dependency;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
+using Abp.MultiTenancy;
 using Abp.Zero.Configuration;
 using Microsoft.AspNetCore.Identity;
 using School.Authorization.Roles;
@@ -165,13 +167,26 @@ namespace School.Authorization
                 return await CreateLoginResultAsync(user, tenant);
             }
         }
+        /// <summary>
+        /// 获取默认租户
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<Tenant> GetDefaultTenant()
+        {
+            var tenant = await TenantRepository.FirstOrDefaultAsync(t => t.TenancyName == AbpTenantBase.DefaultTenantName);
+            if (tenant == null)
+            {
+                throw new AbpException("There should be a 'Default' tenant if multi-tenancy is disabled!");
+            }
 
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <param name="str"></param>
-       /// <returns></returns>
-        private string Md5(string str)
+            return tenant;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string Md5(string str)
         {
             string ps = "";
             MD5 md5 = MD5.Create();

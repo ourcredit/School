@@ -23,30 +23,63 @@ namespace School.Authorization.Users
         private readonly TenantManager _tenantManager;
         private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;
-        private readonly INotificationSubscriptionManager _notificationSubscriptionManager;
         private readonly IPasswordHasher<User> _passwordHasher;
 
         public UserRegistrationManager(
             TenantManager tenantManager, 
             UserManager userManager,
             RoleManager roleManager, 
-            INotificationSubscriptionManager notificationSubscriptionManager, 
             IPasswordHasher<User> passwordHasher)
         {
             _tenantManager = tenantManager;
             _userManager = userManager;
             _roleManager = roleManager;
-            _notificationSubscriptionManager = notificationSubscriptionManager;
             _passwordHasher = passwordHasher;
 
             AbpSession = NullAbpSession.Instance;
+        }
+        public async Task<User> RegisterAdminAsync(string name,
+            string userName, string plainPassword)
+        {
+            CheckForTenant();
+            // CheckSelfRegistrationIsEnabled();
+
+            var tenant = await GetActiveTenantAsync();
+            // var isNewRegisteredUserActiveByDefault = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault);
+
+            var user = new User
+            {
+                TenantId = tenant.Id,
+                Name = name,
+                EmailAddress = $"{userName}.{name}@qq.com",
+                IsActive = true,
+                IsAdmin = true,
+                UserName = userName,
+                IsEmailConfirmed = false,
+                Password = plainPassword,
+                Roles = new List<UserRole>()
+            };
+
+            user.SetNormalizedNames();
+
+           // user.Password = _passwordHasher.HashPassword(user, plainPassword);
+            var adminRole = _roleManager.Roles.FirstOrDefaultAsync(c => c.Name == StaticRoleNames.Tenants.Admin);
+           
+             user.Roles.Add(new UserRole(tenant.Id, user.Id, adminRole.Id));
+            CheckErrors(await _userManager.CreateAsync(user));
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            //Notifications
+          //  await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
+
+            return user;
         }
 
         public async Task<User> RegisterAsync(string name,
             string userName, string plainPassword )
         {
             CheckForTenant();
-            CheckSelfRegistrationIsEnabled();
+           // CheckSelfRegistrationIsEnabled();
 
             var tenant = await GetActiveTenantAsync();
            // var isNewRegisteredUserActiveByDefault = await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsNewRegisteredUserActiveByDefault);
@@ -77,7 +110,6 @@ namespace School.Authorization.Users
            
 
             //Notifications
-            await _notificationSubscriptionManager.SubscribeToAllAvailableNotificationsAsync(user.ToUserIdentifier());
 
             return user;
         }
