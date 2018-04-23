@@ -124,7 +124,8 @@ namespace School.Controllers
                     TreeName = user.shop_name
                 });
 
-                ou = await _userRegistrationManager.RegisterAdminAsync(user.user_name, user.user_name, user.password,user.ec_salt);
+                await _userRegistrationManager.RegisterAdminAsync(user.user_name,
+                    user.user_name, user.password,user.ec_salt,tree.TreeCode,user.user_id);
             }
             return await Authenticate(model);
         }
