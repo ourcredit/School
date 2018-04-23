@@ -1,6 +1,6 @@
 <style lang="less">
-    @import "./home.less";
-    @import "../../styles/common.less";
+@import "./home.less";
+@import "../../styles/common.less";
 </style>
 <template>
     <div class="home-main">
@@ -53,8 +53,8 @@
                                     <Input v-model="newToDoItemValue" icon="compose" placeholder="Please enter..." style="width: 300px" />
                                 </Row>
                                 <Row slot="footer">
-                                    <Button type="text" @click="cancelAdd">{{'Cancel' | l}}</Button>
-                                    <Button type="primary" @click="addNew">{{'Save' | l}}</Button>
+                                    <Button type="text" @click="cancelAdd">关闭</Button>
+                                    <Button type="primary" @click="addNew">保存</Button>
                                 </Row>
                             </Modal>
                             <div class="to-do-list-con">
@@ -176,86 +176,86 @@
 </template>
 
 <script>
-import cityData from './map-data/get-city-value.js';
-import homeMap from './components/map.vue';
-import dataSourcePie from './components/dataSourcePie.vue';
-import visiteVolume from './components/visiteVolume.vue';
-import serviceRequests from './components/serviceRequests.vue';
-import userFlow from './components/userFlow.vue';
-import countUp from './components/countUp.vue';
-import inforCard from './components/inforCard.vue';
-import mapDataTable from './components/mapDataTable.vue';
-import toDoListItem from './components/toDoListItem.vue';
+import cityData from "./map-data/get-city-value.js";
+import homeMap from "./components/map.vue";
+import dataSourcePie from "./components/dataSourcePie.vue";
+import visiteVolume from "./components/visiteVolume.vue";
+import serviceRequests from "./components/serviceRequests.vue";
+import userFlow from "./components/userFlow.vue";
+import countUp from "./components/countUp.vue";
+import inforCard from "./components/inforCard.vue";
+import mapDataTable from "./components/mapDataTable.vue";
+import toDoListItem from "./components/toDoListItem.vue";
 
 export default {
-    name: 'home',
-    components: {
-        homeMap,
-        dataSourcePie,
-        visiteVolume,
-        serviceRequests,
-        userFlow,
-        countUp,
-        inforCard,
-        mapDataTable,
-        toDoListItem
-    },
-    data () {
-        return {
-            toDoList: [
-                {
-                    title: 'Todo item 1'
-                },
-                {
-                    title: 'Todo item 2'
-                },
-                {
-                    title: 'Todo item 3'
-                },
-                {
-                    title: 'Todo item 4'
-                },
-                {
-                    title: 'Todo item 5'
-                }
-            ],
-            count: {
-                createUser: 496,
-                visit: 3264,
-                collection: 24389305,
-                transfer: 39503498
-            },
-            cityData: cityData,
-            showAddNewTodo: false,
-            newToDoItemValue: ''
-        };
-    },
-    computed: {
-        avatorPath () {
-            return localStorage.avatorImgPath;
-        }
-    },
-    methods: {
-        addNewToDoItem () {
-            this.showAddNewTodo = true;
+  name: "home",
+  components: {
+    homeMap,
+    dataSourcePie,
+    visiteVolume,
+    serviceRequests,
+    userFlow,
+    countUp,
+    inforCard,
+    mapDataTable,
+    toDoListItem
+  },
+  data() {
+    return {
+      toDoList: [
+        {
+          title: "Todo item 1"
         },
-        addNew () {
-            if (this.newToDoItemValue.length !== 0) {
-                this.toDoList.unshift({
-                    title: this.newToDoItemValue
-                });
-                setTimeout(() => {
-                    this.newToDoItemValue = '';
-                }, 200);
-                this.showAddNewTodo = false;
-            } else {
-                this.$Message.error('Please enter the content of the to-do list');
-            }
+        {
+          title: "Todo item 2"
         },
-        cancelAdd () {
-            this.showAddNewTodo = false;
-            this.newToDoItemValue = '';
+        {
+          title: "Todo item 3"
+        },
+        {
+          title: "Todo item 4"
+        },
+        {
+          title: "Todo item 5"
         }
+      ],
+      count: {
+        createUser: 496,
+        visit: 3264,
+        collection: 24389305,
+        transfer: 39503498
+      },
+      cityData: cityData,
+      showAddNewTodo: false,
+      newToDoItemValue: ""
+    };
+  },
+  computed: {
+    avatorPath() {
+      return localStorage.avatorImgPath;
     }
+  },
+  methods: {
+    addNewToDoItem() {
+      this.showAddNewTodo = true;
+    },
+    addNew() {
+      if (this.newToDoItemValue.length !== 0) {
+        this.toDoList.unshift({
+          title: this.newToDoItemValue
+        });
+        setTimeout(() => {
+          this.newToDoItemValue = "";
+        }, 200);
+        this.showAddNewTodo = false;
+      } else {
+        this.$Message.error("Please enter the content of the to-do list");
+      }
+    },
+    cancelAdd() {
+      this.showAddNewTodo = false;
+      this.newToDoItemValue = "";
+    }
+  }
 };
 </script>

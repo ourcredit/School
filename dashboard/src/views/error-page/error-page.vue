@@ -1,6 +1,6 @@
 <style lang="less">
-    @import '../../styles/common.less';
-    @import './error-page.less';
+@import "../../styles/common.less";
+@import "./error-page.less";
 </style>
 
 <template>
@@ -9,7 +9,7 @@
             <Card>
                 <p slot="title">
                     <Icon :size="14" type="ios-navigate-outline"></Icon>
-                    404 - {{'Page does not exist'|l}}
+                    404 - Not Found
                 </p>
                 <Row>
                     <Col span="10">
@@ -84,14 +84,14 @@
 </template>
 
 <script>
-import Error404 from './404.vue';
-import Error500 from './500.vue';
-import Error403 from './403.vue';
+import Error404 from "./404.vue";
+import Error500 from "./500.vue";
+import Error403 from "./403.vue";
 export default {
-    components: {
-        Error404,
-        Error500,
-        Error403
-    }
+  components: {
+    Error404,
+    Error500,
+    Error403
+  }
 };
 </script>

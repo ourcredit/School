@@ -28,7 +28,7 @@
                     @click.native="linkTo(item)"
                     :closable="item.name==='pointmanage'?false:true"
                     :color="item.children?(item.children[0].name===currentPageName?'blue':'default'):(item.name===currentPageName?'blue':'default')"
-                >{{ itemTitle(item) | l}}</Tag>
+                >{{ itemTitle(item) }}</Tag>
             </transition-group>
         </div>
     </div>
