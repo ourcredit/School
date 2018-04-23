@@ -63,7 +63,8 @@ export default {
           type: "user/login",
           data: {
             userNameOrEmailAddress: username,
-            password: password
+            password: password,
+            isAdmin: true
           }
         })
         .then(
