@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using School.Models;
@@ -23,7 +24,7 @@ namespace School.Others
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<PagedResultDto<ProductListDto>> Products(GetProductsInput input);
+        Task<List<ProductListDto>> Products(GetProductsInput input);
 
         /// <summary>
         /// 更新售货机工控编号接口

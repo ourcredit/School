@@ -92,17 +92,16 @@ namespace School.Others
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<PagedResultDto<ProductListDto>> Products(GetProductsInput input)
+        public async Task<List<ProductListDto>> Products(GetProductsInput input)
         {
             var ht = await _deviceRepository.GetAllIncluding(c => c.DeviceGoods)
                 .FirstOrDefaultAsync(c => c.DeviceNum == input.MachineCode);
             if (ht == null || ht.DeviceGoods == null || !ht.DeviceGoods.Any())
             {
-                return new PagedResultDto<ProductListDto>();
+                return new List<ProductListDto>();
             }
             var temp = await _cacheManager.GetCache(SchoolCache.GoodsCache)
                 .GetAsync(SchoolCache.GoodsCache, GetGoodsFromCache);
-            var count = ht.DeviceGoods.Count;
 
             var list = ht.DeviceGoods;
             var result = new List<ProductListDto>();
@@ -121,7 +120,7 @@ namespace School.Others
                 }
                 result.Add(model);
             }
-            return new PagedResultDto<ProductListDto>(count, result);
+            return result;
         }
 
         /// <summary>
