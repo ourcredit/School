@@ -302,7 +302,13 @@ namespace School.Others
         {
             var result = new CheckPickCodeResult();
             var orders = await _orderRepository.GetAllListAsync(c => c.vmid == input.MachineCode);
-            if (orders == null || !orders.Any()) result.IsTrue = false;
+            if (orders == null || !orders.Any())
+            {
+                result.IsTrue = false;
+                result.ProductId = 0;
+                return result;
+            }
+
             var order = orders.FirstOrDefault(c => c.pickup_code == input.PickCode);
             if (order == null) result.IsTrue = false;
             if (!order.status.IsNullOrWhiteSpace()||order.status.Equals("10004")) result.IsTrue = false;
