@@ -34,7 +34,7 @@
         this.getpage();
       },
       async getpage() {
-        if (!this.treeCode) return;
+        if (!this.params.treeCode) return;
         await this.$store.dispatch({
           type: "device/getOrders",
           data: this.params
