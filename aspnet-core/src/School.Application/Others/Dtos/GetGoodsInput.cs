@@ -1,4 +1,5 @@
-﻿using Abp.Runtime.Validation;
+﻿using System;
+using Abp.Runtime.Validation;
 using School.Dto;
 
 namespace School.Others.Dtos
@@ -22,6 +23,18 @@ namespace School.Others.Dtos
         /// 机器码
         /// </summary>
         public string MachineCode { get; set; }
+    }
+    /// <summary>
+    /// 获取订单列表 参数
+    /// </summary>
+
+    public class GetOrderInput: PagedInputDto
+    {
+        public string TreeCode { get; set; }
+        public string OrderNum { get; set; }
+        public string DeviceNum { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
     }
     /// <summary>
     /// 获取商品input

@@ -66,7 +66,8 @@ namespace School
 
             configuration.CreateMap<Channel, ChannelListDto>();
             configuration.CreateMap<Show, ShowListDto>();
-            
+            configuration.CreateMap<Orders, OrderListDto>();
+
         }
     }
 }

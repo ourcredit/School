@@ -10,6 +10,7 @@ const point = {
         goods: [],
         current: null,
         currentCode: "",
+        orders:[],
         points: [],
         totalCount: 0,
         pageSize: 10,
@@ -45,6 +46,25 @@ const point = {
             });
             state.devices = [];
             state.devices.push(...rep.data.result.items);
+            state.totalCount = rep.data.result.totalCount;
+        },
+        async getOrders({
+            state
+        }, payload) {
+            let page = {
+                maxResultCount: state.pageSize,
+                skipCount: (state.currentPage - 1) * state.pageSize,
+                TreeCode: payload.data.treeCode,
+                OrderNum: payload.data.orderNum,
+                StartTime: payload.data.startTime,
+                EndTime: payload.data.endTime,
+                DeviceNum: payload.data.deviceNum
+            }
+            let rep = await Util.ajax.get('/api/services/app/Other/GetOrdersAsync', {
+                params: page
+            });
+            state.orders = [];
+            state.orders.push(...rep.data.result.items);
             state.totalCount = rep.data.result.totalCount;
         },
         async getUnbind({

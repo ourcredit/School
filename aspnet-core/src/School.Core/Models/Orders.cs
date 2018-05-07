@@ -52,6 +52,11 @@ namespace School.Models
         /// </summary>
         public DateTime created_time { get; set; }
         /// <summary>
+        /// 货柜号
+        /// </summary>
+
+        public int site { get; set; }
+        /// <summary>
         /// 支付时间
         /// </summary>
         public DateTime? pay_time { get; set; }

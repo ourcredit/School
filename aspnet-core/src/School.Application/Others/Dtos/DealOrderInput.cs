@@ -20,6 +20,7 @@ namespace School.Others.Dtos
         public List<OrderInfoB> orders { get; set; }
         public class OrderInfoB
         {
+            public int site { get; set; }
             public int productId { get; set; }
             public int price { get; set; }
             public DateTime venDoutDate { get; set; }

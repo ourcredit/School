@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
@@ -31,12 +32,13 @@ namespace School.Others
         private readonly IRepository<Show> _showRepository;
         private readonly IRepository<ChannelShow> _channelShowRepository;
         private readonly IRepository<OperatorTree> _treeRepository;
+        private readonly IRepository<OperatorDevice> _treeDeviceRepository;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         public OtherAppService(ICacheManager cacheManager,
-            IRepository<Orders> orderRepository, IRepository<Device> deviceRepository, IRepository<Show> showRepository, IRepository<Channel> channelRepository, IRepository<ChannelShow> channelShowRepository, IRepository<OperatorTree> treeRepository)
+            IRepository<Orders> orderRepository, IRepository<Device> deviceRepository, IRepository<Show> showRepository, IRepository<Channel> channelRepository, IRepository<ChannelShow> channelShowRepository, IRepository<OperatorTree> treeRepository, IRepository<OperatorDevice> treeDeviceRepository)
         {
             _cacheManager = cacheManager;
             _orderRepository = orderRepository;
@@ -45,6 +47,7 @@ namespace School.Others
             _channelRepository = channelRepository;
             _channelShowRepository = channelShowRepository;
             _treeRepository = treeRepository;
+            _treeDeviceRepository = treeDeviceRepository;
         }
 
         /// <summary>
@@ -222,6 +225,32 @@ namespace School.Others
 
         }
         /// <summary>
+        /// 获取订单列表
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+
+        public async Task<PagedResultDto<OrderListDto>> GetOrdersAsync(GetOrderInput input)
+        {
+            var otre = await _treeRepository.GetAllListAsync(c => c.TreeCode.Contains(input.TreeCode));
+
+            var devices = await _treeDeviceRepository.GetAllIncluding(c=>c.Device).Where(c => otre.Any(w => w.Id == c.OperatorId)).ToListAsync();
+            var deids = devices.Select(c => c.Device.DeviceNum);
+            var orders = _orderRepository.GetAll().WhereIf(deids!=null&&deids.Any(),c=>deids.Any(w=>w==c.vmid));
+            var count =await orders.CountAsync();
+            var os = await orders
+                .OrderByDescending(c=>c.created_time)
+                .PageBy(input)
+                .ToListAsync();
+            //var deviceListDtos = ObjectMapper.Map<List <DeviceListDto>>(devices);
+            var osdtos = os.MapTo<List<OrderListDto>>();
+            return new PagedResultDto<OrderListDto>(
+                count,
+                osdtos
+            );
+        }
+
+        /// <summary>
         /// 现金出货上报
         /// </summary>
         /// <returns></returns>
@@ -231,6 +260,7 @@ namespace School.Others
             {
                 var model = new Orders()
                 {
+                    site = order.site,
                     created_time = DateTime.Now,
                     delivery_time = order.venDoutDate,
                     goods_id = order.productId,
