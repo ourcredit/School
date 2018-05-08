@@ -24,10 +24,18 @@ const user = {
         }
     },
     actions: {
-        async login({
+        async superlogin({
             state
         }, payload) {
             let rep = await Util.ajax.post("/api/TokenAuth/SuperAuthenticate", payload.data);
+            var tokenExpireDate = payload.data.rememberMe ? (new Date(new Date().getTime() + 1000 * rep.data.result.expireInSeconds)) : undefined;
+            abp.auth.setToken(rep.data.result.accessToken, tokenExpireDate);
+            abp.utils.setCookieValue(appconst.authorization.encrptedAuthTokenName, rep.data.result.encryptedAccessToken, tokenExpireDate, abp.appPath)
+        },
+        async login({
+            state
+        }, payload) {
+            let rep = await Util.ajax.post("/api/TokenAuth/Authenticate", payload.data);
             var tokenExpireDate = payload.data.rememberMe ? (new Date(new Date().getTime() + 1000 * rep.data.result.expireInSeconds)) : undefined;
             abp.auth.setToken(rep.data.result.accessToken, tokenExpireDate);
             abp.utils.setCookieValue(appconst.authorization.encrptedAuthTokenName, rep.data.result.encryptedAccessToken, tokenExpireDate, abp.appPath)
